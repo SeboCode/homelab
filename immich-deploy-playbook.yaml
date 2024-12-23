@@ -1,9 +1,0 @@
-- hosts: all
-  roles:
-    - base
-    - user
-    - role: immich
-      become: yes
-      become_method: su
-      become_flags: "--login"
-      become_user: "{{ podman_user }}"
