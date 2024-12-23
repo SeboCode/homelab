@@ -2,4 +2,5 @@
 podman_user: immich-deploy
 podman_user_home: "/home/{{ podman_username }}"
 podman_user_systemd_directory: "{{ podman_user_home }}/.config/systemd/user"
+container_host: "{{ inventory_hostname }}"
 
