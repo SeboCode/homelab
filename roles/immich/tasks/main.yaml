@@ -1,2 +1,21 @@
 ---
+- name: Ensure immich storage directory location exists
+  ansible.builtin.file:
+    path: "{{ immich_storage_directory }}"
+    state: directory
+    owner: "{{ podman_user }}"
+    group: "{{ podman_user }}"
+    mode: 0755
+
+- name: Ensure immich container network is created
+  containers.podman.podman_network:
+    name: immich_network
+    driver: bridge
+    recreate: false
+    state: present
+
+- include_tasks: immich-database.yaml
+- include_tasks: immich-redis.yaml
+- include_tasks: immich-machine-learning.yaml
+- include_tasks: immich-server.yaml
 

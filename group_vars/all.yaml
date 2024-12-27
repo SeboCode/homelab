@@ -1,6 +1,20 @@
 ---
+ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
+
 podman_user: immich-deploy
 podman_user_home: "/home/{{ podman_user }}"
 podman_user_systemd_directory: "{{ podman_user_home }}/.config/systemd/user"
 container_host: "{{ inventory_hostname }}"
+
+immich_server_version: v1.123.0
+immich_server_image: "ghcr.io/immich-app/immich-server:{{ immich_server_version }}"
+immich_server_port: 20000
+immich_upload_location: "{{ immich_storage_directory }}/library"
+immich_db_data_location: "{{ immich_storage_directory }}/postgres"
+immich_db_database_name: immich-database
+immich_db_username: immich-postgres
+
+# Move to environment dependent variables (prod needs to be split between versioned and unversioned containing secrets)
+immich_storage_directory: "{{ podman_user_home }}/immich-storage"
+immich_db_password: immich-db-password # Change
 
