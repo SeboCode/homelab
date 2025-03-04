@@ -1,4 +1,12 @@
 ---
+- name: Ensure immich upload location exists
+  ansible.builtin.file:
+    path: "{{ immich_upload_location }}"
+    state: directory
+    owner: "{{ podman_user }}"
+    group: "{{ podman_user }}"
+    mode: 0644
+
 - name: Ensure immich-server systemd service is stopped
   ansible.builtin.systemd:
     scope: user
