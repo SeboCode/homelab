@@ -1,3 +1,4 @@
+---
 - name: Create test containers to run playbook for dummy server
   hosts: localhost
   vars:
@@ -8,47 +9,47 @@
     deployserver_test_container_name: deployserver_test
 
   tasks:
-  - name: Ensure image is created
-    community.docker.docker_image:
-      name: "{{ deployserver_test_image_name }}"
-      build:
-        nocache: true
-        path: "{{ playbook_dir }}/platform-stack/deployserver-test"
-      tag: "{{ deployserver_test_image_version }}"
-      state: present
-      source: build
+    - name: Ensure image is created
+      community.docker.docker_image:
+        name: "{{ deployserver_test_image_name }}"
+        build:
+          nocache: true
+          path: "{{ playbook_dir }}/platform-stack/deployserver-test"
+        tag: "{{ deployserver_test_image_version }}"
+        state: present
+        source: build
 
-  - name: Ensure container is running
-    community.docker.docker_container:
-      name: "{{ deployserver_test_container_name }}"
-      image: "{{ deployserver_test_image_name }}:{{ deployserver_test_image_version }}"
-      state: started
-      restart: yes
-      ports:
-        - "{{ immich_port }}:80"
-        - "{{ ssh_port }}:22"
+    - name: Ensure container is running
+      community.docker.docker_container:
+        name: "{{ deployserver_test_container_name }}"
+        image: "{{ deployserver_test_image_name }}:{{ deployserver_test_image_version }}"
+        state: started
+        restart: yes
+        ports:
+          - "{{ immich_port }}:80"
+          - "{{ ssh_port }}:22"
 
-  - name: Ensure test inventory file is created
-    ansible.builtin.copy:
-      content: |
-        [configserver]
-        localhost
-        [configserver:vars]
-        ansible_connection=local
+    - name: Ensure test inventory file is created
+      ansible.builtin.copy:
+        content: |
+          [configserver]
+          localhost
+          [configserver:vars]
+          ansible_connection=local
 
-        [deployserver]
-        {{ deployserver_test_container_name }}
-        [deployserver:vars]
-        ansible_connection=docker
-        ansible_ssh_user=root
-        ansible_ssh_pass=root
-        ansible_ssh_port={{ ssh_port }}
-      dest: "{{ playbook_dir }}/inventory/test.ini"
-      force: true
+          [deployserver]
+          {{ deployserver_test_container_name }}
+          [deployserver:vars]
+          ansible_connection=docker
+          ansible_ssh_user=root
+          ansible_ssh_pass=root
+          ansible_ssh_port={{ ssh_port }}
+        dest: "{{ playbook_dir }}/inventory/test.ini"
+        force: true
 
-  - name: Ensure new inventory entries are loaded
-    ansible.builtin.meta: "refresh_inventory"
-  
+    - name: Ensure new inventory entries are loaded
+      ansible.builtin.meta: "refresh_inventory"
+
 - name: Execute deployment
   ansible.builtin.import_playbook: deploy.yaml
 
@@ -58,8 +59,8 @@
     deployserver_test_container_name: deployserver_test
 
   tasks:
-  - name: Ensure container is stopped
-    community.docker.docker_container:
-      name: "{{ deployserver_test_container_name }}"
-      state: absent
+    - name: Ensure container is stopped
+      community.docker.docker_container:
+        name: "{{ deployserver_test_container_name }}"
+        state: absent
 
