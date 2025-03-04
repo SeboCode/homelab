@@ -1,11 +1,14 @@
 FROM ubuntu:24.04
 
-RUN apt-get update
+RUN apt update
 
-RUN apt-get install -y --no-install-recommends \
+RUN apt install -y --no-install-recommends \
     python3 \
     openssh-server \
-    sudo
+    sudo \
+    ca-certificates
+
+RUN update-ca-certificates
 
 # Ok for testing purposes, DO NOT USE IN PRODUCTION!
 RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
