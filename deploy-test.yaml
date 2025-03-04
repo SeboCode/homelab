@@ -25,6 +25,13 @@
         image: "{{ deployserver_test_image_name }}:{{ deployserver_test_image_version }}"
         state: started
         restart: yes
+        security_opts:
+          - seccomp:unconfined
+        devices:
+          - /dev/fuse:/dev/fuse:rwm
+        capabilities:
+          - sys_admin
+          - mknod
         ports:
           - "{{ immich_port }}:80"
           - "{{ ssh_port }}:22"
