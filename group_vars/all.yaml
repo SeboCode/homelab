@@ -1,7 +1,7 @@
 ---
 ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
 
-podman_user: immich-deploy
+podman_user: podman-user-deploy
 podman_user_home: "/home/{{ podman_user }}"
 podman_user_systemd_directory: "{{ podman_user_home }}/.config/systemd/user"
 container_host: "{{ inventory_hostname }}"
