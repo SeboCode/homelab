@@ -45,9 +45,9 @@
     recreate: no
     state: created
     env:
-      - DB_DATABASE_NAME: "{{ immich_db_database_name }}"
-      - DB_USERNAME: "{{ immich_db_username }}"
-      - DB_PASSWORD: "{{ immich_db_password }}"
+      DB_DATABASE_NAME: "{{ immich_db_database_name }}"
+      DB_USERNAME: "{{ immich_db_username }}"
+      DB_PASSWORD: "{{ immich_db_password }}"
     volumes:
       - "{{ immich_upload_location }}:/usr/src/app/upload"
       - /etc/localtime:/etc/localtime:ro
