@@ -15,6 +15,9 @@
     state: stopped
   register: "result_immich_server_stop"
   failed_when: "result_immich_server_stop is failed and 'Could not find the requested service' not in result_immich_server_stop.msg"
+  # systemd does not work when executed in a docker environment. It is also not needed, as the container will be
+  # destroyed after execution.
+  when: ansible_connection != "docker"
 
 - name: Ensure immich-server container is removed
   containers.podman.podman_container:
@@ -68,6 +71,9 @@
     enabled: yes
     daemon_reload: yes
     state: started
+  # systemd does not work when executed in a docker environment. It is also not needed, as the container will be
+  # destroyed after execution.
+  when: ansible_connection != "docker"
 
 - name: Wait for immich-server to be healthy
   ansible.builtin.uri:
