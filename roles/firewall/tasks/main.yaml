@@ -1,0 +1,10 @@
+---
+- name: Ensure firewall is installed
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - ip6tables
+    - iptables
+    - awall
+
