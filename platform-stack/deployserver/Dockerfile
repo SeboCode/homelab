@@ -1,10 +1,10 @@
-FROM ubuntu:24.04
+FROM alpine:3.21.3
 
-RUN apt update
+RUN apk update
 
-RUN apt install -y --no-install-recommends \
+RUN apk add --no-cache \
     python3 \
-    openssh-server \
+    openssh \
     sudo \
     ca-certificates
 
@@ -15,12 +15,13 @@ RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/s
 
 RUN echo "root:root" | chpasswd
 
-RUN service ssh start
-
-RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
 
 # Exposes port not to host, but to other containers, which allows for inter container communication
 EXPOSE 22
+
+# Ok for testing purposes, DO NOT USE IN PRODUCTION, AS KEYS ARE FIXED WITH THE IMAGE!
+RUN ssh-keygen -A
 
 CMD ["/usr/sbin/sshd", "-D"]
 
