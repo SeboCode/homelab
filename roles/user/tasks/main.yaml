@@ -1,4 +1,18 @@
 ---
+# This is needed for the podman user to be able to create pseudo root and other users inside the container that are then
+# mounted to a non root user with a uid and gid inside of the specified range on the main system.
+- name: Ensure subuid and subgid ranges are defined for podman user to use
+  ansible.builtin.lineinfile:
+    path: "{{ item }}"
+    regexp: "^{{ podman_user }}"
+    line: "{{ podman_user }}:100000:65536"
+    state: present
+    create: true
+    insertafter: EOF
+  loop:
+    - "/etc/subuid"
+    - "/etc/subgid"
+
 - name: "Ensure {{ podman_user }} is created and locked to prevent logins on the user"
   ansible.builtin.user:
     name: "{{ podman_user }}"
@@ -26,10 +40,14 @@
     group: "{{ podman_user }}"
     mode: 0755
 
-- name: Ensure podman tmp file storage environment variable is exported in .bashrc
+- name: Ensure podman tmp file storage environment variable is exported in .ashrc
   ansible.builtin.lineinfile:
-    path: "{{ podman_user_home }}/.bashrc"
+    path: "{{ podman_user_home }}/.ashrc"
     regexp: '^export XDG_RUNTIME_DIR'
     line: 'export XDG_RUNTIME_DIR=/run/user/"$(id -u)"'
     state: present
+    owner: "{{ podman_user }}"
+    group: "{{ podman_user }}"
+    create: true
     insertafter: EOF
+

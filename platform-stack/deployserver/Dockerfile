@@ -6,7 +6,10 @@ RUN apk add --no-cache \
     python3 \
     openssh \
     sudo \
-    ca-certificates
+    ca-certificates \
+    shadow \
+    fuse-overlayfs # mount program required by podman to work, as the defult overlay driver of alpine (overlay) cannot
+                   # run on top of another overlay filesystem (which is the case when running inside a docker container)
 
 RUN update-ca-certificates
 
