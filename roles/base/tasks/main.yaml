@@ -16,6 +16,26 @@
     name: slirp4netns
     state: present
 
+# Used to allow the creation of usermapping from container to host when using rootless containers
+- name: Ensure shadow-uidmap is installed
+  ansible.builtin.package:
+    name: shadow-uidmap
+    state: present
+
+# This is needed for the podman user to be able to create pseudo root and other users inside the container that are then
+# mounted to a none root user with a uid and gid inside of the specified range on the host system.
+- name: Ensure subuid and subgid ranges are defined for podman user to use
+  ansible.builtin.lineinfile:
+    path: "{{ item }}"
+    regexp: "^{{ podman_user }}"
+    line: "{{ podman_user }}:100000:65536"
+    state: present
+    create: true
+    insertafter: EOF
+  loop:
+    - "/etc/subuid"
+    - "/etc/subgid"
+
 - name: Ensure podman is installed
   ansible.builtin.package:
     name: podman
