@@ -1,6 +1,6 @@
 ---
 - name: Run staging environment for dev
-  ansible.builtin.import_playbook: deploy-staging-base.yaml
+  ansible.builtin.import_playbook: docker-staging.yaml
   vars:
     env: dev
     immich_port: 20080

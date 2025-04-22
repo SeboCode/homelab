@@ -1,6 +1,6 @@
 ---
 - name: Run staging environment for test
-  ansible.builtin.import_playbook: deploy-staging-base.yaml
+  ansible.builtin.import_playbook: docker-staging.yaml
   vars:
     env: test
     immich_port: 30080
