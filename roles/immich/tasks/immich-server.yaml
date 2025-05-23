@@ -13,6 +13,7 @@
   vars:
     container_name: immich-server
     container_image: "{{ immich_server_image }}"
+    container_image_tag: "{{ immich_server_tag }}"
     container_env:
       DB_DATABASE_NAME: "{{ immich_db_database_name }}"
       DB_USERNAME: "{{ immich_db_username }}"

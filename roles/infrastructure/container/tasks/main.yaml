@@ -28,13 +28,14 @@
 - name: "Pull {{ container_name }} image"
   containers.podman.podman_image:
     name: "{{ container_image }}"
+    tag: "{{ container_image_tag }}"
     force: true
 
 - name: "Ensure {{ container_name }} container is created"
   containers.podman.podman_container:
     name: "{{ container_name }}"
     hostname: "{{ container_name }}-{{ ansible_hostname }}" # TODO why hostname?
-    image: "{{ container_image }}"
+    image: "{{ container_image }}:{{ container_image_tag }}"
     user: "{{ container_user_id }}"
     userns: keep-id
     recreate: no
