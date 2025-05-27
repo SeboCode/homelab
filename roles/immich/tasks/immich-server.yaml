@@ -24,7 +24,7 @@
     container_ports:
       - "{{ immich_server_port }}:2283"
     container_networks:
-      - immich_network
+      - "{{ immich_network }}"
     container_network_aliases:
       - immich-server
     container_user: "{{ podman_user }}"
