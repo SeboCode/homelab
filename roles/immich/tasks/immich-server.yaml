@@ -5,7 +5,14 @@
     state: directory
     owner: "{{ podman_user }}"
     group: "{{ podman_user }}"
-    mode: 0644
+    mode: 0755
+    recurse: true
+
+- name: asdf
+  command: echo $CONTAINER_HOST
+  register: container_host_output
+
+- debug: msg="{{ container_host_output }}"
 
 - name: Instantiate immich-server container
   ansible.builtin.include_role:
