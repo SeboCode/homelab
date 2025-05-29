@@ -15,4 +15,6 @@
       become_method: su
       become_flags: "-l"
       become_user: "{{ podman_user }}"
+  environment:
+    CONTAINER_HOST: "{{ 'unix:///run/podman/podman.sock' if ansible_connection == 'docker' else '' }}"
 
