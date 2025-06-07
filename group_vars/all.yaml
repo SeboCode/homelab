@@ -15,7 +15,3 @@ immich_db_data_location: "{{ immich_storage_directory }}/postgres"
 immich_db_database_name: immich-database
 immich_db_username: immich-postgres
 
-# Move to environment dependent variables (prod needs to be split between versioned and unversioned containing secrets)
-immich_storage_directory: "{{ podman_user_home }}/immich-storage"
-immich_db_password: immich-db-password # Change for prod and use ansible vault for managing passwords and other secrets
-
