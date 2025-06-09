@@ -7,12 +7,8 @@
     group: "{{ podman_user }}"
     mode: 0755
     recurse: true
-
-- name: asdf
-  command: echo $CONTAINER_HOST
-  register: container_host_output
-
-- debug: msg="{{ container_host_output }}"
+  # Not possible in staging environments, as the filesystem used by podman is that of the host, not of the container
+  when: ansible_connection != "docker"
 
 - name: Instantiate immich-server container
   ansible.builtin.include_role:

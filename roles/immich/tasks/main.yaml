@@ -6,6 +6,14 @@
     owner: "{{ podman_user }}"
     group: "{{ podman_user }}"
     mode: 0755
+  # Not possible in staging environments, as the filesystem used by podman is that of the host, not of the container
+  when: ansible_connection != "docker"
+
+- name: asdf
+  command: echo $CONTAINER_HOST
+  register: container_host_output
+
+- debug: msg="{{ container_host_output }}"
 
 - name: Ensure immich container network is created
   containers.podman.podman_network:
