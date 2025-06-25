@@ -42,4 +42,7 @@
   until: result.status == 200
   retries: 30
   delay: 2
+  # Cannot be tested due to podman socket being exposed by the host machine. This health check cannot be performed
+  # inside the container.
+  when: ansible_connection != "docker"
 
