@@ -15,4 +15,5 @@
       become_method: su
       become_flags: "-l"
       become_user: "{{ podman_user }}"
+    - alpine
 
