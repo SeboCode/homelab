@@ -6,8 +6,6 @@
     owner: "{{ podman_user }}"
     group: "{{ podman_user }}"
     mode: 0755
-  # Not possible in staging environments, as the filesystem used by podman is that of the host, not of the container
-  when: ansible_connection != "docker"
 
 - name: Ensure immich container network is created
   containers.podman.podman_network:

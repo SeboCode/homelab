@@ -14,9 +14,7 @@
 
 - name: "Ensure lingering for {{ podman_user }} is enabled to enure podman is still running after logout due to script execution termination"
   ansible.builtin.command: "loginctl enable-linger {{ podman_user }}"
-  # Lingering does not work when executed in a docker environment. It is also not needed, as the container will be
-  # destroyed after execution.
-  when: not user_lingering.stat.exists and ansible_connection != "docker"
+  when: not user_lingering.stat.exists
 
 - name: Ensure systemd directory and user subdirectory exists
   ansible.builtin.file:

@@ -1,3 +1,7 @@
 #!/usr/bin/env bash
 
-ansible-playbook deploy-dev.yaml -i inventory/dev.ini -e "@vars/dev.yaml"
+cd ./platform-stack/deployserver
+
+vagrant destroy -f
+vagrant up --provision
+

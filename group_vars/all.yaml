@@ -14,4 +14,5 @@ immich_upload_location: "{{ immich_storage_directory }}/library"
 immich_db_data_location: "{{ immich_storage_directory }}/postgres"
 immich_db_database_name: immich-database
 immich_db_username: immich-postgres
+immich_storage_directory: "{{ podman_user_home }}/immich-storage"
 

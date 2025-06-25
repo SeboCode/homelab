@@ -7,8 +7,6 @@
     group: "{{ podman_user }}"
     mode: 0755
     recurse: true
-  # Not possible in staging environments, as the filesystem used by podman is that of the host, not of the container
-  when: ansible_connection != "docker"
 
 - name: Instantiate immich-server container
   ansible.builtin.include_role:
@@ -42,7 +40,4 @@
   until: result.status == 200
   retries: 30
   delay: 2
-  # Cannot be tested due to podman socket being exposed by the host machine. This health check cannot be performed
-  # inside the container.
-  when: ansible_connection != "docker"
 

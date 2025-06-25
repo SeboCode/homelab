@@ -1,3 +1,0 @@
----
-immich_storage_directory: "{{ playbook_dir }}/staging/test/immich-storage"
-immich_db_password: immich-db-password
