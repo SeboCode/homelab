@@ -1,13 +1,4 @@
 ---
-- name: "Ensure {{ container_name }} systemd service is stopped"
-  ansible.builtin.systemd:
-    scope: user
-    name: "container-{{ container_name }}.service"
-    enabled: no
-    state: stopped
-  register: "systemd_stop_result"
-  failed_when: "systemd_stop_result is failed and 'Could not find the requested service' not in systemd_stop_result.msg"
-
 - name: "Ensure {{ container_name }} container is removed"
   containers.podman.podman_container:
     name: "{{ container_name }}"
@@ -42,15 +33,13 @@
     ports: "{{ container_ports }}"
     network: "{{ container_networks }}"
     network_aliases: "{{ container_network_aliases }}"
-    generate_systemd:
-      path: "{{ container_user_systemd_directory }}"
-      names: true
 
-- name: "Ensure {{ container_name }} systemd service is activated"
-  ansible.builtin.systemd:
-    scope: user
-    name: "container-{{ container_name }}.service"
-    enabled: yes
-    daemon_reload: yes
-    state: started
+- name: "Ensure {{ container_name }} is started after reboot of host by adding it to executor script"
+  lineinfile:
+    path: "/home/{{ container_user }}/bin/container-executor.sh"
+    line: "podman start {{ container_name }}"
+    insertafter: EOF
+    owner: "{{ container_user }}"
+    group: "{{ container_user }}"
+    mode: 0755
 

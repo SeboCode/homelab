@@ -29,7 +29,6 @@
     container_network_aliases:
       - immich-server
     container_user: "{{ podman_user }}"
-    container_user_systemd_directory: "{{ podman_user_systemd_directory }}"
 
 - name: Wait for immich-server to be healthy
   ansible.builtin.uri:
