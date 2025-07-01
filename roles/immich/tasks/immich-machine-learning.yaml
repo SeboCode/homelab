@@ -1,1 +1,25 @@
 ---
+- name: Ensure model cache volume exists
+  containers.podman.podman_volume:
+    state: present
+    name: model-cache
+
+- name: Instantiate immich-machine-learning container
+  ansible.builtin.include_role:
+    name: infrastructure/container
+  vars:
+    container_name: immich_machine_learning
+    container_image: "{{ immich_machine_learning_image }}"
+    container_image_tag: "{{ immich_machine_learning_tag }}"
+    container_env:
+      DB_DATABASE_NAME: "{{ immich_db_database_name }}"
+      DB_USERNAME: "{{ immich_db_username }}"
+      DB_PASSWORD: "{{ immich_db_password }}"
+    container_volumes:
+      - model-cache:/cache
+    container_networks:
+      - "{{ immich_network }}"
+    container_network_aliases:
+      - immich-machine-learning
+    container_user: "{{ podman_user }}"
+

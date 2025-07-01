@@ -1,1 +1,14 @@
 ---
+- name: Instantiate immich-redis container
+  ansible.builtin.include_role:
+    name: infrastructure/container
+  vars:
+    container_name: immich_redis
+    container_image: "{{ immich_redis_image }}"
+    container_image_tag: "{{ immich_redis_tag }}"
+    container_networks:
+      - "{{ immich_network }}"
+    container_network_aliases:
+      - redis
+    container_user: "{{ podman_user }}"
+

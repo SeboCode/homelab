@@ -12,7 +12,7 @@
   ansible.builtin.include_role:
     name: infrastructure/container
   vars:
-    container_name: immich-server
+    container_name: immich_server
     container_image: "{{ immich_server_image }}"
     container_image_tag: "{{ immich_server_tag }}"
     container_env:

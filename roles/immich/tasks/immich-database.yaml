@@ -1,1 +1,32 @@
 ---
+- name: Ensure immich data location exists
+  ansible.builtin.file:
+    path: "{{ immich_db_data_location }}"
+    state: directory
+    owner: "{{ podman_user }}"
+    group: "{{ podman_user }}"
+    mode: 0755
+    recurse: true
+
+- name: Instantiate immich-postgres container
+  ansible.builtin.include_role:
+    name: infrastructure/container
+  vars:
+    container_name: immich_postgres
+    container_image: "{{ immich_server_image }}"
+    container_image_tag: "{{ immich_server_tag }}"
+    container_env:
+      POSTGRES_DB: "{{ immich_db_database_name }}"
+      POSTGRES_USER: "{{ immich_db_username }}"
+      POSTGRES_PASSWORD: "{{ immich_db_password }}"
+      POSTGRES_INITDB_ARGS: "--data-checksums"
+      # Uncomment the DB_STORAGE_TYPE: 'HDD' var if your database isn't stored on SSDs
+      DB_STORAGE_TYPE: "HDD"
+    container_volumes:
+      - "{{ immich_db_data_location }}:/var/lib/postgresql/data"
+    container_networks:
+      - "{{ immich_network }}"
+    container_network_aliases:
+      - database
+    container_user: "{{ podman_user }}"
+
