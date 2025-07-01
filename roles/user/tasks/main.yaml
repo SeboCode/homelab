@@ -18,9 +18,17 @@
     create: true
     insertafter: EOF
 
+- name: Ensure user's ansible tmp directory exists
+  ansible.builtin.file:
+    path: "{{ podman_user_home }}/.ansible/tmp"
+    state: directory
+    owner: "{{ podman_user }}"
+    group: "{{ podman_user }}"
+    mode: 0700
+
 - name: Ensure user's bin directory exists
   ansible.builtin.file:
-    path: "/home/{{ podman_user }}/bin"
+    path: "{{ podman_user_home }}/bin"
     state: directory
     owner: "{{ podman_user }}"
     group: "{{ podman_user }}"
@@ -28,7 +36,7 @@
 
 - name: Create start-container.sh with XDG_RUNTIME_DIR export
   ansible.builtin.copy:
-    dest: "/home/{{ podman_user }}/bin/container-executor.sh"
+    dest: "{{ podman_user_home }}/bin/container-executor.sh"
     content: |
       #!/bin/sh
       export XDG_RUNTIME_DIR=/run/user/$(id -u)

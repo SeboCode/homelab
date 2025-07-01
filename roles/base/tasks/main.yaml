@@ -41,3 +41,8 @@
     name: podman
     state: present
 
+- name: Ensure acl is installed to allow for ansible to perform user switching to unprivileged user
+  ansible.builtin.package:
+    name: acl
+    state: present
+
