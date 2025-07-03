@@ -14,6 +14,10 @@ Vagrant.configure("2") do |config|
       env_config.vm.network :forwarded_port, guest: 22, host: env[:ssh_port], id: "ssh"
       env_config.vm.network :forwarded_port, guest: 20000, host: 20000, id: "immich"
 
+      env_config.vm.provider do |v|
+        v.memory = 8192
+        v.cpus = 4
+
       env_config.vm.provision "shell", inline: <<-SHELL
         echo "Installing required packages..."
         sudo apk update
