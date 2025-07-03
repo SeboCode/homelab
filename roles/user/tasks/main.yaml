@@ -4,7 +4,8 @@
     name: "{{ podman_user }}"
     create_home: true
     home: "{{ podman_user_home }}"
-    password_lock: true
+    password: "{{ podman_user_password }}"
+    shell: /bin/sh
     state: present
 
 - name: Ensure podman tmp file storage environment variable is exported in .ashrc
