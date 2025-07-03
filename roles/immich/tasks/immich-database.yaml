@@ -13,8 +13,8 @@
     name: infrastructure/container
   vars:
     container_name: immich_postgres
-    container_image: "{{ immich_server_image }}"
-    container_image_tag: "{{ immich_server_tag }}"
+    container_image: "{{ immich_postgres_image }}"
+    container_image_tag: "{{ immich_postgres_tag }}"
     container_env:
       POSTGRES_DB: "{{ immich_db_database_name }}"
       POSTGRES_USER: "{{ immich_db_username }}"
