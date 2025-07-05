@@ -25,8 +25,9 @@
     image: "{{ container_image }}:{{ container_image_tag }}"
     user: "{{ container_user_id }}"
     userns: keep-id
-    recreate: no
-    state: created
+    recreate: false
+    restart_policy: on-failure
+    state: started
     env: "{{ container_env }}"
     volumes: "{{ container_volumes }}"
     ports: "{{ container_ports }}"
