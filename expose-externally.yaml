@@ -1,0 +1,16 @@
+---
+- name: Enable firewall to forward dev port
+  hosts: localhost
+  tasks:
+    - name: Enable http service on public interface
+      ansible.posix.firewalld:
+        service: http
+        zone: public
+        state: enabled
+
+    - name: Enable dev port on public interface
+      ansible.posix.firewalld:
+        port: "{{ immich_server_port }}/tcp"
+        zone: public
+        state: enabled
+
