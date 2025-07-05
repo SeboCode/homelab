@@ -32,7 +32,8 @@
 
 - name: Wait for immich-server to be healthy
   ansible.builtin.uri:
-    url: "https://{{ container_host }}:{{ immich_server_port }}"
+    # TODO: change to https
+    url: "http://localhost:{{ immich_server_port }}"
     status_code: 200
     validate_certs: false
   register: result
