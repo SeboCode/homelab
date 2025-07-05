@@ -10,12 +10,6 @@
     dest: /etc/localtime
     state: link
 
-# Used for exposing ports to the host when using rootless containers
-- name: Ensure slirp4netns is installed
-  ansible.builtin.package:
-    name: slirp4netns
-    state: present
-
 # Used to allow the creation of usermapping from container to host when using rootless containers
 - name: Ensure shadow-uidmap is installed
   ansible.builtin.package:
