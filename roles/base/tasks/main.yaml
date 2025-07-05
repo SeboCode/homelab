@@ -46,3 +46,15 @@
     name: acl
     state: present
 
+- name: Ensure tun module is loaded, as podman needs the network tunnel interface device (/dev/net/tun)
+  community.general.modprobe:
+    name: tun
+    state: present
+
+- name: Mount cgroup2 at /sys/fs/cgroup, as crun needs this to run containers
+  ansible.builtin.mount:
+    path: /sys/fs/cgroup
+    src: none
+    fstype: cgroup2
+    state: mounted
+
