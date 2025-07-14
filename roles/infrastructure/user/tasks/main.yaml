@@ -1,0 +1,84 @@
+---
+- name: "Ensure {{ user_name }} is created"
+  ansible.builtin.user:
+    name: "{{ user_name }}"
+    create_home: true
+    home: "/home/{{ user_name }}"
+    password: "{{ user_password }}"
+    shell: /bin/sh
+    state: present
+
+# This is needed for the user to be able to create pseudo root and other users inside a container that are then
+# mounted to a none root user with a uid and gid inside of the specified range on the host system.
+- name: "Ensure subuid and subgid ranges are defined for {{ user_name }} to use"
+  ansible.builtin.lineinfile:
+    path: "{{ item }}"
+    regexp: "^{{ user_name }}"
+    line: "{{ user_name }}:100000:65536"
+    state: present
+    create: true
+    insertafter: EOF
+  loop:
+    - "/etc/subuid"
+    - "/etc/subgid"
+
+- name: Ensure podman tmp file storage environment variable is exported in .ashrc
+  ansible.builtin.lineinfile:
+    path: "/home/{{ user_name }}/.ashrc"
+    regexp: '^export XDG_RUNTIME_DIR'
+    line: 'export XDG_RUNTIME_DIR=/run/user/"$(id -u)"'
+    state: present
+    owner: "{{ user_name }}"
+    group: "{{ user_name }}"
+    create: true
+    insertafter: EOF
+
+- name: Ensure user's ansible tmp directory exists
+  ansible.builtin.file:
+    path: "/home/{{ user_name }}/.ansible/tmp"
+    state: directory
+    owner: "{{ user_name }}"
+    group: "{{ user_name }}"
+    mode: 0700
+
+- name: Ensure user's bin directory exists
+  ansible.builtin.file:
+    path: "/home/{{ user_name }}/bin"
+    state: directory
+    owner: "{{ user_name }}"
+    group: "{{ user_name }}"
+    mode: 0755
+
+- name: Create start-container.sh with XDG_RUNTIME_DIR export
+  ansible.builtin.copy:
+    dest: "/home/{{ user_name }}/bin/container-executor.sh"
+    content: |
+      #!/bin/sh
+      export XDG_RUNTIME_DIR=/run/user/$(id -u)
+    owner: "{{ user_name }}"
+    group: "{{ user_name }}"
+    mode: 0755
+
+- name: "Create OpenRC init script to restart {{ user_name }} containers, in case the system reboots"
+  ansible.builtin.copy:
+    dest: "/etc/init.d/{{ user_name }}-container-executor"
+    content: |
+      #!/sbin/openrc-run
+
+      description="Start user podman container"
+
+      start() {
+          ebegin "Starting podman containers for user {{ user_name }}"
+          su - {{ user_name }} -c '/home/{{ user_name }}/bin/container-executor.sh'
+          eend $?
+      }
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Add OpenRC service to default runlevel
+  ansible.builtin.service:
+    name: "{{ user_name }}-container-executor"
+    enabled: true
+    runlevel: default
+
