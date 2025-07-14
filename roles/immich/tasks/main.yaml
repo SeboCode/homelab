@@ -1,21 +1,21 @@
 ---
-- name: "Ensure {{ podman_user }} is created"
+- name: "Ensure {{ immich_user }} is created"
   ansible.builtin.include_role:
     name: infrastructure/user
   vars:
-    user_name: "{{ podman_user }}"
-    user_password: "{{ podman_user_password }}"
+    user_name: "{{ immich_user }}"
+    user_password: "{{ immich_user_password }}"
 
 - name: Ensure immich is running
   become: true
-  become_user: "{{ podman_user }}"
+  become_user: "{{ immich_user }}"
   block:
     - name: Ensure immich storage directory location exists
       ansible.builtin.file:
         path: "{{ immich_storage_directory }}"
         state: directory
-        owner: "{{ podman_user }}"
-        group: "{{ podman_user }}"
+        owner: "{{ immich_user }}"
+        group: "{{ immich_user }}"
         mode: 0755
 
     - name: Ensure immich container network is created

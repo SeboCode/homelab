@@ -3,8 +3,8 @@
   ansible.builtin.file:
     path: "{{ immich_db_data_location }}"
     state: directory
-    owner: "{{ podman_user }}"
-    group: "{{ podman_user }}"
+    owner: "{{ immich_user }}"
+    group: "{{ immich_user }}"
     mode: 0755
     recurse: true
 
@@ -28,5 +28,5 @@
       - "{{ immich_network }}"
     container_network_aliases:
       - database
-    container_user: "{{ podman_user }}"
+    container_user: "{{ immich_user }}"
 

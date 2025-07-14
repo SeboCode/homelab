@@ -10,5 +10,5 @@
       - "{{ immich_network }}"
     container_network_aliases:
       - redis
-    container_user: "{{ podman_user }}"
+    container_user: "{{ immich_user }}"
 

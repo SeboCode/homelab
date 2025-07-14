@@ -1,11 +1,10 @@
 ---
 ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
 
-podman_user: podman-user-deploy
-podman_user_home: "/home/{{ podman_user }}"
 container_host: "{{ inventory_hostname }}"
 
-immich_storage_directory: "{{ podman_user_home }}/immich-storage"
+immich_user: immich-user
+immich_storage_directory: "/home/{{ immich_user }}/immich-storage"
 immich_network: immich_network
 immich_server_tag: v1.135.3
 immich_server_image: ghcr.io/immich-app/immich-server
