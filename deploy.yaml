@@ -9,9 +9,6 @@
   roles:
     - base
     # - firewall TODO
-    - user
-    - role: immich
-      become: true
-      become_user: "{{ podman_user }}"
+    - immich
     - alpine
 

@@ -1,8 +1,0 @@
----
-- name: "Ensure {{ podman_user }} is created"
-  ansible.builtin.include_role:
-    name: infrastructure/user
-  vars:
-    user_name: "{{ podman_user }}"
-    user_password: "{{ podman_user_password }}"
-
