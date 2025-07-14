@@ -1,2 +1,0 @@
----
-# immich_db_password: immich-db-password # Change for prod and use ansible vault for managing passwords and other secrets
