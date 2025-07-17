@@ -3,8 +3,11 @@ ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
 
 container_host: "{{ inventory_hostname }}"
 
+# Immich
 immich_user: immich-user
 immich_storage_directory: "/home/{{ immich_user }}/immich-storage"
+immich_upload_location: "{{ immich_storage_directory }}/library"
+immich_db_data_location: "{{ immich_storage_directory }}/postgres"
 immich_network: immich_network
 immich_server_tag: v1.135.3
 immich_server_image: ghcr.io/immich-app/immich-server
@@ -15,8 +18,23 @@ immich_redis_tag: 8-bookworm@sha256:fec42f399876eb6faf9e008570597741c87ff7662a54
 immich_redis_image: docker.io/valkey/valkey
 immich_postgres_tag: 14-vectorchord0.4.3-pgvectors0.2.0
 immich_postgres_image: ghcr.io/immich-app/postgres
-immich_upload_location: "{{ immich_storage_directory }}/library"
-immich_db_data_location: "{{ immich_storage_directory }}/postgres"
 immich_db_database_name: immich-database
 immich_db_username: immich-postgres
+
+# Nextcloud
+nextcloud_user: nextcloud-user
+nextcloud_storage_directory: "/home/{{ nextcloud_user }}/nextcloud-storage"
+nextcloud_config_location: "{{ nextcloud_storage_directory }}/config"
+nextcloud_data_location: "{{ nextcloud_storage_directory }}/data"
+nextcloud_db_data_location: "{{ nextcloud_storage_directory }}/postgres"
+nextcloud_network: nextcloud_network
+nextcloud_app_tag: 31.0.7-apache
+nextcloud_app_image: docker.io/nextcloud/nextcloud
+nextcloud_app_port: 20100
+nextcloud_redis_tag: 8.0.3
+nextcloud_redis_image: docker.io/redis/redis
+nextcloud_postgres_tag: 16.9
+nextcloud_postgres_image: docker.io/postgres/postgres
+nextcloud_db_database_name: nextcloud-database
+nextcloud_db_username: nextcloud-postgres
 

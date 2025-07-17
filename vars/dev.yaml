@@ -1,4 +1,11 @@
 ---
+# Immich
 immich_user_password: "$6$rVOhw/ClrcbnLo6y$xZexCAxW8Uttz57SBfusvBG0NBLXrughO6L5hYP8DqJ7XINtvpAMnM78Iej9/45E5h7ZQofQaEI1yE6vlt18A/" # this is 123456
 immich_db_password: immich-db-password
+
+# Nextcloud
+nextcloud_user_password: "$6$rVOhw/ClrcbnLo6y$xZexCAxW8Uttz57SBfusvBG0NBLXrughO6L5hYP8DqJ7XINtvpAMnM78Iej9/45E5h7ZQofQaEI1yE6vlt18A/" # this is 123456
+nextcloud_db_password: nextcloud-db-password
+nextcloud_admin_username: admin
+nextcloud_admin_password: admin
 
