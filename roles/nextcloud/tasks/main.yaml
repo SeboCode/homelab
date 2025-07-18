@@ -1,0 +1,32 @@
+---
+- name: "Ensure {{ nextcloud_user }} is created"
+  ansible.builtin.include_role:
+    name: infrastructure/user
+  vars:
+    user_name: "{{ nextcloud_user }}"
+    user_password: "{{ nextcloud_user_password }}"
+
+- name: Ensure nextcloud is running
+  become: true
+  become_user: "{{ nextcloud_user }}"
+  block:
+    - name: Ensure nextcloud storage directory location exists
+      ansible.builtin.file:
+        path: "{{ nextcloud_storage_directory }}"
+        state: directory
+        owner: "{{ nextcloud_user }}"
+        group: "{{ nextcloud_user }}"
+        mode: 0755
+
+    - name: Ensure nextcloud container network is created
+      containers.podman.podman_network:
+        name: "{{ nextcloud_network }}"
+        driver: bridge
+        recreate: false
+        state: present
+
+    - include_tasks: nextcloud-database.yaml
+    # TODO: Activate once https://github.com/nextcloud/docker/issues/763 is fixed
+    # - include_tasks: nextcloud-redis.yaml
+    - include_tasks: nextcloud-app.yaml
+

@@ -1,0 +1,32 @@
+---
+- name: Ensure nextcloud data location exists
+  ansible.builtin.file:
+    path: "{{ nextcloud_db_data_location }}"
+    state: directory
+    owner: "{{ nextcloud_user }}"
+    group: "{{ nextcloud_user }}"
+    mode: 0755
+    recurse: true
+
+- name: Instantiate nextcloud-postgres container
+  ansible.builtin.include_role:
+    name: infrastructure/container
+  vars:
+    container_name: nextcloud_postgres
+    container_image: "{{ nextcloud_postgres_image }}"
+    container_image_tag: "{{ nextcloud_postgres_tag }}"
+    container_env:
+      POSTGRES_DB: "{{ nextcloud_db_database_name }}"
+      POSTGRES_USER: "{{ nextcloud_db_username }}"
+      POSTGRES_PASSWORD: "{{ nextcloud_db_password }}"
+      POSTGRES_INITDB_ARGS: "--data-checksums"
+      # Uncomment the DB_STORAGE_TYPE: 'HDD' var if your database isn't stored on SSDs
+      DB_STORAGE_TYPE: "HDD"
+    container_volumes:
+      - "{{ nextcloud_db_data_location }}:/var/lib/postgresql/data"
+    container_networks:
+      - "{{ nextcloud_network }}"
+    container_network_aliases:
+      - database
+    container_user: "{{ nextcloud_user }}"
+
