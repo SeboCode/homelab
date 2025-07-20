@@ -24,6 +24,7 @@ immich_db_username: immich_pg_user
 # Nextcloud
 nextcloud_user: nextcloud-user
 nextcloud_storage_directory: "/home/{{ nextcloud_user }}/nextcloud-storage"
+nextcloud_apache_config_location: "{{ nextcloud_storage_directory }}/apache-config"
 nextcloud_config_location: "{{ nextcloud_storage_directory }}/config"
 nextcloud_data_location: "{{ nextcloud_storage_directory }}/data"
 nextcloud_db_data_location: "{{ nextcloud_storage_directory }}/postgres"

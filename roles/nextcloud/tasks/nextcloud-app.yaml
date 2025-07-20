@@ -8,8 +8,17 @@
     mode: 0755
     recurse: true
   loop:
+    - "{{ nextcloud_apache_config_location }}"
     - "{{ nextcloud_config_location }}"
     - "{{ nextcloud_data_location }}"
+
+- name: Ensure apache configs for none root port usage are available for mounting
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ nextcloud_apache_config_location }}"
+  loop:
+    - "ports.conf"
+    - "000-default.conf"
 
 - name: Instantiate nextcloud-app container
   ansible.builtin.include_role:
@@ -27,28 +36,19 @@
       # REDIS_HOST: redis
       NEXTCLOUD_ADMIN_USER: "{{ nextcloud_admin_username }}"
       NEXTCLOUD_ADMIN_PASSWORD: "{{ nextcloud_admin_password }}"
+      NEXTCLOUD_DATA_DIR: "/var/lib/nextcloud"
     container_volumes:
+      - "{{ nextcloud_apache_config_location }}/ports.conf:/etc/apache2/ports.conf"
+      - "{{ nextcloud_apache_config_location }}/000-default.conf:/etc/apache2/sites-available/000-default.conf"
       - "{{ nextcloud_config_location }}:/var/www/html:rw"
       - "{{ nextcloud_data_location }}:/var/lib/nextcloud:rw"
     container_ports:
-      - "{{ nextcloud_app_port }}:80"
+      - "{{ nextcloud_app_port }}:8080"
     container_networks:
       - "{{ nextcloud_network }}"
     container_network_aliases:
       - nextcloud-app
     container_user: "{{ nextcloud_user }}"
-
-- name: Ensure nextcloud data location exists in container
-  containers.podman.podman_container_exec:
-    name: nextcloud_app
-    user: root
-    command: "bash -c 'mkdir -p /var/lib/nextcloud && chown -R www-data:www-data /var/lib/nextcloud && chmod 750 /var/lib/nextcloud'"
-
-- name: Ensure nextcloud is properly configured
-  containers.podman.podman_container_exec:
-    name: nextcloud_app
-    user: www-data
-    command: "php occ maintenance:install --data-dir /var/lib/nextcloud"
 
 - name: Wait for nextcloud-app to be healthy
   ansible.builtin.uri:
