@@ -18,8 +18,8 @@ immich_redis_tag: 8-bookworm@sha256:fec42f399876eb6faf9e008570597741c87ff7662a54
 immich_redis_image: docker.io/valkey/valkey
 immich_postgres_tag: 14-vectorchord0.4.3-pgvectors0.2.0
 immich_postgres_image: ghcr.io/immich-app/postgres
-immich_db_database_name: immich-database
-immich_db_username: immich-postgres
+immich_db_database_name: immich_database
+immich_db_username: immich_pg_user
 
 # Nextcloud
 nextcloud_user: nextcloud-user
@@ -35,6 +35,6 @@ nextcloud_redis_tag: 8.0.3
 nextcloud_redis_image: docker.io/redis
 nextcloud_postgres_tag: 16.9
 nextcloud_postgres_image: docker.io/postgres
-nextcloud_db_database_name: nextcloud-database
-nextcloud_db_username: nextcloud-postgres
+nextcloud_db_database_name: nextcloud_database
+nextcloud_db_username: nextcloud_pg_user
 
