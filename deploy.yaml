@@ -8,7 +8,7 @@
   hosts: deployserver
   roles:
     - base
-    # - firewall TODO
+    - firewall
     - immich
     - nextcloud
     - alpine

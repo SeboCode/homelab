@@ -8,3 +8,36 @@
     - iptables
     - awall
 
+- name: Ensure awall service config and policy are available
+  ansible.builtin.copy:
+    src: "{{ item }}.json"
+    dest: /etc/awall/optional/
+  loop:
+    - global-policy
+    - immich
+    - nextcloud
+
+- name: Ensure awall service config and policy are enabled
+  community.general.awall:
+    name: "{{ item }}"
+    state: enabled
+  loop:
+    - global-policy
+    - immich
+    - nextcloud
+
+- name: Ensure iptables services are started, such that the awall activation will succeed
+  ansible.builtin.command: "sudo iptables -L"
+
+- name: Ensure ip6tables services are started, such that the awall activation will succeed
+  ansible.builtin.command: "sudo ip6tables -L"
+
+- name: Ensure awall policies are active
+  ansible.builtin.command: "sudo awall activate -f"
+  async: 5
+  poll: 0
+
+- name: Sleep to avoid ssh issues due to the awall policy application
+  ansible.builtin.pause:
+    seconds: 5
+

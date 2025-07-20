@@ -1,0 +1,19 @@
+{
+  "description": "Allow access to immich service",
+
+  "service": {
+    "immich": [
+      { "proto": "tcp", "port": 20000 },
+      { "proto": "udp", "port": 20000 }
+    ]
+  },
+
+  "filter": [
+    {
+      "in": "internet",
+      "out": "_fw",
+      "service": "immich",
+      "action": "accept"
+    }
+  ]
+}

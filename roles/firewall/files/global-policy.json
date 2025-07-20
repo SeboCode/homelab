@@ -1,0 +1,33 @@
+{
+  "description": "Global policy",
+
+  "zone": {
+    "internet": { "iface": "eth0" }
+  },
+
+  "policy": [{ "in": "internet", "action": "drop" }, { "action": "reject" }],
+
+  "filter": [
+    {
+      "in": "internet",
+      "out": "_fw",
+      "service": "ping",
+      "action": "accept",
+      "flow-limit": { "count": 10, "interval": 6 }
+    },
+    {
+      "in": "internet",
+      "out": "_fw",
+      "service": "ssh",
+      "action": "accept",
+      "conn-limit": { "count": 3, "interval": 60 }
+    }
+    {
+      "in": "_fw",
+      "out": "internet",
+      "service": "http",
+      "action": "accept",
+      "conn-limit": { "count": 3, "interval": 60 }
+    }
+  ]
+}

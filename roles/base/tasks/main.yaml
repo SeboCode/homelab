@@ -31,7 +31,7 @@
     name: tun
     state: present
 
-- name: Ensure ip_tables and iptable_nat modules are loaded, as podman needs them for networking
+- name: Ensure ip_tables and iptable_nat modules are loaded, as podman and awall need them for networking
   community.general.modprobe:
     name: "{{ item }}"
     state: present
