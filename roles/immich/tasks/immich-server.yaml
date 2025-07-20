@@ -30,14 +30,9 @@
       - immich-server
     container_user: "{{ immich_user }}"
 
-- name: Wait for immich-server to be healthy
-  ansible.builtin.uri:
-    # TODO: change to https
-    url: "http://localhost:{{ immich_server_port }}"
-    status_code: 200
-    validate_certs: false
-  register: result
-  until: result.status == 200
-  retries: 30
-  delay: 2
+- ansible.builtin.include_role:
+    name: infrastructure/http-healthcheck
+  vars:
+    service_name: immich-server
+    service_port: "{{ immich_server_port }}"
 

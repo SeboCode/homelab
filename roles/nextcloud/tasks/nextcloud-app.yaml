@@ -50,14 +50,9 @@
       - nextcloud-app
     container_user: "{{ nextcloud_user }}"
 
-- name: Wait for nextcloud-app to be healthy
-  ansible.builtin.uri:
-    # TODO: change to https
-    url: "http://localhost:{{ nextcloud_app_port }}"
-    status_code: 200
-    validate_certs: false
-  register: result
-  until: result.status == 200
-  retries: 30
-  delay: 2
+- ansible.builtin.include_role:
+    name: infrastructure/http-healthcheck
+  vars:
+    service_name: nextcloud-app
+    service_port: "{{ nextcloud_app_port }}"
 

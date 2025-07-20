@@ -1,0 +1,12 @@
+---
+- name: "Wait for {{ service_name }} to be healthy"
+  ansible.builtin.uri:
+    # TODO: change to https
+    url: "http://localhost:{{ service_port }}"
+    status_code: 200
+    validate_certs: false
+  register: result
+  until: result.status == 200
+  retries: 30
+  delay: 2
+
