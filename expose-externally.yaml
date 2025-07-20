@@ -10,7 +10,10 @@
 
     - name: Enable dev port on public interface
       ansible.posix.firewalld:
-        port: "{{ immich_server_port }}/tcp"
+        port: "{{ item }}/tcp"
         zone: public
         state: enabled
+      loop:
+        - "{{ immich_server_port }}"
+        - "{{ nextcloud_app_port }}"
 
