@@ -56,3 +56,11 @@
     service_name: nextcloud-app
     service_port: "{{ nextcloud_app_port }}"
 
+- name: Ensure nextcloud users exist
+  containers.podman.podman_container_exec:
+    name: nextcloud_app
+    command: >
+      bash -c 'export NC_PASS="{{ nextcloud_user_default_password }}" && php occ user:add --password-from-env --display-name "{{ item.display_name }}" --group "user" {{ item.username }}'
+  loop: "{{ nextcloud_user_definitions }}"
+  ignore_errors: true
+

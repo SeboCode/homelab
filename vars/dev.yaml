@@ -8,4 +8,10 @@ nextcloud_user_password: "$6$rVOhw/ClrcbnLo6y$xZexCAxW8Uttz57SBfusvBG0NBLXrughO6
 nextcloud_db_password: nextcloud-db-password
 nextcloud_admin_username: admin
 nextcloud_admin_password: admin
+nextcloud_user_default_password: default_password1*
+nextcloud_user_definitions:
+  - username: test_user1
+    display_name: "Test User 1"
+  - username: test_user2
+    display_name: "Test User 2"
 
