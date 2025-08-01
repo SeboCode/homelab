@@ -1,4 +1,8 @@
-# immich-setup
+# Homelab
+
+This is the setup script to configure my private homelab server. It builds on Ansible to configure the homelab server
+and provision the services using Podman. The Ansible playbook is built such that it configures an Alpine Linux machine.
+For local development, the Ansible playbook is run on an Alpine Linux VM, provisioned using Vagrant.
 
 # Installation guide
 
