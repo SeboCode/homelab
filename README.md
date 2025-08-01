@@ -1,8 +1,8 @@
 # immich-setup
 
-# Setup
+# Installation guide
 
-This is the setup guide to install and configure the homelab server.
+This is the installation guide to install the os and configure the homelab server.
 
 ## OS installation and manual setup
 
@@ -39,3 +39,13 @@ This is the setup guide to install and configure the homelab server.
 ## Run Ansible script against system
 
 TODO
+
+# Services
+
+The following services are available on the machine:
+| Service | Reserved Portrange | Exposed Service | Port of exposed Service |
+| :------ | -----------------: | :-------------- | ----------------------: |
+| Immich | 20000 - 20099 | | |
+| | | Immich Server | 20000 |
+| NextCloud | 20100 - 20199 | | |
+| | | NextCloud Server | 20100 |

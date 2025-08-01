@@ -8,8 +8,8 @@
   hosts: deployserver
   roles:
     - base
-    - firewall
-    - immich
-    - nextcloud
-    - alpine
+    # - firewall
+    # - immich
+    # - nextcloud
+    # - alpine
 
