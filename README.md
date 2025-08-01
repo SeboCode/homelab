@@ -10,9 +10,9 @@ This is the installation guide to install the os and configure the homelab serve
 
 ## OS installation and manual setup
 
-- Install AlpineLinux to the drive.
-  - Download latest basic AlpineLinux iso from the official [website](https://alpinelinux.org/downloads/) and verify its integrity and authenticity.
-  - Setup AlpineLinux according to documentation in "System Disk Mode (sys)".
+- Install Alpine Linux to the drive.
+  - Download latest basic Alpine Linux iso from the official [website](https://alpinelinux.org/downloads/) and verify its integrity and authenticity.
+  - Setup Alpine Linux according to documentation in "System Disk Mode (sys)".
     - Create a none-root user here or later on, with which the Ansible script is run later on.
     - Choose "OpenSSH" when prompted for the ssh server.
     - Choose "sys" when prompted for the Disk Mode.
@@ -22,7 +22,7 @@ This is the installation guide to install the os and configure the homelab serve
   - Create new ssh key file for each device that needs to connect to the homelab machine via ssh using `ssh-keygen`.
   - Add ssh configuration on the devices to more easily connect to the homelab machine.
   - Copy public key of the newly created ssh keys to the data usb drive
-  - Install mount on the AlpineLinux homelab node `apk add mount`.
+  - Install mount on the Alpine Linux homelab node `apk add mount`.
   - Mount the data usb drive using `mount /dev/sdXY /media/usb`.
 - Setup SSH daemon
   - Copy sshd configuration files to the sshd config folder using `cp /media/usb/sshd_config/*.conf /etc/ssh/sshd_config.d/`.
@@ -35,7 +35,7 @@ This is the installation guide to install the os and configure the homelab serve
   - Create an authorized_keys file in the .ssh directory its owner and mode `touch authorized_keys && chown <username> authorized_keys && chmod 600 authorized_keys`.
   - Populate authorized_keys file with ssh public keys found on the mounted usb drive `cat /media/usb/<pulic-key.pub> >> authorized_keys`.
 - Elevate Ansible user privileges
-  - Install doas (AlpineLinux sudo equivalent) `apk add doas`.
+  - Install doas (Alpine Linux sudo equivalent) `apk add doas`.
   - Give new user superuser privileges `echo "permit persist keepenv <username>" >> /etc/doas.conf`.
 - Prepare system to be Ansible target
   - Install Python on the system `apk add python3`.
