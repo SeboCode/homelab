@@ -1,2 +1,3 @@
 platform-stack/deployserver/.vagrant
+inventory/prod.ini
 vars/prod.yaml
