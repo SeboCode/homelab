@@ -15,8 +15,8 @@ This is the setup guide to install and configure the homelab server.
   - Reboot and login as root.
 - Setup SSH daemon
   - Install mount `apk add mount`.
-  - Mount usb drive with the documents found in the "manual-setup-documents" folder using `mount /dev/sdXY /media/usb`.
-  - Copy sshd configuration files to the sshd config folder using `cp /media/usb/sshd_config/20-*.conf /etc/ssh/sshd_config.d/`.
+  - Mount usb drive with the documents found in the "manual-setup-data" folder using `mount /dev/sdXY /media/usb`.
+  - Copy sshd configuration files to the sshd config folder using `cp /media/usb/sshd_config/*.conf /etc/ssh/sshd_config.d/`.
   - Restart sshd service `rc-service sshd restart`.
 - Setup Ansible user
   - Create none-root user, with which the Ansible script will be run later on using `setup-user`.
