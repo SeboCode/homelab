@@ -7,7 +7,7 @@ This is the setup guide to install and configure the homelab server.
 ## OS installation and manual setup
 
 - Install AlpineLinux to the drive.
-  - Download latest basic AlpineLinux iso from the official (website)[https://alpinelinux.org/downloads/] and verify its integrity and authenticity.
+  - Download latest basic AlpineLinux iso from the official [website](https://alpinelinux.org/downloads/) and verify its integrity and authenticity.
   - Setup AlpineLinux according to documentation in "System Disk Mode (sys)".
     - Create a none-root user here or later on, with which the Ansible script is run later on.
     - Choose "OpenSSH" when prompted for the ssh server.
@@ -18,9 +18,9 @@ This is the setup guide to install and configure the homelab server.
   - Create new ssh key file for each device that needs to connect to the homelab machine via ssh using `ssh-keygen`.
   - Add ssh configuration on the devices to more easily connect to the homelab machine.
   - Copy public key of the newly created ssh keys to the data usb drive
-- Setup SSH daemon
-  - Install mount `apk add mount`.
+  - Install mount on the AlpineLinux homelab node `apk add mount`.
   - Mount the data usb drive using `mount /dev/sdXY /media/usb`.
+- Setup SSH daemon
   - Copy sshd configuration files to the sshd config folder using `cp /media/usb/sshd_config/*.conf /etc/ssh/sshd_config.d/`.
   - Restart sshd service `rc-service sshd restart`.
 - Setup Ansible user
