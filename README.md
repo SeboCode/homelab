@@ -13,9 +13,14 @@ This is the setup guide to install and configure the homelab server.
     - Choose "OpenSSH" when prompted for the ssh server.
     - Choose "sys" when prompted for the Disk Mode.
   - Reboot and login as root.
+- Prepare data
+  - Create data usb drive with the documents found in the "manual-setup-data" folder.
+  - Create new ssh key file for each device that needs to connect to the homelab machine via ssh using `ssh-keygen`.
+  - Add ssh configuration on the devices to more easily connect to the homelab machine.
+  - Copy public key of the newly created ssh keys to the data usb drive
 - Setup SSH daemon
   - Install mount `apk add mount`.
-  - Mount usb drive with the documents found in the "manual-setup-data" folder using `mount /dev/sdXY /media/usb`.
+  - Mount the data usb drive using `mount /dev/sdXY /media/usb`.
   - Copy sshd configuration files to the sshd config folder using `cp /media/usb/sshd_config/*.conf /etc/ssh/sshd_config.d/`.
   - Restart sshd service `rc-service sshd restart`.
 - Setup Ansible user
