@@ -43,7 +43,8 @@ This is the installation guide to install the os and configure the homelab serve
 ## Run Ansible script against system
 
 1. Check that all secrets and variable values for all services are set correctly in the `vars/prod.yaml` file.
-2. Execute the bash script `prod.sh`.
+2. Check that the `inventory/prod.ini` file is configured correctly.
+3. Execute the bash script `prod.sh`.
 
 # Services
 
