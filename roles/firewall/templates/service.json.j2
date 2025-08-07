@@ -1,0 +1,19 @@
+{
+  "description": "Allow access to {{ item.service_name }} service",
+
+  "service": {
+    "{{ item.service_name }}": [
+      { "proto": "tcp", "port": {{ item.service_port }} },
+      { "proto": "udp", "port": {{ item.service_port }} }
+    ]
+  },
+
+  "filter": [
+    {
+      "in": "internet",
+      "out": "_fw",
+      "service": "{{ item.service_name }}",
+      "action": "accept"
+    }
+  ]
+}

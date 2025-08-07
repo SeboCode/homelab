@@ -8,14 +8,20 @@
     - iptables
     - awall
 
-- name: Ensure awall service config and policy are available
+- name: Ensure awall service policy are available
   ansible.builtin.copy:
-    src: "{{ item }}.json"
+    src: global-policy.json
     dest: /etc/awall/optional/
+
+- name: Ensure awall service configs are available
+  ansible.builtin.template:
+    src: service.json.j2
+    dest: "/etc/awall/optional/{{ item.service_name }}.json"
   loop:
-    - global-policy
-    - immich
-    - nextcloud
+    - service_name: immich
+      service_port: "{{ immich_server_port }}"
+    - service_name: nextcloud
+      service_port: "{{ nextcloud_server_port }}"
 
 - name: Ensure awall service config and policy are enabled
   community.general.awall:
