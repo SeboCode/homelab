@@ -28,5 +28,5 @@
     - include_tasks: nextcloud-database.yaml
     # TODO: Activate once https://github.com/nextcloud/docker/issues/763 is fixed
     # - include_tasks: nextcloud-redis.yaml
-    - include_tasks: nextcloud-app.yaml
+    - include_tasks: nextcloud-server.yaml
 

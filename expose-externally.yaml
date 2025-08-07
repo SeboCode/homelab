@@ -15,5 +15,5 @@
         state: enabled
       loop:
         - "{{ immich_server_port }}"
-        - "{{ nextcloud_app_port }}"
+        - "{{ nextcloud_server_port }}"
 

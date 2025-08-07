@@ -25,9 +25,9 @@ nextcloud_config_location: "{{ nextcloud_storage_directory }}/config"
 nextcloud_data_location: "{{ nextcloud_storage_directory }}/data"
 nextcloud_db_data_location: "{{ nextcloud_storage_directory }}/postgres"
 nextcloud_network: nextcloud_network
-nextcloud_app_tag: 31.0.7-apache
-nextcloud_app_image: docker.io/nextcloud
-nextcloud_app_port: 20100
+nextcloud_server_tag: 31.0.7-apache
+nextcloud_server_image: docker.io/nextcloud
+nextcloud_server_port: 20100
 nextcloud_redis_tag: 8.0.3
 nextcloud_redis_image: docker.io/redis
 nextcloud_postgres_tag: 16.9
