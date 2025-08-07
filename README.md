@@ -53,3 +53,5 @@ The following services are available on the machine:
 | | | Immich Server | 20000 |
 | NextCloud | 20100 - 20199 | | |
 | | | NextCloud Server | 20100 |
+| PhotoPrism | 20200 - 20299 | | |
+| | | PhotoPrism Server | 20200 |

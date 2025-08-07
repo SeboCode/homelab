@@ -1,0 +1,38 @@
+---
+- name: Ensure photoprism data location exists
+  ansible.builtin.file:
+    path: "{{ photoprism_db_data_location }}"
+    state: directory
+    owner: "{{ photoprism_user }}"
+    group: "{{ photoprism_user }}"
+    mode: 0755
+    recurse: true
+
+- name: Instantiate photoprism-mariadb container
+  ansible.builtin.include_role:
+    name: infrastructure/container
+  vars:
+    container_name: photoprism_mariadb
+    container_image: "{{ photoprism_mariadb_image }}"
+    container_image_tag: "{{ photoprism_mariadb_tag }}"
+    container_command:
+      - "--innodb-buffer-pool-size=512M"
+      - "--transaction-isolation=READ-COMMITTED"
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
+      - "--max-connections=512"
+      - "--innodb-rollback-on-timeout=OFF"
+      - "--innodb-lock-wait-timeout=120"
+    container_env:
+      MARIADB_DATABASE: "{{ photoprism_db_database_name }}"
+      MARIADB_USER: "{{ photoprism_db_username }}"
+      MARIADB_PASSWORD: "{{ photoprism_db_password }}"
+      MARIADB_ROOT_PASSWORD: "{{ photoprism_db_root_password }}"
+    container_volumes:
+      - "{{ photoprism_db_data_location }}:/var/lib/mysql"
+    container_networks:
+      - "{{ photoprism_network }}"
+    container_network_aliases:
+      - database
+    container_user: "{{ photoprism_user }}"
+

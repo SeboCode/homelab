@@ -1,0 +1,30 @@
+---
+- name: "Ensure {{ photoprism_user }} is created"
+  ansible.builtin.include_role:
+    name: infrastructure/user
+  vars:
+    user_name: "{{ photoprism_user }}"
+    user_password: "{{ photoprism_user_password }}"
+
+- name: Ensure photoprism is running
+  become: true
+  become_user: "{{ photoprism_user }}"
+  block:
+    - name: Ensure photoprism storage directory location exists
+      ansible.builtin.file:
+        path: "{{ photoprism_storage_directory }}"
+        state: directory
+        owner: "{{ photoprism_user }}"
+        group: "{{ photoprism_user }}"
+        mode: 0755
+
+    - name: Ensure photoprism container network is created
+      containers.podman.podman_network:
+        name: "{{ photoprism_network }}"
+        driver: bridge
+        recreate: false
+        state: present
+
+    - include_tasks: photoprism-database.yaml
+    - include_tasks: photoprism-server.yaml
+

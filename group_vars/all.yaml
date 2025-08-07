@@ -35,3 +35,18 @@ nextcloud_postgres_image: docker.io/postgres
 nextcloud_db_database_name: nextcloud_database
 nextcloud_db_username: nextcloud_pg_user
 
+# PhotoPrism
+photoprism_user: photoprism-user
+photoprism_storage_directory: "/home/{{ photoprism_user }}/photoprism-storage"
+photoprism_originals_location: "{{ photoprism_storage_directory }}/originals"
+photoprism_storage_location: "{{ photoprism_storage_directory }}/storage"
+photoprism_db_data_location: "{{ photoprism_storage_directory }}/mariadb"
+photoprism_network: photoprism_network
+photoprism_server_tag: 250707
+photoprism_server_image: docker.io/photoprism/photoprism
+photoprism_server_port: 20200
+photoprism_mariadb_tag: 11.8.2
+photoprism_mariadb_image: docker.io/mariadb
+photoprism_db_database_name: photoprism_database
+photoprism_db_username: photoprism_mariadb_user
+

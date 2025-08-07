@@ -12,4 +12,5 @@
     - firewall
     - service/immich
     - service/nextcloud
+    - service/photoprism
 
