@@ -27,15 +27,21 @@
     - nextcloud
 
 - name: Ensure iptables services are started, such that the awall activation will succeed
-  ansible.builtin.command: "sudo iptables -L"
+  ansible.builtin.command: "iptables -L"
+  become: true
+  become_method: "{{ superuser_method }}"
 
 - name: Ensure ip6tables services are started, such that the awall activation will succeed
-  ansible.builtin.command: "sudo ip6tables -L"
+  ansible.builtin.command: "ip6tables -L"
+  become: true
+  become_method: "{{ superuser_method }}"
 
 - name: Ensure awall policies are active
-  ansible.builtin.command: "sudo awall activate -f"
+  ansible.builtin.command: "awall activate -f"
   async: 5
   poll: 0
+  become: true
+  become_method: "{{ superuser_method }}"
 
 - name: Sleep to avoid ssh issues due to the awall policy application
   ansible.builtin.pause:
