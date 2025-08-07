@@ -1,0 +1,22 @@
+---
+- name: Load current AlpineLinux version in base64 format
+  ansible.builtin.slurp:
+    src: /etc/alpine-release
+  register: alpine_release_raw # This is in the format vX.YY.Z
+
+- name: Set AlpineLinux major version
+  ansible.builtin.set_fact:
+    alpine_major_version: "v{{ (alpine_release_raw['content'] | b64decode).split('.')[0] }}.{{ (alpine_release_raw['content'] | b64decode).split('.')[1] }}"
+
+- name: Ensure mirrors are configured based on the installed AlpineLinux version
+  ansible.builtin.copy:
+    dest: /etc/apk/repositories
+    content: |
+      https://debian.ethz.ch/alpine/{{ alpine_major_version }}/main
+      https://debian.ethz.ch/alpine/{{ alpine_major_version }}/community
+      https://mirrors.edge.kernel.org/alpine/{{ alpine_major_version }}/main
+      https://mirrors.edge.kernel.org/alpine/{{ alpine_major_version }}/community
+    owner: root
+    group: root
+    mode: 0644
+

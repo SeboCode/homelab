@@ -7,6 +7,7 @@
 - name: Configure server node
   hosts: deployserver
   roles:
+    - mirror
     - base
     - firewall
     - immich
