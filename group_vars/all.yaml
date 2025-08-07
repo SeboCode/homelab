@@ -1,6 +1,4 @@
 ---
-ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
-
 container_host: "{{ inventory_hostname }}"
 
 # Immich
