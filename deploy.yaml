@@ -10,6 +10,6 @@
     - mirror
     - base
     - firewall
-    - immich
-    - nextcloud
+    - service/immich
+    - service/nextcloud
 
