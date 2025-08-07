@@ -1,6 +1,4 @@
 ---
-container_host: "{{ inventory_hostname }}"
-
 # Immich
 immich_user: immich-user
 immich_storage_directory: "/home/{{ immich_user }}/immich-storage"
