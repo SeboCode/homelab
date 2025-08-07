@@ -33,6 +33,7 @@
     ports: "{{ container_ports }}"
     network: "{{ container_networks }}"
     network_aliases: "{{ container_network_aliases }}"
+    command: "{{ container_command | default(omit) }}"
 
 - name: "Ensure {{ container_name }} is started after reboot of host by adding it to executor script"
   lineinfile:
