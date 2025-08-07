@@ -1,5 +1,0 @@
----
-- name: Commit changes to persistent storage
-  community.general.lbu:
-    commit: true
-
