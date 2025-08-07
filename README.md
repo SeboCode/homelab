@@ -56,3 +56,16 @@ The following services are available on the machine:
 | | | NextCloud Server | 20100 |
 | PhotoPrism | 20200 - 20299 | | |
 | | | PhotoPrism Server | 20200 |
+
+## Introduce new service
+
+To introduce a new service, follow these steps:
+
+1. Create a new role in the `services` directory with the name of the service.
+   1. Implement new role in accordance with the other roles.
+   2. Every service has its own user to increase security and have a clearer separation of the independent services.
+2. Add all relevant configuration for the new service to the `group_vars/all.yaml` file.
+   1. Secrets and other variables that are environment dependent have to be added to the `vars/<environment>.yaml` file.
+3. Add the new service to the firewall by updating the `firewall` role.
+4. Add the new service to the `deployment.yaml` playbook.
+5. Add the port to the vagrant configuration to be forwarded to the host machine for accessing the service locally.
