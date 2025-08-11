@@ -1,0 +1,38 @@
+---
+- name: Ensure traefik configuration location exists
+  ansible.builtin.file:
+    path: "{{ traefik_config_location }}"
+    state: directory
+    owner: "{{ traefik_user }}"
+    group: "{{ traefik_user }}"
+    mode: 0755
+    recurse: true
+
+- name: Instantiate traefik container
+  ansible.builtin.include_role:
+    name: infrastructure/container
+  vars:
+    container_name: traefik
+    container_image: "{{ traefik_image }}"
+    container_image_tag: "{{ traefik_tag }}"
+    container_command:
+      - "--entrypoints.websecure.address=:{{ traefik_websecure_port }}"
+      # - "--entrypoints.websecure.http.tls=true"
+      - "--api.dashboard=true"
+      - "--api.insecure=true" # TODO set to false
+    container_volumes: [] # TODO add certificates
+    container_ports:
+      - "{{ traefik_websecure_port }}:{{ traefik_websecure_port }}"
+      - "{{ traefik_dashboard_port }}:8080"
+    container_networks:
+      - "{{ traefik_network }}"
+    container_network_aliases:
+      - traefik
+    container_user: "{{ traefik_user }}"
+
+- ansible.builtin.include_role:
+    name: infrastructure/http-healthcheck
+  vars:
+    service_name: traefik
+    service_port: "{{ traefik_dashboard_port }}"
+

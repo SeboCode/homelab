@@ -17,4 +17,5 @@
         - "{{ immich_server_port }}"
         - "{{ nextcloud_server_port }}"
         - "{{ photoprism_server_port }}"
+        - "{{ traefik_dashboard_port }}"
 

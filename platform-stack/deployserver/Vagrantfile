@@ -12,6 +12,8 @@ Vagrant.configure("2") do |config|
       env_config.vm.box_version = "4.3.12"
       env_config.vm.hostname = env[:environment]
       env_config.vm.network :forwarded_port, guest: 22, host: env[:ssh_port], id: "ssh"
+      env_config.vm.network :forwarded_port, guest: 10000, host: 10000, id: "traefik"
+      env_config.vm.network :forwarded_port, guest: 10001, host: 10001, id: "traefik-dashboard"
       env_config.vm.network :forwarded_port, guest: 20000, host: 20000, id: "immich"
       env_config.vm.network :forwarded_port, guest: 20100, host: 20100, id: "nextcloud"
       env_config.vm.network :forwarded_port, guest: 20200, host: 20200, id: "photoprism"

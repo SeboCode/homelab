@@ -1,0 +1,29 @@
+---
+- name: "Ensure {{ traefik_user }} is created"
+  ansible.builtin.include_role:
+    name: infrastructure/user
+  vars:
+    user_name: "{{ traefik_user }}"
+    user_password: "{{ traefik_user_password }}"
+
+- name: Ensure traefik is running
+  become: true
+  become_user: "{{ traefik_user }}"
+  block:
+    - name: Ensure traefik storage directory location exists
+      ansible.builtin.file:
+        path: "{{ traefik_storage_directory }}"
+        state: directory
+        owner: "{{ traefik_user }}"
+        group: "{{ traefik_user }}"
+        mode: 0755
+
+    - name: Ensure traefik container network is created
+      containers.podman.podman_network:
+        name: "{{ traefik_network }}"
+        driver: bridge
+        recreate: false
+        state: present
+
+    - include_tasks: traefik.yaml
+

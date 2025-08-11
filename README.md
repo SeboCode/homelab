@@ -51,6 +51,9 @@ This is the installation guide to install the os and configure the homelab serve
 The following services are available on the machine:
 | Service | Reserved Portrange | Exposed Service | Port of exposed Service |
 | :------ | -----------------: | :-------------- | ----------------------: |
+| Traefik | 10000 - 19999 | | |
+| | | Traefik Websecure | 10000 |
+| | | Traefik Dashboard | 10001 |
 | Immich | 20000 - 20099 | | |
 | | | Immich Server | 20000 |
 | NextCloud | 20100 - 20199 | | |

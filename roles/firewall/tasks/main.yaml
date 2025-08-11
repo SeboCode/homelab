@@ -18,6 +18,8 @@
     src: service.json.j2
     dest: "/etc/awall/optional/{{ item.service_name }}.json"
   loop:
+    - service_name: traefik
+      service_port: "{{ traefik_dashboard_port }}"
     - service_name: immich
       service_port: "{{ immich_server_port }}"
     - service_name: nextcloud
@@ -31,6 +33,7 @@
     state: enabled
   loop:
     - global-policy
+    - traefik
     - immich
     - nextcloud
     - photoprism
