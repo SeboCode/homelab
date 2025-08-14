@@ -2,5 +2,3 @@
 container_env: {}
 container_volumes: []
 container_ports: []
-container_networks: []
-container_network_aliases: []
