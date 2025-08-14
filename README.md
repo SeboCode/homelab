@@ -70,6 +70,6 @@ To introduce a new service, follow these steps:
    2. Every service has its own user to increase security and have a clearer separation of the independent services.
 2. Add all relevant configuration for the new service to the `group_vars/all.yaml` file.
    1. Secrets and other variables that are environment dependent have to be added to the `vars/<environment>.yaml` file.
-3. Add the new service to the firewall by updating the `firewall` role.
+3. Add the new service to the reverse proxy by updating the `traefik` role.
 4. Add the new service to the `deployment.yaml` playbook.
 5. Add the port to the vagrant configuration to be forwarded to the host machine for accessing the service locally.

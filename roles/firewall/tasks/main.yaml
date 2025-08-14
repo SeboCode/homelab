@@ -8,24 +8,13 @@
     - iptables
     - awall
 
-- name: Ensure awall service policy are available
+- name: Ensure awall policy and traefik configs are available
   ansible.builtin.copy:
-    src: global-policy.json
+    src: "{{ item }}"
     dest: /etc/awall/optional/
-
-- name: Ensure awall service configs are available
-  ansible.builtin.template:
-    src: service.json.j2
-    dest: "/etc/awall/optional/{{ item.service_name }}.json"
   loop:
-    - service_name: traefik
-      service_port: "{{ traefik_dashboard_port }}"
-    - service_name: immich
-      service_port: "{{ immich_server_port }}"
-    - service_name: nextcloud
-      service_port: "{{ nextcloud_server_port }}"
-    - service_name: photoprism
-      service_port: "{{ photoprism_server_port }}"
+    - global-policy.json
+    - traefik.json
 
 - name: Ensure awall service config and policy are enabled
   community.general.awall:
@@ -34,9 +23,6 @@
   loop:
     - global-policy
     - traefik
-    - immich
-    - nextcloud
-    - photoprism
 
 - name: Ensure iptables services are started, such that the awall activation will succeed
   ansible.builtin.command: "iptables -L"
