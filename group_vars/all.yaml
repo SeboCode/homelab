@@ -2,12 +2,12 @@
 # Traefik
 traefik_user: traefik-user
 traefik_storage_directory: "/home/{{ traefik_user }}/traefik-storage"
-traefik_config_location: "{{ traefik_storage_directory }}/config"
+traefik_service_location: "{{ traefik_storage_directory }}/service"
 traefik_network: traefik_network
 traefik_image: docker.io/traefik
 traefik_tag: v3.5.0
 traefik_websecure_port: 10000
-traefik_dashboard_port: 10001
+traefik_dashboard_port: 8080
 
 # Immich
 immich_user: immich-user
