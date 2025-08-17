@@ -2,8 +2,9 @@
 # Traefik
 traefik_user: traefik-user
 traefik_storage_directory: "/home/{{ traefik_user }}/traefik-storage"
-traefik_service_location: "{{ traefik_storage_directory }}/service"
-traefik_network: traefik_network
+traefik_config_location: "{{ traefik_storage_directory }}/config"
+traefik_config_dynamic_location: "{{ traefik_storage_directory }}/config_dynamic"
+traefik_certs_location: "{{ traefik_storage_directory }}/certs"
 traefik_image: docker.io/traefik
 traefik_tag: v3.5.0
 traefik_websecure_port: 10000

@@ -1,12 +1,46 @@
 ---
 - name: Ensure traefik configuration location exists
   ansible.builtin.file:
-    path: "{{ traefik_service_location }}"
+    path: "{{ item }}"
     state: directory
     owner: "{{ traefik_user }}"
     group: "{{ traefik_user }}"
     mode: 0755
     recurse: true
+  loop:
+    - "{{ traefik_config_location }}"
+    - "{{ traefik_config_dynamic_location }}"
+    - "{{ traefik_certs_location }}"
+
+- name: Ensure traefik config is available
+  ansible.builtin.template:
+    src: traefik.yaml.j2
+    dest: "{{ traefik_config_location }}/traefik.yaml"
+
+- name: Ensure traefik service configs are available
+  ansible.builtin.template:
+    src: service.yaml.j2
+    dest: "{{ traefik_config_dynamic_location }}/{{ item.service_name }}.yaml"
+  loop:
+    - service_name: immich
+      service_port: "{{ immich_server_port }}"
+    - service_name: nextcloud
+      service_port: "{{ nextcloud_server_port }}"
+    - service_name: photoprism
+      service_port: "{{ photoprism_server_port }}"
+
+- name: Ensure certs config is available
+  ansible.builtin.copy:
+    src: certs.yaml
+    dest: "{{ traefik_config_dynamic_location }}"
+
+- name: Ensure traefik certificates are available
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ traefik_certs_location }}"
+  loop:
+    - certs/server.crt
+    - certs/server.key
 
 - name: Instantiate traefik container
   ansible.builtin.include_role:
@@ -15,30 +49,13 @@
     container_name: traefik
     container_image: "{{ traefik_image }}"
     container_image_tag: "{{ traefik_tag }}"
-    container_command:
-      - "--entrypoints.web.address=:{{ traefik_websecure_port }}"
-      - "--api.dashboard=true"
-      - "--api.insecure=true" # TODO set to false
-      - "--providers.file.directory=/etc/traefik/service.d"
-      - "--providers.file.watch=true"
     container_volumes:
-      # TODO add certificates
-      - "{{ traefik_service_location }}:/etc/traefik/service.d:ro"
+      - "{{ traefik_config_location }}/traefik.yaml:/etc/traefik/traefik.yaml:ro" # This is a default location which traefik searches for a static configuration file.
+      - "{{ traefik_config_dynamic_location }}:/etc/traefik/dynamic:ro"
+      - "{{ traefik_certs_location }}:/etc/traefik/certs:ro"
     container_networks:
       - host # Has to be exposed to the host, as it needs access to all services in its localhost network
     container_user: "{{ traefik_user }}"
-
-- name: Ensure traefik service configs are available
-  ansible.builtin.template:
-    src: service.yaml.j2
-    dest: "{{ traefik_service_location }}/{{ item.service_name }}.yaml"
-  loop:
-    - service_name: immich
-      service_port: "{{ immich_server_port }}"
-    - service_name: nextcloud
-      service_port: "{{ nextcloud_server_port }}"
-    - service_name: photoprism
-      service_port: "{{ photoprism_server_port }}"
 
 - ansible.builtin.include_role:
     name: infrastructure/http-healthcheck

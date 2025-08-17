@@ -1,0 +1,11 @@
+entryPoints:
+  websecure:
+    address: ":{{ traefik_websecure_port }}"
+api:
+  dashboard: true
+  insecure: true # TODO remove
+providers:
+  file:
+    directory: "/etc/traefik/dynamic"
+    watch: true
+

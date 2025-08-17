@@ -2,14 +2,13 @@ http:
   routers:
     {{ item.service_name }}:
       entryPoints:
-        - web
-        #- websecure                      # Match traffic coming to the HTTPS entrypoint
-      rule: "Host(`{{ item.service_name }}.{{ domain }}`)"     # Match requests where the HTTP Host header is your Tailscale IP
-      service: {{ item.service_name }}-service             # Forward to this service
-      #tls: {}                             # Empty block = use global TLS settings (from traefik.yml)
+        - websecure
+      rule: "Host(`{{ item.service_name }}.{{ domain }}`)"
+      service: {{ item.service_name }}-service
+      tls: {} # Empty block means to use the global TLS settings
   services:
     {{ item.service_name }}-service:
       loadBalancer:
         servers:
-          - url: "http://localhost:{{ item.service_port }}"  # Where {{ item.service_name }} is actually listening inside the host or network
+          - url: "http://localhost:{{ item.service_port }}"
 
