@@ -1,4 +1,11 @@
 entryPoints:
+  web:
+    address: ":{{ traefik_web_port }}"
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
   websecure:
     address: ":{{ traefik_websecure_port }}"
 api:
