@@ -12,8 +12,8 @@
   ansible.builtin.copy:
     dest: /etc/apk/repositories
     content: |
-      https://debian.ethz.ch/alpine/{{ alpine_major_version }}/main
-      https://debian.ethz.ch/alpine/{{ alpine_major_version }}/community
+      https://alpine.ethz.ch/alpine/{{ alpine_major_version }}/main
+      https://alpine.ethz.ch/alpine/{{ alpine_major_version }}/community
       https://mirrors.edge.kernel.org/alpine/{{ alpine_major_version }}/main
       https://mirrors.edge.kernel.org/alpine/{{ alpine_major_version }}/community
     owner: root

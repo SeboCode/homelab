@@ -27,8 +27,8 @@ Vagrant.configure("2") do |config|
       env_config.vm.provision "vm-setup", type: "shell", inline: <<-SHELL
         echo "Set correct alpine mirror list..."
         sudo truncate -s 0 /etc/apk/repositories
-        sudo echo "https://debian.ethz.ch/alpine/v3.19/main" >> /etc/apk/repositories
-        sudo echo "https://debian.ethz.ch/alpine/v3.19/community" >> /etc/apk/repositories
+        sudo echo "https://alpine.ethz.ch/alpine/v3.19/main" >> /etc/apk/repositories
+        sudo echo "https://alpine.ethz.ch/alpine/v3.19/community" >> /etc/apk/repositories
         echo "Upgrade all installed packages including the kernel..."
         sudo apk update
         sudo apk upgrade
