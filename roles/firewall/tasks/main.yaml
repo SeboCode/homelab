@@ -10,11 +10,13 @@
 
 - name: Ensure awall policy and traefik configs are available
   ansible.builtin.copy:
-    src: "{{ item }}"
+    src: global-policy.json
     dest: /etc/awall/optional/
-  loop:
-    - global-policy.json
-    - traefik.json
+
+- name: Ensure traefik configs is available
+  ansible.builtin.template:
+    src: traefik.json.j2
+    dest: /etc/awall/optional/traefik.json
 
 - name: Ensure awall service config and policy are enabled
   community.general.awall:
@@ -35,13 +37,14 @@
   become_method: "{{ superuser_method }}"
 
 - name: Ensure awall policies are active
-  ansible.builtin.command: "awall activate -f"
-  async: 5
+  community.general.awall:
+    activate: true
+  async: 3
   poll: 0
   become: true
   become_method: "{{ superuser_method }}"
 
 - name: Sleep to avoid ssh issues due to the awall policy application
   ansible.builtin.pause:
-    seconds: 5
+    seconds: 3
 

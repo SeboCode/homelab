@@ -19,15 +19,25 @@
       "in": "internet",
       "out": "_fw",
       "service": "ssh",
-      "action": "accept",
-      "conn-limit": { "count": 3, "interval": 60 }
-    }
+      "action": "accept"
+    },
     {
       "in": "_fw",
       "out": "internet",
       "service": "http",
-      "action": "accept",
-      "conn-limit": { "count": 3, "interval": 60 }
+      "action": "accept"
+    },
+    {
+      "in": "_fw",
+      "out": "internet",
+      "service": "https",
+      "action": "accept"
+    },
+    {
+      "in": "_fw",
+      "out": "internet",
+      "service": "dns",
+      "action": "accept"
     }
   ]
 }

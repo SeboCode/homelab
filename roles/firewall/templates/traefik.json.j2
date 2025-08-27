@@ -4,7 +4,7 @@
   "service": {
     "traefik": [
       { "proto": "tcp", "port": {{ traefik_websecure_port }} },
-      { "proto": "udp", "port": {{ traefik_websecure_port }} }
+      { "proto": "udp", "port": {{ traefik_websecure_port }} },
       { "proto": "tcp", "port": {{ traefik_dashboard_port }} },
       { "proto": "udp", "port": {{ traefik_dashboard_port }} }
     ]
