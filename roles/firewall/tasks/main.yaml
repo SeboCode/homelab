@@ -26,16 +26,6 @@
     - global-policy
     - traefik
 
-- name: Ensure iptables services are started, such that the awall activation will succeed
-  ansible.builtin.command: "iptables -L"
-  become: true
-  become_method: "{{ superuser_method }}"
-
-- name: Ensure ip6tables services are started, such that the awall activation will succeed
-  ansible.builtin.command: "ip6tables -L"
-  become: true
-  become_method: "{{ superuser_method }}"
-
 - name: Ensure awall policies are active
   community.general.awall:
     activate: true
