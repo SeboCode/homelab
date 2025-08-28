@@ -12,6 +12,8 @@ Vagrant.configure("2") do |config|
       env_config.vm.box_version = "4.3.12"
       env_config.vm.hostname = env[:environment]
       env_config.vm.network :forwarded_port, guest: 22, host: env[:ssh_port], id: "ssh"
+      env_config.vm.network :forwarded_port, guest: 80, host: 80, id: "port-forwarded-to-traefik-http"
+      env_config.vm.network :forwarded_port, guest: 443, host: 443, id: "port-forwarded-to-traefik-https"
       env_config.vm.network :forwarded_port, guest: 10080, host: 10080, id: "traefik-http"
       env_config.vm.network :forwarded_port, guest: 10443, host: 10443, id: "traefik-https"
       env_config.vm.network :forwarded_port, guest: 8080, host: 8080, id: "traefik-dashboard"

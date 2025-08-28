@@ -8,23 +8,15 @@
     - iptables
     - awall
 
-- name: Ensure awall policy and traefik configs are available
+- name: Ensure awall policy is available
   ansible.builtin.copy:
     src: global-policy.json
     dest: /etc/awall/optional/
 
-- name: Ensure traefik configs is available
-  ansible.builtin.template:
-    src: traefik.json.j2
-    dest: /etc/awall/optional/traefik.json
-
-- name: Ensure awall service config and policy are enabled
+- name: Ensure awall port redirect config and policy are enabled
   community.general.awall:
-    name: "{{ item }}"
+    name: global-policy
     state: enabled
-  loop:
-    - global-policy
-    - traefik
 
 - name: Ensure awall policies are well defined
   ansible.builtin.command: "awall translate -o /tmp"
@@ -40,4 +32,18 @@
 - name: Sleep to avoid ssh issues due to the awall policy application
   ansible.builtin.pause:
     seconds: 3
+
+- name: Ensure traffic is redirected from local 80/443 to traefik ports
+  ansible.builtin.iptables:
+    table: nat
+    chain: OUTPUT
+    out_interface: lo
+    protocol: tcp
+    destination_ports: "{{ item.from }}"
+    jump: REDIRECT
+    to_ports: "{{ item.to }}"
+    state: present
+  loop:
+    - {from: 80, to: "{{ traefik_web_port }}"}
+    - {from: 443, to: "{{ traefik_websecure_port }}",}
 
