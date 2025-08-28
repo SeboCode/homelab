@@ -26,6 +26,9 @@
     - global-policy
     - traefik
 
+- name: Ensure awall policies are well defined
+  ansible.builtin.command: "awall translate -o /tmp"
+
 - name: Ensure awall policies are active
   community.general.awall:
     activate: true
