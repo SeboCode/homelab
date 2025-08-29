@@ -49,9 +49,9 @@ Vagrant.configure("2") do |config|
           "configserver" => [ "localhost" ],
           "configserver:vars" => { "ansible_connection" => "local" }
         }
-        ansible.extra_vars = [
-          "../../vars/#{env[:environment]}.yaml",
-          "../../vars/cloudflare-dns-api-token.yaml",
+        ansible.raw_arguments = [
+          "-e @vars/#{env[:environment]}.yaml",
+          "-e @vars/cloudflare-dns-api-token.yaml",
         ]
       end
     end
