@@ -49,6 +49,8 @@
     container_name: traefik
     container_image: "{{ traefik_image }}"
     container_image_tag: "{{ traefik_tag }}"
+    container_env:
+      CF_DNS_API_TOKEN: "{{ cloudflare_dns_api_token }}"
     container_volumes:
       - "{{ traefik_config_location }}/traefik.yaml:/etc/traefik/traefik.yaml:ro" # This is a default location which traefik searches for a static configuration file.
       - "{{ traefik_config_dynamic_location }}:/etc/traefik/dynamic:ro"

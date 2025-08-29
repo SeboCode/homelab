@@ -14,4 +14,4 @@ trap cleanup EXIT
 trap cleanup INT
 trap cleanup TERM
 
-ansible-playbook deploy.yaml -i inventory/prod.ini -e "@vars/prod.yaml"
+ansible-playbook deploy.yaml -i inventory/prod.ini -e "@vars/prod.yaml" -e "@vars/cloudflare-dns-api-token.yaml"
