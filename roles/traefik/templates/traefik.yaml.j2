@@ -11,6 +11,18 @@ entryPoints:
           scheme: https
   websecure:
     address: ":{{ traefik_websecure_port }}"
+certificatesResolvers:
+    infomaniak:
+      acme:
+        email: acme@mikemarti.ch
+        storage: /etc/traefik/acme.json
+        caServer: "{{ traefik_ca_server }}"
+        keyType: EC256
+        dnsChallenge:
+          provider: infomaniak
+          resolvers:
+            - "1.1.1.1:53"
+            - "8.8.8.8:53"
 api:
   dashboard: true
   insecure: true # TODO remove

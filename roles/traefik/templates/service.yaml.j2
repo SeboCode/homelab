@@ -5,7 +5,8 @@ http:
         - websecure
       rule: "Host(`{{ item.service_name }}.{{ domain }}`)"
       service: {{ item.service_name }}-service
-      tls: {} # Empty block means to use the global TLS settings
+      tls:
+        certresolver: infomaniak
   services:
     {{ item.service_name }}-service:
       loadBalancer:
