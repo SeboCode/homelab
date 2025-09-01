@@ -17,5 +17,5 @@ trap cleanup TERM
 ansible-playbook deploy.yaml \
     --ask-vault-pass \
     --inventory=inventory/prod.ini \
-    --extra-vars="@vars/prod.yaml" \
-    --extra-vars="@vars/infomaniak-dns-api-token.yaml"
+    --extra-vars="@vars/prod.yaml"
+
