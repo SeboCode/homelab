@@ -1,9 +1,4 @@
 ---
-- name: Create necessary certificates on local environment to reuse during deployment of containers
-  hosts: configserver
-  roles:
-    - certificates
-
 - name: Configure server node
   hosts: deployserver
   roles:
