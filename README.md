@@ -48,9 +48,16 @@ This is the installation guide to install the os and configure the homelab serve
       after token is expired. If this step is not performed, the service might no longer be accessible at some point,
       until it is reauthenticated using `doas tailscale up`.
 
-## Run Ansible script against system
+## Automatic setup using Ansible and manual configurations
 
 1. Check that all secrets and variable values for all services are set correctly in the `vars/prod.yaml` file.
+   1. The current setup uses Traefik's built in ACME client configured for Infomaniak's NameServer to perform a
+      DNS challenge to get a valid Let's Encrypt certificate. If a different NameServer is supposed to be used, the
+      environment variable passed to the Traefik-Container has to be modified. Furthermore, the
+      `certificatesResolvers.[resolver-name].acme.dnsChallenge.provider` value has to be updated, to contain the
+      specific value required by the used NameServer. In addition (not necessary, but results in a cleaner
+      configuration), name of the `certresolver` in the `service.yaml.j2` and `traefik.yaml.j2` files have to be
+      updated.
 2. Check that the `inventory/prod.ini` file is configured correctly.
 3. Execute the bash script `prod.sh`.
 
