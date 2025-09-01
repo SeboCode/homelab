@@ -50,7 +50,7 @@ This is the installation guide to install the os and configure the homelab serve
 
 ## Automatic setup using Ansible and manual configurations
 
-1. Check that all secrets and variable values for all services are set correctly in the `vars/prod.yaml` file.
+1. Check that all secrets and variable values for all services are set correctly in the `ansible/vars/prod.yaml` file.
    1. The current setup uses Traefik's built in ACME client configured for Infomaniak's NameServer to perform a
       DNS challenge to get a valid Let's Encrypt certificate. If a different NameServer is supposed to be used, the
       environment variable passed to the Traefik-Container has to be modified. Furthermore, the
@@ -58,7 +58,7 @@ This is the installation guide to install the os and configure the homelab serve
       specific value required by the used NameServer. In addition (not necessary, but results in a cleaner
       configuration), name of the `certresolver` in the `service.yaml.j2` and `traefik.yaml.j2` files have to be
       updated.
-2. Check that the `inventory/prod.ini` file is configured correctly.
+2. Check that the `ansible/inventory/prod.ini` file is configured correctly.
 3. Execute the bash script `prod.sh`.
 
 # Services
@@ -84,8 +84,8 @@ To introduce a new service, follow these steps:
 1. Create a new role in the `services` directory with the name of the service.
    1. Implement new role in accordance with the other roles.
    2. Every service has its own user to increase security and have a clearer separation of the independent services.
-2. Add all relevant configuration for the new service to the `group_vars/all.yaml` file.
-   1. Secrets and other variables that are environment dependent have to be added to the `vars/<environment>.yaml` file.
+2. Add all relevant configuration for the new service to the `ansible/group_vars/all.yaml` file.
+   1. Secrets and other variables that are environment dependent have to be added to the `ansible/vars/<environment>.yaml` file.
 3. Add the new service to the reverse proxy by updating the `traefik` role.
-4. Add the new service to the `deployment.yaml` playbook.
+4. Add the new service to the `ansible/deploy.yaml` playbook.
 5. Add the port to the vagrant configuration to be forwarded to the host machine for accessing the service locally.

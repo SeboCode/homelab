@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-ansible-playbook expose-externally.yaml
+ansible-playbook ansible/expose-externally.yaml
 
