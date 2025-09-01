@@ -39,6 +39,14 @@ This is the installation guide to install the os and configure the homelab serve
    2. Give new user superuser privileges `echo "permit persist keepenv <username>" >> /etc/doas.conf`.
 6. Prepare system to be Ansible target
    1. Install Python on the system `apk add python3`.
+7. Add system to Tailscale Tailnet
+   1. Install Tailscale using `apk add tailscale`.
+   2. Add Tailscale to autostart list `doas rc-update add tailscale`.
+   3. Start Tailscale service `doas rc-service tailscale start`. See the status using `rc-service tailscale status`.
+   4. Connect to Tailnet `doas tailscale up`.
+   5. Disable key expiry in the Tailscale admin panel for the server, to avoid need of reauthentication of the node at
+      after token is expired. If this step is not performed, the service might no longer be accessible at some point,
+      until it is reauthenticated using `doas tailscale up`.
 
 ## Run Ansible script against system
 
@@ -49,17 +57,18 @@ This is the installation guide to install the os and configure the homelab serve
 # Services
 
 The following services are available on the machine:
-| Service | Reserved Portrange | Exposed Service | Port of exposed Service |
-| :------ | -----------------: | :-------------- | ----------------------: |
-| Traefik | 10000 - 19999 | | |
-| | | Traefik Websecure | 10000 |
-| | | Traefik Dashboard | 10001 |
-| Immich | 20000 - 20099 | | |
-| | | Immich Server | 20000 |
-| NextCloud | 20100 - 20199 | | |
-| | | NextCloud Server | 20100 |
-| PhotoPrism | 20200 - 20299 | | |
-| | | PhotoPrism Server | 20200 |
+| Service | Reserved Portrange | Exposed Service | Port of exposed Service | Directly accessible | Url Accessibility |
+| :------ | -----------------: | :-------------- | ----------------------: | :-----------------: | :---------------- |
+| Traefik | 10000 - 19999 | | | | |
+| | | Traefik Dashboard | 8080 | :heavy_check_mark: | TODO |
+| | | Traefik Web | 10080 | :heavy_check_mark: | |
+| | | Traefik Websecure | 10443 | :heavy_check_mark: | |
+| Immich | 20000 - 20099 | | | | |
+| | | Immich Server | 20000 | :x: | `immich(.dev).homelab.*` |
+| NextCloud | 20100 - 20199 | | | | |
+| | | NextCloud Server | 20100 | :x: | `nextcloud(.dev).homelab.*` |
+| PhotoPrism | 20200 - 20299 | | | | |
+| | | PhotoPrism Server | 20200 | :x: | `photoprism(.dev).homelab.*` |
 
 ## Introduce new service
 
