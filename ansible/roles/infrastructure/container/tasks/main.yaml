@@ -1,4 +1,8 @@
 ---
+- name: Ensure s6 stops container supervision
+  ansible.builtin.command: "s6-svc -d /home/{{ container_user }}/s6-services/{{ container_name }}"
+  ignore_errors: true # If the service is not running or the folder does not exist
+
 - name: "Ensure {{ container_name }} container is removed"
   containers.podman.podman_container:
     name: "{{ container_name }}"
@@ -26,8 +30,8 @@
     user: "{{ container_user_id }}"
     userns: keep-id
     recreate: false
-    restart_policy: on-failure
-    state: started
+    restart_policy: "no" # s6 manages container lifecycle
+    state: created # s6 manages container lifecycle
     env: "{{ container_env }}"
     volumes: "{{ container_volumes }}"
     ports: "{{ container_ports }}"
@@ -35,12 +39,27 @@
     network_aliases: "{{ container_network_aliases | default(omit) }}" # Cannot set alias in host network mode => used by traefik
     command: "{{ container_command | default(omit) }}"
 
-- name: "Ensure {{ container_name }} is started after reboot of host by adding it to s6 run script"
-  ansible.builtin.lineinfile:
-    path: "/home/{{ container_user }}/s6-services/container-autostart/run"
-    line: "exec podman start -a {{ container_name }}"
-    insertafter: EOF
+- name: Ensure user's s6 directory exists
+  ansible.builtin.file:
+    path: "/home/{{ container_user }}/s6-services/{{ container_name }}"
+    state: directory
     owner: "{{ container_user }}"
     group: "{{ container_user }}"
     mode: 0755
+
+- name: Ensure s6 run script for user exists in order for it to be filled with container startup commands
+  ansible.builtin.copy:
+    dest: "/home/{{ container_user }}/s6-services/{{ container_name }}/run"
+    content: |
+      #!/bin/sh
+      exec podman start -a {{ container_name }}
+    owner: "{{ container_user }}"
+    group: "{{ container_user }}"
+    mode: 0755
+
+- name: Ensure s6 discoveres container supervision (Will also start the service, if it is new. However it will not start, if it already existed.)
+  ansible.builtin.command: "s6-svscanctl -a /home/{{ container_user }}/s6-services"
+
+- name: Ensure s6 starts container supervision (Will force the service to be in a started state.)
+  ansible.builtin.command: "s6-svc -u /home/{{ container_user }}/s6-services/{{ container_name }}"
 

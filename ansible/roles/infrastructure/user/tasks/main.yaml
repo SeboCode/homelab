@@ -43,17 +43,8 @@
 
 - name: Ensure user's s6 directory exists
   ansible.builtin.file:
-    path: "/home/{{ user_name }}/s6-services/container-autostart"
+    path: "/home/{{ user_name }}/s6-services"
     state: directory
-    owner: "{{ user_name }}"
-    group: "{{ user_name }}"
-    mode: 0755
-
-- name: Ensure s6 run script for user exists in order for it to be filled with container startup commands
-  ansible.builtin.copy:
-    dest: "/home/{{ user_name }}/s6-services/container-autostart/run"
-    content: |
-      #!/bin/sh
     owner: "{{ user_name }}"
     group: "{{ user_name }}"
     mode: 0755
@@ -69,4 +60,8 @@
     owner: root
     group: root
     mode: 0755
+
+- name: Ensure s6 supervisor service script is executed
+  ansible.builtin.command: "/etc/local.d/s6-{{ user_name }}.start"
+  become: true
 
