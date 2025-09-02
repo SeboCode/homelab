@@ -8,7 +8,6 @@ traefik_image: docker.io/traefik
 traefik_tag: v3.5.0
 traefik_web_port: 10080
 traefik_websecure_port: 10443
-traefik_dashboard_port: 8080
 
 # Immich
 immich_user: immich-user

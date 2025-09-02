@@ -5,6 +5,8 @@ domain: dev.homelab.mikemarti.ch
 # Traefik
 traefik_user_password: "$6$rVOhw/ClrcbnLo6y$xZexCAxW8Uttz57SBfusvBG0NBLXrughO6L5hYP8DqJ7XINtvpAMnM78Iej9/45E5h7ZQofQaEI1yE6vlt18A/" # this is 123456
 traefik_ca_server: "https://acme-staging-v02.api.letsencrypt.org/directory"
+traefik_dashboard_username: admin
+traefik_dashboard_password: admin
 
 # Immich
 immich_user_password: "$6$rVOhw/ClrcbnLo6y$xZexCAxW8Uttz57SBfusvBG0NBLXrughO6L5hYP8DqJ7XINtvpAMnM78Iej9/45E5h7ZQofQaEI1yE6vlt18A/" # this is 123456

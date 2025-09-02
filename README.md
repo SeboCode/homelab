@@ -67,7 +67,7 @@ The following services are available on the machine:
 | Service | Reserved Portrange | Exposed Service | Port of exposed Service | Directly accessible | Url Accessibility |
 | :------ | -----------------: | :-------------- | ----------------------: | :-----------------: | :---------------- |
 | Traefik | 10000 - 19999 | | | | |
-| | | Traefik Dashboard | 8080 | :heavy_check_mark: | TODO |
+| | | Traefik API/Dashboard | 8080 | :x: | `traefik(.dev).homelab.*` |
 | | | Traefik Web | 10080 | :heavy_check_mark: | |
 | | | Traefik Websecure | 10443 | :heavy_check_mark: | |
 | Immich | 20000 - 20099 | | | | |

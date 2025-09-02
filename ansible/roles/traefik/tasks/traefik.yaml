@@ -24,6 +24,11 @@
     src: traefik.yaml.j2
     dest: "{{ traefik_config_location }}/traefik.yaml"
 
+- name: Ensure traefik dashboard config is available
+  ansible.builtin.template:
+    src: traefik-dashboard.yaml.j2
+    dest: "{{ traefik_config_dynamic_location }}/traefik-dashboard.yaml"
+
 - name: Ensure traefik service configs are available
   ansible.builtin.template:
     src: service.yaml.j2
@@ -57,5 +62,7 @@
     name: infrastructure/http-healthcheck
   vars:
     service_name: traefik
-    service_port: "{{ traefik_dashboard_port }}"
+    exposed_locally: false
+    username: "{{ traefik_dashboard_username }}"
+    password: "{{ traefik_dashboard_password }}"
 
