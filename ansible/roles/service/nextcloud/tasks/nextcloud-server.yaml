@@ -53,7 +53,7 @@
 - ansible.builtin.include_role:
     name: infrastructure/http-healthcheck
   vars:
-    service_name: nextcloud-server
+    service_name: nextcloud
     service_port: "{{ nextcloud_server_port }}"
 
 - name: Ensure nextcloud users exist

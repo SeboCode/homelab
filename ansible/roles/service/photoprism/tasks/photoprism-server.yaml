@@ -72,6 +72,6 @@
 - ansible.builtin.include_role:
     name: infrastructure/http-healthcheck
   vars:
-    service_name: photoprism-server
+    service_name: photoprism
     service_port: "{{ photoprism_server_port }}"
 

@@ -33,6 +33,6 @@
 - ansible.builtin.include_role:
     name: infrastructure/http-healthcheck
   vars:
-    service_name: immich-server
+    service_name: immich
     service_port: "{{ immich_server_port }}"
 
