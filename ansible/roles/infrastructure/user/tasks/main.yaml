@@ -4,7 +4,7 @@
     name: "{{ user_name }}"
     create_home: true
     home: "/home/{{ user_name }}"
-    password: "{{ user_password }}"
+    password: "{{ user_password | password_hash('sha512') }}"
     shell: /bin/sh
     state: present
 

@@ -3,17 +3,17 @@ superuser_method: sudo
 domain: dev.homelab.mikemarti.ch
 
 # Traefik
-traefik_user_password: "$6$rVOhw/ClrcbnLo6y$xZexCAxW8Uttz57SBfusvBG0NBLXrughO6L5hYP8DqJ7XINtvpAMnM78Iej9/45E5h7ZQofQaEI1yE6vlt18A/" # this is 123456
+traefik_user_password: "123456"
 traefik_ca_server: "https://acme-staging-v02.api.letsencrypt.org/directory"
 traefik_dashboard_username: admin
 traefik_dashboard_password: admin
 
 # Immich
-immich_user_password: "$6$rVOhw/ClrcbnLo6y$xZexCAxW8Uttz57SBfusvBG0NBLXrughO6L5hYP8DqJ7XINtvpAMnM78Iej9/45E5h7ZQofQaEI1yE6vlt18A/" # this is 123456
+immich_user_password: "123456"
 immich_db_password: immich-db-password
 
 # Nextcloud
-nextcloud_user_password: "$6$rVOhw/ClrcbnLo6y$xZexCAxW8Uttz57SBfusvBG0NBLXrughO6L5hYP8DqJ7XINtvpAMnM78Iej9/45E5h7ZQofQaEI1yE6vlt18A/" # this is 123456
+nextcloud_user_password: "123456"
 nextcloud_db_password: nextcloud-db-password
 nextcloud_admin_username: admin
 nextcloud_admin_password: admin
@@ -25,7 +25,7 @@ nextcloud_user_definitions:
     display_name: "Test User 2"
 
 # PhotoPrism
-photoprism_user_password: "$6$rVOhw/ClrcbnLo6y$xZexCAxW8Uttz57SBfusvBG0NBLXrughO6L5hYP8DqJ7XINtvpAMnM78Iej9/45E5h7ZQofQaEI1yE6vlt18A/" # this is 123456
+photoprism_user_password: "123456"
 photoprism_db_password: photoprism-db-password
 photoprism_db_root_password: photoprism-db-root-password
 photoprism_admin_username: admin # PhotoPrism does not allow to create users in the free version. This is also the user to use the application with.
