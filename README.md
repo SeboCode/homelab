@@ -39,12 +39,12 @@ This is the installation guide to install the os and configure the homelab serve
    2. Give new user superuser privileges `echo "permit persist keepenv <username>" >> /etc/doas.conf`.
 6. Prepare system to be Ansible target
    1. Install Python on the system `apk add python3`.
-7. Add system to Tailscale Tailnet
+7. Add node to Tailnet
    1. Install Tailscale using `apk add tailscale`.
    2. Add Tailscale to autostart list `doas rc-update add tailscale`.
    3. Start Tailscale service `doas rc-service tailscale start`. See the status using `rc-service tailscale status`.
    4. Connect to Tailnet `doas tailscale up`.
-   5. Disable key expiry in the Tailscale admin panel for the server, to avoid need of reauthentication of the node at
+   5. Disable key expiry in the Tailscale admin panel for the server, to avoid need for reauthentication of the node
       after token is expired. If this step is not performed, the service might no longer be accessible at some point,
       until it is reauthenticated using `doas tailscale up`.
 
@@ -86,6 +86,6 @@ To introduce a new service, follow these steps:
    2. Every service has its own user to increase security and have a clearer separation of the independent services.
 2. Add all relevant configuration for the new service to the `ansible/group_vars/all.yaml` file.
    1. Secrets and other variables that are environment dependent have to be added to the `ansible/vars/<environment>.yaml` file.
-3. Add the new service to the reverse proxy by updating the `traefik` role.
-4. Add the new service to the `ansible/deploy.yaml` playbook.
-5. Add the port to the vagrant configuration to be forwarded to the host machine for accessing the service locally.
+3. Add the service to the `active_services` variable in `ansible/group_vars/all.yaml`.
+4. Add the port to the vagrant configuration to be forwarded to the host machine for accessing the service locally
+   without the need to go through Traefik (nice for debugging).

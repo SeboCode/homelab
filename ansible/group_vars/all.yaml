@@ -1,4 +1,14 @@
 ---
+# Services
+active_services:
+  - service_name: immich
+    service_port: "{{ immich_server_port }}"
+  # Does not work well with traefik and is a pain to setup (not very modern) => search for alternative, maybe OpenCloud?
+  # - service_name: nextcloud
+  #   service_port: "{{ nextcloud_server_port }}"
+  - service_name: photoprism
+    service_port: "{{ photoprism_server_port }}"
+
 # Traefik
 traefik_user: traefik-user
 traefik_storage_directory: "/home/{{ traefik_user }}/traefik-storage"
@@ -26,6 +36,7 @@ immich_postgres_image: ghcr.io/immich-app/postgres
 immich_postgres_tag: 14-vectorchord0.4.3-pgvectors0.2.0@sha256:32324a2f41df5de9efe1af166b7008c3f55646f8d0e00d9550c16c9822366b4a
 immich_db_database_name: immich_database
 immich_db_username: immich_pg_user
+
 # Nextcloud
 nextcloud_user: nextcloud-user
 nextcloud_storage_directory: "/home/{{ nextcloud_user }}/nextcloud-storage"

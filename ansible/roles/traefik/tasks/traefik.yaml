@@ -33,13 +33,7 @@
   ansible.builtin.template:
     src: service.yaml.j2
     dest: "{{ traefik_config_dynamic_location }}/{{ item.service_name }}.yaml"
-  loop:
-    - service_name: immich
-      service_port: "{{ immich_server_port }}"
-    - service_name: nextcloud
-      service_port: "{{ nextcloud_server_port }}"
-    - service_name: photoprism
-      service_port: "{{ photoprism_server_port }}"
+  loop: "{{ active_services }}"
 
 - name: Instantiate traefik container
   ansible.builtin.include_role:
