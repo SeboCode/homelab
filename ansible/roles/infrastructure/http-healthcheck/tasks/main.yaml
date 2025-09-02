@@ -1,8 +1,20 @@
 ---
-- name: "Wait for {{ service_name }} to be healthy"
+- name: "Wait for {{ service_name }} to be healthy locally"
   ansible.builtin.uri:
-    # TODO: change to https
     url: "http://localhost:{{ service_port }}"
+    status_code: 200
+    validate_certs: false
+  register: result
+  until: result.status == 200
+  retries: 30
+  delay: 2
+  when: exposed_locally
+
+- name: "Wait for {{ service_name }} to be available via traefik"
+  ansible.builtin.uri:
+    url: "https://{{ service_name }}.{{ domain }}"
+    user: "{{ username | default(omit) }}"
+    password: "{{ password | default(omit) }}"
     status_code: 200
     validate_certs: false
   register: result
