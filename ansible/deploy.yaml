@@ -6,7 +6,7 @@
     - base
     - firewall
     - traefik
-    # - service/immich
-    # - service/nextcloud
+    - service/immich
+    - service/nextcloud
     - service/photoprism
 
