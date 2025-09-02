@@ -46,3 +46,14 @@
     fstype: cgroup2
     state: mounted
 
+- name: Ensure s6 is installed
+  ansible.builtin.package:
+    name: s6
+    state: present
+
+- name: Ensure services defined in /etc/local.d are started on system startup, as this is where s6 services are defined
+  ansible.builtin.service:
+    name: local
+    state: started
+    enabled: true
+

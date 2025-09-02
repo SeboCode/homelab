@@ -41,44 +41,32 @@
     group: "{{ user_name }}"
     mode: 0700
 
-- name: Ensure user's bin directory exists
+- name: Ensure user's s6 directory exists
   ansible.builtin.file:
-    path: "/home/{{ user_name }}/bin"
+    path: "/home/{{ user_name }}/s6-services/container-autostart"
     state: directory
     owner: "{{ user_name }}"
     group: "{{ user_name }}"
     mode: 0755
 
-- name: Create start-container.sh with XDG_RUNTIME_DIR export
+- name: Ensure s6 run script for user exists in order for it to be filled with container startup commands
   ansible.builtin.copy:
-    dest: "/home/{{ user_name }}/bin/container-executor.sh"
+    dest: "/home/{{ user_name }}/s6-services/container-autostart/run"
     content: |
       #!/bin/sh
-      export XDG_RUNTIME_DIR=/run/user/$(id -u)
     owner: "{{ user_name }}"
     group: "{{ user_name }}"
     mode: 0755
 
-- name: "Create OpenRC init script to restart {{ user_name }} containers, in case the system reboots"
+- name: Ensure s6 supervisor script to execute on system startup
   ansible.builtin.copy:
-    dest: "/etc/init.d/{{ user_name }}-container-executor"
+    dest: "/etc/local.d/s6-{{ user_name }}.start"
+    # ATTENTION: This command HAS to be executed in the user space. Otherwise, the specified services would be executed
+    # as root, whilst beeing controlled/manipulated by the user => privilege escalation!
     content: |
-      #!/sbin/openrc-run
-
-      description="Start user podman container"
-
-      start() {
-          ebegin "Starting podman containers for user {{ user_name }}"
-          su - {{ user_name }} -c '/home/{{ user_name }}/bin/container-executor.sh'
-          eend $?
-      }
+      #!/bin/sh
+      exec {{ superuser_method }} -u {{ user_name }} /bin/s6-svscan /home/{{ user_name }}/s6-services &
     owner: root
     group: root
     mode: 0755
-
-- name: Add OpenRC service to default runlevel
-  ansible.builtin.service:
-    name: "{{ user_name }}-container-executor"
-    enabled: true
-    runlevel: default
 
