@@ -47,3 +47,18 @@
     - {from: 80, to: "{{ traefik_web_port }}"}
     - {from: 443, to: "{{ traefik_websecure_port }}",}
 
+- name: Ensure iptables is enabled in default runlevel
+  ansible.builtin.service:
+    name: iptables
+    state: started
+    enabled: true
+    runlevel: default
+
+- name: Ensure firewall rules stay persested after system restart
+  ansible.builtin.command: rc-service iptables save
+
+- name: Ensure iptables is reloaded with newly created rules file
+  ansible.builtin.service:
+    name: iptables
+    state: restarted
+

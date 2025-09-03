@@ -51,7 +51,7 @@
     name: s6
     state: present
 
-- name: Ensure services defined in /etc/local.d are started on system startup, as this is where s6 services are defined
+- name: Ensure services defined in /etc/local.d are started on system startup (the ansible playbook will define custom reboot scripts here, e.g. s6 startup scripts)
   ansible.builtin.service:
     name: local
     state: started
