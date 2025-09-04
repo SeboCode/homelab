@@ -49,19 +49,57 @@
     group: "{{ user_name }}"
     mode: 0755
 
-- name: Ensure s6 supervisor script to execute on system startup
+- name: Ensure s6 supervisor script to execute on local service shutdown
+  ansible.builtin.copy:
+    dest: "/etc/local.d/s6-{{ user_name }}.stop"
+    # ATTENTION: This command HAS to be executed in the user space. Otherwise, the specified services would be executed
+    # as root, whilst beeing controlled/manipulated by the user => privilege escalation!
+    content: |
+      #!/bin/sh
+      exec {{ superuser_method }} -u {{ user_name }} s6-svscanctl -t /home/{{ user_name }}/s6-services
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Ensure s6 supervisor script to execute on local service startup
   ansible.builtin.copy:
     dest: "/etc/local.d/s6-{{ user_name }}.start"
     # ATTENTION: This command HAS to be executed in the user space. Otherwise, the specified services would be executed
     # as root, whilst beeing controlled/manipulated by the user => privilege escalation!
     content: |
       #!/bin/sh
-      exec {{ superuser_method }} -u {{ user_name }} /bin/s6-svscan /home/{{ user_name }}/s6-services &
+      exec {{ superuser_method }} -u {{ user_name }} s6-svscan /home/{{ user_name }}/s6-services &
     owner: root
     group: root
     mode: 0755
 
-- name: Ensure s6 supervisor service script is executed
-  ansible.builtin.command: "/etc/local.d/s6-{{ user_name }}.start"
+- name: "Ensure root can execute s6 commands as {{ user_name }} without beeing prompted for a password"
+  ansible.builtin.lineinfile:
+    path: /etc/doas.conf
+    line: "permit nopass root as {{ user_name }} cmd {{ item }}"
+    state: present
+    owner: root
+    group: root
+    create: true
+    insertafter: EOF
+  loop:
+    - "s6-svscan"
+    - "s6-svscanctl"
   become: true
+  when: become_method == "doas"
+
+- name: Ensure s6 supervisor service shutdown script is executed
+  ansible.builtin.command: "s6-svscanctl -t /home/{{ user_name }}/s6-services"
+  become: true
+  become_user: "{{ user_name }}"
+  become_method: "{{ superuser_method }}"
+  ignore_errors: true
+
+- name: Ensure s6 supervisor service startup script is executed
+  ansible.builtin.shell: "s6-svscan /home/{{ user_name }}/s6-services &"
+  become: true
+  become_user: "{{ user_name }}"
+  become_method: "{{ superuser_method }}"
+  async: 1
+  poll: 0
 
