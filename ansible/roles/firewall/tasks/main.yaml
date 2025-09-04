@@ -1,4 +1,31 @@
 ---
+- name: Ensure script to easily reset the firewall is available (in case something goes wrong)
+  ansible.builtin.copy:
+    dest: "/home/{{ ansible_user }}/firewall-reset.sh"
+    content: |
+      #!/bin/sh
+      {{ superuser_method }} iptables -F
+      {{ superuser_method }} iptables -t nat -F
+      {{ superuser_method }} iptables -t mangle -F
+      {{ superuser_method }} iptables -X
+      {{ superuser_method }} iptables -t nat -X
+      {{ superuser_method }} iptables -t mangle -X
+      {{ superuser_method }} iptables -P INPUT ACCEPT
+      {{ superuser_method }} iptables -P FORWARD ACCEPT
+      {{ superuser_method }} iptables -P OUTPUT ACCEPT
+      {{ superuser_method }} ip6tables -F
+      {{ superuser_method }} ip6tables -t nat -F
+      {{ superuser_method }} ip6tables -t mangle -F
+      {{ superuser_method }} ip6tables -X
+      {{ superuser_method }} ip6tables -t nat -X
+      {{ superuser_method }} ip6tables -t mangle -X
+      {{ superuser_method }} ip6tables -P INPUT ACCEPT
+      {{ superuser_method }} ip6tables -P FORWARD ACCEPT
+      {{ superuser_method }} ip6tables -P OUTPUT ACCEPT
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0755
+
 - name: Ensure firewall is installed
   ansible.builtin.package:
     name: "{{ item }}"
