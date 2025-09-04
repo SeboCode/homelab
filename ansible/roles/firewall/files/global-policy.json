@@ -2,7 +2,8 @@
   "description": "Global policy",
 
   "zone": {
-    "internet": { "iface": "eth0" }
+    "internet": { "iface": "eth0" },
+    "vpn": { "iface": "tailscale0" }
   },
 
   "policy": [{ "in": "internet", "action": "drop" }, { "action": "reject" }],
@@ -16,7 +17,20 @@
       "flow-limit": { "count": 10, "interval": 6 }
     },
     {
+      "in": "vpn",
+      "out": "_fw",
+      "service": "ping",
+      "action": "accept",
+      "flow-limit": { "count": 10, "interval": 6 }
+    },
+    {
       "in": "internet",
+      "out": "_fw",
+      "service": "ssh",
+      "action": "accept"
+    },
+    {
+      "in": "vpn",
       "out": "_fw",
       "service": "ssh",
       "action": "accept"
@@ -29,13 +43,31 @@
     },
     {
       "in": "_fw",
+      "out": "vpn",
+      "service": "http",
+      "action": "accept"
+    },
+    {
+      "in": "_fw",
       "out": "internet",
       "service": "https",
       "action": "accept"
     },
     {
       "in": "_fw",
+      "out": "vpn",
+      "service": "https",
+      "action": "accept"
+    },
+    {
+      "in": "_fw",
       "out": "internet",
+      "service": "dns",
+      "action": "accept"
+    },
+    {
+      "in": "_fw",
+      "out": "vpn",
       "service": "dns",
       "action": "accept"
     }
