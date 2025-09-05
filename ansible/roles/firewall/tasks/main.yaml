@@ -40,10 +40,18 @@
     src: global-policy.json
     dest: /etc/awall/optional/
 
+- name: Ensure awall traefik config is available
+  ansible.builtin.template:
+    src: traefik.json.j2
+    dest: /etc/awall/optional/traefik.json
+
 - name: Ensure awall port redirect config and policy are enabled
   community.general.awall:
-    name: global-policy
+    name: "{{ item }}"
     state: enabled
+  loop:
+    - global-policy
+    - traefik
 
 - name: Ensure awall policies are well defined
   ansible.builtin.command: "awall translate -o /tmp"

@@ -1,0 +1,25 @@
+{
+  "description": "Allow access to traefik service",
+
+  "service": {
+    "traefik": [
+      { "proto": "tcp", "port": {{ traefik_web_port }} },
+      { "proto": "tcp", "port": {{ traefik_websecure_port }} }
+    ]
+  },
+
+  "filter": [
+    {
+      "in": "internet",
+      "out": "_fw",
+      "service": "traefik",
+      "action": "accept"
+    },
+    {
+      "in": "vpn",
+      "out": "_fw",
+      "service": "traefik",
+      "action": "accept"
+    }
+  ]
+}
