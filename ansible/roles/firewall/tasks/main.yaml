@@ -82,6 +82,18 @@
     - {from: 80, to: "{{ traefik_web_port }}"}
     - {from: 443, to: "{{ traefik_websecure_port }}",}
 
+- name: Ensure traffic is redirected from local 80/443 to traefik ports
+  ansible.builtin.iptables:
+    table: nat
+    chain: PREROUTING
+    in_interface: "{{ item.0 }}"
+    protocol: tcp
+    destination_ports: "{{ item.1.from }}"
+    jump: REDIRECT
+    to_ports: "{{ item.1.to }}"
+    state: present
+  loop: "{{ ['tailscale0', 'eth0'] | product([ { 'from': 80, 'to': traefik_web_port }, { 'from': 443, 'to': traefik_websecure_port } ]) | list }}"
+
 - name: Ensure iptables is enabled in default runlevel
   ansible.builtin.service:
     name: iptables
