@@ -21,5 +21,28 @@
       "service": "traefik",
       "action": "accept"
     }
+  ],
+
+  "dnat": [
+    {
+      "in": "internet",
+      "service": "http",
+      "to-port": {{ traefik_web_port }}
+    },
+    {
+      "in": "vpn",
+      "service": "http",
+      "to-port": {{ traefik_web_port }}
+    },
+    {
+      "in": "internet",
+      "service": "https",
+      "to-port": {{ traefik_websecure_port }}
+    },
+    {
+      "in": "vpn",
+      "service": "https",
+      "to-port": {{ traefik_websecure_port }}
+    }
   ]
 }
