@@ -68,6 +68,13 @@
   ansible.builtin.pause:
     seconds: 3
 
+- name: Ensure iptables is enabled in default runlevel
+  ansible.builtin.service:
+    name: iptables
+    state: started
+    enabled: true
+    runlevel: default
+
 - name: Ensure traffic is redirected from ports 80/443 to traefik ports for requests performed on localhost (does not go over PREROUTING nat, but over OUTPUT nat instead)
   ansible.builtin.iptables:
     table: nat
@@ -81,13 +88,6 @@
   loop:
     - {from: 80, to: "{{ traefik_web_port }}"}
     - {from: 443, to: "{{ traefik_websecure_port }}",}
-
-- name: Ensure iptables is enabled in default runlevel
-  ansible.builtin.service:
-    name: iptables
-    state: started
-    enabled: true
-    runlevel: default
 
 - name: Ensure firewall rules stay persested after system restart
   ansible.builtin.command: rc-service iptables save
