@@ -6,7 +6,8 @@ For local development, the Ansible playbook is run on an Alpine Linux VM, provis
 
 # Installation guide
 
-This is the installation guide to install the os and configure the homelab server.
+This is the installation guide describes how to set up ACME Let's Encrypt certificate configuration, how to prepare the
+local and remote DNS entries and how to install the os and perform manual setup steps.
 
 ## OS installation and manual setup
 
@@ -48,16 +49,33 @@ This is the installation guide to install the os and configure the homelab serve
       after token is expired. If this step is not performed, the service might no longer be accessible at some point,
       until it is reauthenticated using `doas tailscale up`.
 
+## ACME Let's Encrypt setup
+
+The current setup uses Traefik's built in ACME client configured for Infomaniak's NameServer to perform a DNS challenge
+to get a valid Let's Encrypt certificate. To perform this challenge, Traefik, the reverse proxy used in this setup,
+needs an appropriate access token with write privileges to the NameServer. If a different NameServer is supposed to be used,
+the environment variable passed to the Traefik-Container has to be modified. Furthermore, the
+`certificatesResolvers.[resolver-name].acme.dnsChallenge.provider` value has to be updated, to contain the
+specific value required by the used NameServer. In addition (not necessary, but results in a cleaner
+configuration), name of the `certresolver` in the `service.yaml.j2` and `traefik.yaml.j2` files have to be
+updated.
+
+## Prepare the DNS entries for both local and remote access
+
+1. To improve network speed and avoid unnecessary routing, it is advised, to setup a DNS entry in the local gateway. This
+   can be done in the appropriate admin panel of the home router.
+2. To setup remote access over Tailscale, additional DNS entries have to be manually added to the used NameServer of the
+   domain to be used. An A and AAAA record should be added with the IPv4 and IPv6 of the server node in the Tailnet,
+   respectively.
+
 ## Automatic setup using Ansible and manual configurations
 
 1. Check that all secrets and variable values for all services are set correctly in the `ansible/vars/prod.yaml` file.
-   1. The current setup uses Traefik's built in ACME client configured for Infomaniak's NameServer to perform a
-      DNS challenge to get a valid Let's Encrypt certificate. If a different NameServer is supposed to be used, the
-      environment variable passed to the Traefik-Container has to be modified. Furthermore, the
-      `certificatesResolvers.[resolver-name].acme.dnsChallenge.provider` value has to be updated, to contain the
-      specific value required by the used NameServer. In addition (not necessary, but results in a cleaner
-      configuration), name of the `certresolver` in the `service.yaml.j2` and `traefik.yaml.j2` files have to be
-      updated.
+   Take inspiration from the `ansible/vars/dev.yaml` file to get a list of all necessary variables that have to be set.
+   In addition to the ones found in the development variable file, the following secret variables have to be set:
+   | Variablename | Description |
+   | :----------- | :---------- |
+   | infomaniak_dns_api_token | Token used to edit the DNS entries of the NameServer for the ACME challenge performed by Traefik. |
 2. Check that the `ansible/inventory/prod.ini` file is configured correctly.
 3. Execute the bash script `prod.sh`.
 
