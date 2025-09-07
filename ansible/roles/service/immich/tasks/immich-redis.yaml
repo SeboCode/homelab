@@ -1,4 +1,13 @@
 ---
+- name: Ensure redis data location exists
+  ansible.builtin.file:
+    path: "{{ immich_redis_data_location }}"
+    state: directory
+    owner: "{{ immich_user }}"
+    group: "{{ immich_user }}"
+    mode: 0755
+    recurse: true
+
 - name: Instantiate immich-redis container
   ansible.builtin.include_role:
     name: infrastructure/container
@@ -6,6 +15,8 @@
     container_name: immich_redis
     container_image: "{{ immich_redis_image }}"
     container_image_tag: "{{ immich_redis_tag }}"
+    container_volumes:
+      - "{{ immich_redis_data_location }}:/data:rw"
     container_networks:
       - "{{ immich_network }}"
     container_network_aliases:

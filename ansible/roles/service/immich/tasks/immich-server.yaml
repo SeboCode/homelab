@@ -20,7 +20,7 @@
       DB_USERNAME: "{{ immich_db_username }}"
       DB_PASSWORD: "{{ immich_db_password }}"
     container_volumes:
-      - "{{ immich_upload_location }}:/usr/src/app/upload"
+      - "{{ immich_upload_location }}:/usr/src/app/upload:rw"
       - /etc/localtime:/etc/localtime:ro
     container_ports:
       - "{{ immich_server_port }}:2283"

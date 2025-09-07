@@ -24,6 +24,7 @@ immich_user: immich-user
 immich_storage_directory: "/home/{{ immich_user }}/immich-storage"
 immich_upload_location: "{{ immich_storage_directory }}/library"
 immich_db_data_location: "{{ immich_storage_directory }}/postgres"
+immich_redis_data_location: "{{ immich_storage_directory }}/redis"
 immich_network: immich_network
 immich_server_image: ghcr.io/immich-app/immich-server
 immich_server_tag: v1.140.1
