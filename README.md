@@ -40,14 +40,19 @@ local and remote DNS entries and how to install the os and perform manual setup 
    2. Give new user superuser privileges `echo "permit persist keepenv <username>" >> /etc/doas.conf`.
 6. Prepare system to be Ansible target
    1. Install Python on the system `apk add python3`.
-7. Add node to Tailnet
-   1. Install Tailscale using `apk add tailscale`.
-   2. Add Tailscale to autostart list `doas rc-update add tailscale`.
-   3. Start Tailscale service `doas rc-service tailscale start`. See the status using `rc-service tailscale status`.
-   4. Connect to Tailnet `doas tailscale up`.
-   5. Disable key expiry in the Tailscale admin panel for the server, to avoid need for reauthentication of the node
-      after token is expired. If this step is not performed, the service might no longer be accessible at some point,
-      until it is reauthenticated using `doas tailscale up`.
+
+## (Optional) Setup Tailscale
+
+To access the services from anywhere in the world, without the need to expose the server into the internet, a VPN
+solution, such as Tailscale, can be used.
+
+1.  Install Tailscale using `apk add tailscale`.
+2.  Add Tailscale to autostart list `doas rc-update add tailscale`.
+3.  Start Tailscale service `doas rc-service tailscale start`. See the status using `rc-service tailscale status`.
+4.  Connect to Tailnet `doas tailscale up`.
+5.  Disable key expiry in the Tailscale admin panel for the server, to avoid need for reauthentication of the node
+    after token is expired. If this step is not performed, the service might no longer be accessible at some point,
+    until it is reauthenticated using `doas tailscale up`.
 
 ## ACME Let's Encrypt setup
 
@@ -62,9 +67,9 @@ updated.
 
 ## Prepare the DNS entries for both local and remote access
 
-1. To improve network speed and avoid unnecessary routing, it is advised, to setup a DNS entry in the local gateway. This
+1. To improve network speed and avoid unnecessary routing, it is advised to setup a DNS entry in the local gateway. This
    can be done in the appropriate admin panel of the home router.
-2. To setup remote access over Tailscale, additional DNS entries have to be manually added to the used NameServer of the
+2. To setup remote access over Tailscale, additional DNS entries have to be manually added to the NameServer of the
    domain to be used. An A and AAAA record should be added with the IPv4 and IPv6 of the server node in the Tailnet,
    respectively.
 
