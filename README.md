@@ -9,12 +9,12 @@ For local development, the Ansible playbook is run on an Alpine Linux VM, provis
 This is the installation guide describes how to set up ACME Let's Encrypt certificate configuration, how to prepare the
 local and remote DNS entries and how to install the os and perform manual setup steps.
 
-## OS installation and manual setup
+## OS installation and manual Ansible preparation
 
-1. Install Alpine Linux to the drive.
-   1. Download latest basic Alpine Linux iso from the official [website](https://alpinelinux.org/downloads/) and verify its integrity and authenticity.
-   2. Setup Alpine Linux according to documentation in "System Disk Mode (sys)".
-      1. Create a none-root user here or later on, with which the Ansible script is run later on.
+1. Install Alpine Linux on the server.
+   1. Download the latest basic Alpine Linux iso from the official [website](https://alpinelinux.org/downloads/) and verify its integrity and authenticity.
+   2. Setup Alpine Linux according to the documentation in "System Disk Mode (sys)".
+      1. Create a none-root user during this step (or later on). This user should be used by Ansible to configure the server. It is advised to create this user, to avoid running Ansible with the root user.
       2. Choose "OpenSSH" when prompted for the ssh server.
       3. Choose "sys" when prompted for the Disk Mode.
    3. Reboot and login as root.
