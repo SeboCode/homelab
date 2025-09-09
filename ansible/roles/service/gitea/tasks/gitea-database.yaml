@@ -1,0 +1,29 @@
+---
+- name: Ensure gitea data location exists
+  ansible.builtin.file:
+    path: "{{ gitea_db_data_location }}"
+    state: directory
+    owner: "{{ gitea_user }}"
+    group: "{{ gitea_user }}"
+    mode: 0755
+    recurse: true
+
+- name: Instantiate gitea-postgres container
+  ansible.builtin.include_role:
+    name: infrastructure/container
+  vars:
+    container_name: gitea_postgres
+    container_image: "{{ gitea_postgres_image }}"
+    container_image_tag: "{{ gitea_postgres_tag }}"
+    container_env:
+      POSTGRES_DB: "{{ gitea_db_database_name }}"
+      POSTGRES_USER: "{{ gitea_db_username }}"
+      POSTGRES_PASSWORD: "{{ gitea_db_password }}"
+    container_volumes:
+      - "{{ gitea_db_data_location }}:/var/lib/postgresql/data"
+    container_networks:
+      - "{{ gitea_network }}"
+    container_network_aliases:
+      - database
+    container_user: "{{ gitea_user }}"
+

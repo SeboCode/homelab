@@ -99,6 +99,9 @@ The following services are available on the machine:
 | | | NextCloud Server | 20100 | :x: | `nextcloud(.dev).homelab.*` |
 | PhotoPrism | 20200 - 20299 | | | | |
 | | | PhotoPrism Server | 20200 | :x: | `photoprism(.dev).homelab.*` |
+| Gitea | 20300 - 20399 | | | | |
+| | | Gitea Server | 20300 | :x: | `gitea(.dev).homelab.*` |
+| | | Gitea Server SSH | 20322 | :x: | This is currently not working due to firewall and traefik configurations. Repositories can only be cloned via https. |
 
 ## Introduce new service
 
@@ -112,3 +115,19 @@ To introduce a new service, follow these steps:
 3. Add the service to the `active_services` variable in `ansible/group_vars/all.yaml`.
 4. Add the port to the vagrant configuration to be forwarded to the host machine for accessing the service locally
    without the need to go through Traefik (nice for debugging).
+
+# Post installation
+
+1. Setup Immich admin account and user accounts using the web overview.
+2. Setup Gitea admin account and user accounts using the web overview. In addition, set configuration flags during first
+   setup as follows:
+   1. Check correct port of server domain.
+   2. Disable `Enable Local Mode`.
+   3. Disable `Enable OpenID Sign-In`.
+   4. Enable `Disable Self-Registration`.
+   5. Enable `Require Sign-In to View Pages`.
+   6. Enable `Allow Creation of Organizations by Default`.
+   7. Enable `Enable Time Tracking by Default`.
+   8. Set password hash algorithm to `argon2`, if memory is not a limiting factor. Otherwise, choose based on your
+      system configuration.
+   9. Set correct administrator credentials.

@@ -8,6 +8,8 @@ active_services:
   #   service_port: "{{ nextcloud_server_port }}"
   - service_name: photoprism
     service_port: "{{ photoprism_server_port }}"
+  - service_name: gitea
+    service_port: "{{ gitea_server_port }}"
 
 # Traefik
 traefik_user: traefik-user
@@ -70,4 +72,20 @@ photoprism_mariadb_image: docker.io/mariadb
 photoprism_mariadb_tag: 11.8.3
 photoprism_db_database_name: photoprism_database
 photoprism_db_username: photoprism_mariadb_user
+
+# gitea
+gitea_user: gitea-user
+gitea_storage_directory: "/home/{{ gitea_user }}/gitea-storage"
+gitea_data_location: "{{ gitea_storage_directory }}/data"
+gitea_config_location: "{{ gitea_storage_directory }}/config"
+gitea_db_data_location: "{{ gitea_storage_directory }}/postgres"
+gitea_network: gitea_network
+gitea_server_image: docker.gitea.com/gitea
+gitea_server_tag: 1.24.5-rootless
+gitea_server_port: 20300
+gitea_server_ssh_port: 20322
+gitea_postgres_image: docker.io/postgres
+gitea_postgres_tag: 14.19
+gitea_db_database_name: gitea_database
+gitea_db_username: gitea_pg_user
 

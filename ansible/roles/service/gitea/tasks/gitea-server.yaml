@@ -1,0 +1,45 @@
+---
+- name: Ensure gitea upload location exists
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ gitea_user }}"
+    group: "{{ gitea_user }}"
+    mode: 0755
+    recurse: true
+  loop:
+    - "{{ gitea_data_location }}"
+    - "{{ gitea_config_location }}"
+
+- name: Instantiate gitea-server container
+  ansible.builtin.include_role:
+    name: infrastructure/container
+  vars:
+    container_name: gitea_server
+    container_image: "{{ gitea_server_image }}"
+    container_image_tag: "{{ gitea_server_tag }}"
+    container_env:
+      GITEA__database__DB_TYPE: postgres
+      GITEA__database__HOST: database:5432
+      GITEA__database__NAME: "{{ gitea_db_database_name }}"
+      GITEA__database__USER: "{{ gitea_db_username }}"
+      GITEA__database__PASSWD: "{{ gitea_db_password }}"
+    container_volumes:
+      - "{{ gitea_data_location }}:/var/lib/gitea:rw"
+      - "{{ gitea_data_location }}:/etc/gitea:rw"
+      - /etc/localtime:/etc/localtime:ro
+    container_ports:
+      - "{{ gitea_server_port }}:3000"
+      - "{{ gitea_server_ssh_port }}:2222"
+    container_networks:
+      - "{{ gitea_network }}"
+    container_network_aliases:
+      - gitea-server
+    container_user: "{{ gitea_user }}"
+
+- ansible.builtin.include_role:
+    name: infrastructure/http-healthcheck
+  vars:
+    service_name: gitea
+    service_port: "{{ gitea_server_port }}"
+

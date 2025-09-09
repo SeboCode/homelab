@@ -31,3 +31,8 @@ photoprism_db_password: photoprism-db-password
 photoprism_db_root_password: photoprism-db-root-password
 photoprism_admin_username: admin # PhotoPrism does not allow to create users in the free version. This is also the user to use the application with.
 photoprism_admin_password: admin
+
+# Gitea
+gitea_user_password: "123456"
+gitea_db_password: gitea-db-password
+
