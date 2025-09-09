@@ -1,4 +1,9 @@
 ---
+- name: Ensure intel microcode update is installed
+  ansible.builtin.package:
+    name: "{{ processor_microcode_package }}"
+    state: present
+
 - name: Ensure timezone data (tzdata) is installed
   ansible.builtin.package:
     name: tzdata
