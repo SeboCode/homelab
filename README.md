@@ -115,6 +115,7 @@ To introduce a new service, follow these steps:
 3. Add the service to the `active_services` variable in `ansible/group_vars/all.yaml`.
 4. Add the port to the vagrant configuration to be forwarded to the host machine for accessing the service locally
    without the need to go through Traefik (nice for debugging).
+5. Update router DNS entries to easily access the service in the home network.
 
 # Post installation
 
