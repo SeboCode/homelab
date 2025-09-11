@@ -95,6 +95,8 @@ The following services are available on the machine:
 | | | Traefik Websecure | 10443 | :heavy_check_mark: | |
 | Immich | 20000 - 20099 | | | | |
 | | | Immich Server | 20000 | :x: | `immich(.dev).homelab.*` |
+| Filebrowser | 20100 - 20199 | | | | |
+| | | Filebrowser Server | 20100 | :x: | `filebrowser(.dev).homelab.*` |
 | NextCloud | 20100 - 20199 | | | | |
 | | | NextCloud Server | 20100 | :x: | `nextcloud(.dev).homelab.*` |
 | PhotoPrism | 20200 - 20299 | | | | |

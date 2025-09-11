@@ -39,6 +39,10 @@
     network_aliases: "{{ container_network_aliases | default(omit) }}" # Cannot set alias in host network mode => used by traefik
     command: "{{ container_command | default(omit) }}"
 
+- name: Run post container creation tasks
+  include_tasks: "{{ post_container_creation_tasks }}"
+  when: post_container_creation_tasks is defined
+
 - name: Ensure user's s6 directory exists
   ansible.builtin.file:
     path: "/home/{{ container_user }}/s6-services/{{ container_name }}"

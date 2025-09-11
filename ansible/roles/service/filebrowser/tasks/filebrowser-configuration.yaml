@@ -1,0 +1,33 @@
+---
+- name: Database file state
+  ansible.builtin.stat:
+    path: "{{ filebrowser_db_data_location }}/filebrowser.db"
+  register: database_file
+
+- name: Get uid of filebrowser user
+  ansible.builtin.command: "id -u {{ filebrowser_user }}"
+  register: filebrowser_user_uid
+
+- name: Get gid of filebrowser user
+  ansible.builtin.command: "id -g {{ filebrowser_user }}"
+  register: filebrowser_user_gid
+
+- name: Ensure filebrowser server is configured correctly
+  containers.podman.podman_container:
+    name: filebrowser_server_config
+    image: "{{ filebrowser_server_image }}:{{ filebrowser_server_tag }}"
+    user: "{{ filebrowser_user_uid.stdout }}:{{ filebrowser_user_gid.stdout }}"
+    userns: keep-id
+    recreate: false
+    restart_policy: "no"
+    state: started
+    volumes:
+      - "{{ filebrowser_data_location }}:/srv"
+      - "{{ filebrowser_db_data_location }}:/database"
+      - "{{ filebrowser_config_location }}:/config"
+    command: "{{ item }}"
+  loop:
+    - "config init --create-user-dir --port 8080"
+    - "users add {{ filebrowser_admin_username }} {{ filebrowser_admin_password }} --perm.admin=true"
+  when: not database_file.stat.exists
+

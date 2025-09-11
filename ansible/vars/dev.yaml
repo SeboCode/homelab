@@ -13,6 +13,11 @@ traefik_dashboard_password: admin
 immich_user_password: "123456"
 immich_db_password: immich-db-password
 
+# Filebrowser
+filebrowser_user_password: "123456"
+filebrowser_admin_username: admin
+filebrowser_admin_password: adminadmin123*
+
 # Nextcloud
 nextcloud_user_password: "123456"
 nextcloud_db_password: nextcloud-db-password

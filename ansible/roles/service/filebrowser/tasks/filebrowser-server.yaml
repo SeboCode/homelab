@@ -1,0 +1,45 @@
+---
+- name: Ensure filebrowser data and config location exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ filebrowser_user }}"
+    group: "{{ filebrowser_user }}"
+    mode: 0755
+    recurse: true
+  loop:
+    - "{{ filebrowser_config_location }}"
+    - "{{ filebrowser_db_data_location }}"
+    - "{{ filebrowser_data_location }}"
+
+- name: Ensure apache configs for none root port usage are available for mounting
+  ansible.builtin.copy:
+    src: settings.json
+    dest: "{{ filebrowser_config_location }}"
+
+- name: Instantiate filebrowser-server container
+  ansible.builtin.include_role:
+    name: infrastructure/container
+  vars:
+    post_container_creation_tasks: tasks/filebrowser-configuration.yaml
+    container_name: filebrowser_server
+    container_image: "{{ filebrowser_server_image }}"
+    container_image_tag: "{{ filebrowser_server_tag }}"
+    container_volumes:
+      - "{{ filebrowser_data_location }}:/srv"
+      - "{{ filebrowser_db_data_location }}:/database"
+      - "{{ filebrowser_config_location }}:/config"
+    container_ports:
+      - "{{ filebrowser_server_port }}:8080"
+    container_networks:
+      - "{{ filebrowser_network }}"
+    container_network_aliases:
+      - filebrowser-server
+    container_user: "{{ filebrowser_user }}"
+
+- ansible.builtin.include_role:
+    name: infrastructure/http-healthcheck
+  vars:
+    service_name: filebrowser
+    service_port: "{{ filebrowser_server_port }}"
+

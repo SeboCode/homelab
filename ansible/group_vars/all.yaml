@@ -3,9 +3,8 @@
 active_services:
   - service_name: immich
     service_port: "{{ immich_server_port }}"
-  # Does not work well with traefik and is a pain to setup (not very modern) => search for alternative, maybe OpenCloud?
-  # - service_name: nextcloud
-  #   service_port: "{{ nextcloud_server_port }}"
+  - service_name: filebrowser
+    service_port: "{{ filebrowser_server_port }}"
   - service_name: photoprism
     service_port: "{{ photoprism_server_port }}"
   - service_name: gitea
@@ -57,6 +56,17 @@ nextcloud_postgres_image: docker.io/postgres
 nextcloud_postgres_tag: 16.10
 nextcloud_db_database_name: nextcloud_database
 nextcloud_db_username: nextcloud_pg_user
+
+# Filebrowser
+filebrowser_user: filebrowser-user
+filebrowser_storage_directory: "/home/{{ filebrowser_user }}/filebrowser-storage"
+filebrowser_config_location: "{{ filebrowser_storage_directory }}/config"
+filebrowser_data_location: "{{ filebrowser_storage_directory }}/data"
+filebrowser_db_data_location: "{{ filebrowser_storage_directory }}/database"
+filebrowser_network: filebrowser_network
+filebrowser_server_image: docker.io/filebrowser/filebrowser
+filebrowser_server_tag: v2.42.5
+filebrowser_server_port: 20100
 
 # PhotoPrism
 photoprism_user: photoprism-user
