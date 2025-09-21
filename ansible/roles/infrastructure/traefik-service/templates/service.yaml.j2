@@ -1,0 +1,15 @@
+http:
+  routers:
+    {{ service_name }}:
+      entryPoints:
+        - websecure
+      rule: "Host(`{{ service_name }}.{{ domain }}`)"
+      service: {{ service_name }}-service
+      tls:
+        certresolver: infomaniak
+  services:
+    {{ service_name }}-service:
+      loadBalancer:
+        servers:
+          - url: "http://localhost:{{ service_port }}"
+

@@ -6,6 +6,13 @@
     user_name: "{{ photoprism_user }}"
     user_password: "{{ photoprism_user_password }}"
 
+- name: Ensure treafik is configured
+  ansible.builtin.include_role:
+    name: infrastructure/traefik-service
+  vars:
+    service_name: photoprism
+    service_port: "{{ photoprism_server_port }}"
+
 - name: Ensure photoprism is running
   become: true
   become_user: "{{ photoprism_user }}"

@@ -1,4 +1,9 @@
 ---
+- name: Ensure traefik dynamic configuration location is cleared to avoid exposing subdomains that no longer serve services
+  ansible.builtin.file:
+    path: "{{ traefik_config_dynamic_location }}"
+    state: absent
+
 - name: Ensure traefik configuration location exists
   ansible.builtin.file:
     path: "{{ item }}"
@@ -28,12 +33,6 @@
   ansible.builtin.template:
     src: traefik-dashboard.yaml.j2
     dest: "{{ traefik_config_dynamic_location }}/traefik-dashboard.yaml"
-
-- name: Ensure traefik service configs are available
-  ansible.builtin.template:
-    src: service.yaml.j2
-    dest: "{{ traefik_config_dynamic_location }}/{{ item.service_name }}.yaml"
-  loop: "{{ active_services }}"
 
 - name: Instantiate traefik container
   ansible.builtin.include_role:
