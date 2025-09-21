@@ -1,17 +1,13 @@
 ---
 - name: Configure server node
   hosts: deployserver
-  tasks:
-    - name: Run node setup roles
-      ansible.builtin.include_role:
-        name: "{{ item }}"
-      loop:
-        - mirror
-        - base
-        - firewall
-        - traefik
-    - name: "Ensure all active services are configured and running"
-      ansible.builtin.include_role:
-        name: "service/{{ item.service_name }}"
-      loop: "{{ active_services }}"
+  roles:
+    - mirror
+    - base
+    - firewall
+    - traefik
+    - service/immich
+    - service/filebrowser
+    - service/photoprism
+    - service/gitea
 

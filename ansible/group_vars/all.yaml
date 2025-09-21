@@ -1,15 +1,4 @@
 ---
-# Services
-active_services:
-  - service_name: immich
-    service_port: "{{ immich_server_port }}"
-  - service_name: filebrowser
-    service_port: "{{ filebrowser_server_port }}"
-  - service_name: photoprism
-    service_port: "{{ photoprism_server_port }}"
-  - service_name: gitea
-    service_port: "{{ gitea_server_port }}"
-
 # Traefik
 traefik_user: traefik-user
 traefik_storage_directory: "/home/{{ traefik_user }}/traefik-storage"

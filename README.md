@@ -112,7 +112,7 @@ To introduce a new service, follow these steps:
    2. Every service has its own user to increase security and have a clearer separation of the independent services.
 2. Add all relevant configuration for the new service to the `ansible/group_vars/all.yaml` file.
    1. Secrets and other variables that are environment dependent have to be added to the `ansible/vars/<environment>.yaml` file.
-3. Add the service to the `active_services` variable in `ansible/group_vars/all.yaml`.
+3. Add the service role to the `ansible/deploy.yaml` file.
 4. Add the port to the vagrant configuration to be forwarded to the host machine for accessing the service locally
    without the need to go through Traefik (nice for debugging).
 5. Update router DNS entries to easily access the service in the home network.
