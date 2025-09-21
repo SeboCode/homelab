@@ -39,24 +39,6 @@ immich_postgres_tag: 14-vectorchord0.4.3-pgvectors0.2.0@sha256:32324a2f41df5de9e
 immich_db_database_name: immich_database
 immich_db_username: immich_pg_user
 
-# Nextcloud
-nextcloud_user: nextcloud-user
-nextcloud_storage_directory: "/home/{{ nextcloud_user }}/nextcloud-storage"
-nextcloud_apache_config_location: "{{ nextcloud_storage_directory }}/apache-config"
-nextcloud_config_location: "{{ nextcloud_storage_directory }}/config"
-nextcloud_data_location: "{{ nextcloud_storage_directory }}/data"
-nextcloud_db_data_location: "{{ nextcloud_storage_directory }}/postgres"
-nextcloud_network: nextcloud_network
-nextcloud_server_image: docker.io/nextcloud
-nextcloud_server_tag: 31.0.8-apache
-nextcloud_server_port: 20100
-nextcloud_redis_image: docker.io/redis
-nextcloud_redis_tag: 8.2.1
-nextcloud_postgres_image: docker.io/postgres
-nextcloud_postgres_tag: 16.10
-nextcloud_db_database_name: nextcloud_database
-nextcloud_db_username: nextcloud_pg_user
-
 # Filebrowser
 filebrowser_user: filebrowser-user
 filebrowser_storage_directory: "/home/{{ filebrowser_user }}/filebrowser-storage"

@@ -17,7 +17,7 @@ Vagrant.configure("2") do |config|
       env_config.vm.network :forwarded_port, guest: 10080, host: 10080, id: "traefik-http"
       env_config.vm.network :forwarded_port, guest: 10443, host: 10443, id: "traefik-https"
       env_config.vm.network :forwarded_port, guest: 20000, host: 20000, id: "immich"
-      env_config.vm.network :forwarded_port, guest: 20100, host: 20100, id: "nextcloud"
+      env_config.vm.network :forwarded_port, guest: 20100, host: 20100, id: "filebrowser"
       env_config.vm.network :forwarded_port, guest: 20200, host: 20200, id: "photoprism"
       env_config.vm.network :forwarded_port, guest: 20300, host: 20300, id: "gitea"
       env_config.vm.network :forwarded_port, guest: 20322, host: 20322, id: "gitea-ssh"
