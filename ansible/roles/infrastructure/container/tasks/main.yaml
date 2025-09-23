@@ -1,7 +1,17 @@
 ---
+- name: Gather s6 supervision status
+  ansible.builtin.stat:
+    path: "/home/{{ container_user }}/s6-services/{{ container_name }}/supervise/status"
+  register: container_s6_supervise_status
+
+- name: Gather s6 service state information
+  ansible.builtin.command: "s6-svstat -u /home/{{ container_user }}/s6-services/{{ container_name }}"
+  register: container_s6_state
+  when: container_s6_supervise_status.stat.exists
+
 - name: Ensure s6 stops container supervision
   ansible.builtin.command: "s6-svc -wD -D /home/{{ container_user }}/s6-services/{{ container_name }}"
-  ignore_errors: true # If the service is not running or the folder does not exist
+  when: container_s6_state is defined and container_s6_state.stdout is defined and container_s6_state.stdout == "true"
 
 - name: "Ensure {{ container_name }} container is removed"
   containers.podman.podman_container:
