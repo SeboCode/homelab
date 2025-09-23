@@ -1,6 +1,6 @@
 ---
 - name: Ensure s6 stops container supervision
-  ansible.builtin.command: "s6-svc -d /home/{{ container_user }}/s6-services/{{ container_name }}"
+  ansible.builtin.command: "s6-svc -wD -D /home/{{ container_user }}/s6-services/{{ container_name }}"
   ignore_errors: true # If the service is not running or the folder does not exist
 
 - name: "Ensure {{ container_name }} container is removed"
@@ -65,5 +65,5 @@
   ansible.builtin.command: "s6-svscanctl -a /home/{{ container_user }}/s6-services"
 
 - name: Ensure s6 starts container supervision (Will force the service to be in a started state.)
-  ansible.builtin.command: "s6-svc -u /home/{{ container_user }}/s6-services/{{ container_name }}"
+  ansible.builtin.command: "s6-svc -wU -U /home/{{ container_user }}/s6-services/{{ container_name }}"
 
