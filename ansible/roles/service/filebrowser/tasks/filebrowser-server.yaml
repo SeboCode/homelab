@@ -21,7 +21,7 @@
   ansible.builtin.include_role:
     name: infrastructure/container
   vars:
-    post_container_creation_tasks: tasks/filebrowser-configuration.yaml
+    post_container_creation_tasks: roles/service/filebrowser/tasks/filebrowser-configuration.yaml
     container_name: filebrowser_server
     container_image: "{{ filebrowser_server_image }}"
     container_image_tag: "{{ filebrowser_server_tag }}"
