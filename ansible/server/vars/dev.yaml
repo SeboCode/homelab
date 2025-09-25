@@ -1,7 +1,6 @@
 ---
 processor_microcode_package: intel-ucode
 superuser_method: sudo
-domain: dev.homelab.mikemarti.ch
 
 # Traefik
 traefik_user_password: "123456"

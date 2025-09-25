@@ -14,8 +14,10 @@ trap cleanup EXIT
 trap cleanup INT
 trap cleanup TERM
 
-ansible-playbook ansible/deploy.yaml \
+ansible-playbook ansible/server/deploy.yaml \
     --ask-vault-pass \
-    --inventory=ansible/inventory/prod.ini \
-    --extra-vars="@ansible/vars/prod.yaml"
+    --inventory=ansible/server/inventory/prod.ini \
+    --extra-vars="@ansible/commons/vars/prod.yaml"
+    --extra-vars="@ansible/commons/vars/prod-secrets.yaml"
+    --extra-vars="@ansible/server/vars/prod.yaml"
 

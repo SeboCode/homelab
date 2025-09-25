@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cd ./platform-stack/deployserver
+cd ./platform-stack/server
 
 vagrant provision --provision-with=ansible
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cd ./platform-stack/deployserver
+cd ./platform-stack/server
 
 vagrant destroy -f
 vagrant up --no-provision
