@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+set -o errexit
+set -o nounset
+set -o pipefail
+
+platformstack="${$1:-server}"
+
 echo "Starting and configuring ssh-agent to populate ssh private key for later use by Ansible..."
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/homelab
@@ -14,10 +20,10 @@ trap cleanup EXIT
 trap cleanup INT
 trap cleanup TERM
 
-ansible-playbook ansible/server/deploy.yaml \
+ansible-playbook "ansible/$platformstack/deploy.yaml" \
     --ask-vault-pass \
-    --inventory=ansible/server/inventory/prod.ini \
+    --inventory="ansible/$platformstack/inventory/prod.ini" \
     --extra-vars="@ansible/commons/vars/prod.yaml"
     --extra-vars="@ansible/commons/vars/prod-secrets.yaml"
-    --extra-vars="@ansible/server/vars/prod.yaml"
+    --extra-vars="@ansible/$platformstack/vars/prod.yaml"
 

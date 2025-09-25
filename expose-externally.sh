@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
 
-ansible-playbook ansible/server/expose-externally.yaml
+set -o errexit
+set -o nounset
+set -o pipefail
+
+platformstack="${$1:-server}"
+
+ansible-playbook "ansible/$platformstack/expose-externally.yaml"
 
