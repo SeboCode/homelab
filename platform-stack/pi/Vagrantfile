@@ -1,42 +1,49 @@
 Vagrant.configure("2") do |config|
-  config.vm.box = "debian/bookworm64"
-  config.vm.box_version = "12.20250126.1"
-  config.vm.hostname = "pi"
-  config.vm.network :forwarded_port, guest: 22, host: 10122, id: "ssh"
-  config.vm.network :forwarded_port, guest: 80, host: 80, id: "port-forwarded-to-traefik-http"
-  config.vm.network :forwarded_port, guest: 443, host: 443, id: "port-forwarded-to-traefik-https"
-  config.vm.network :forwarded_port, guest: 10080, host: 10080, id: "traefik-http"
-  config.vm.network :forwarded_port, guest: 10443, host: 10443, id: "traefik-https"
+  config.vm.define "pi" do |pi|
+    pi.vm.box = "generic/debian12"
+    pi.vm.box_version = "4.3.12"
+    pi.vm.hostname = "pi"
+    pi.vm.network :forwarded_port, guest: 22, host: 10122, id: "ssh"
+    pi.vm.network :forwarded_port, guest: 80, host: 80, id: "port-forwarded-to-traefik-http"
+    pi.vm.network :forwarded_port, guest: 443, host: 443, id: "port-forwarded-to-traefik-https"
+    pi.vm.network :forwarded_port, guest: 10080, host: 10080, id: "traefik-http"
+    pi.vm.network :forwarded_port, guest: 10443, host: 10443, id: "traefik-https"
 
-  config.vm.provider "libvirt" do |lv|
-    lv.memory = 8192
-    lv.cpus = 4
-  end
+    pi.vm.provider "libvirt" do |lv|
+      lv.memory = 8192
+      lv.cpus = 4
+    end
 
-  config.vm.provision "vm-setup", type: "shell", inline: <<-SHELL
-    echo "Upgrade all installed packages including the kernel..."
-    sudo apt update
-    sudo apt -y upgrade
-    echo "Install required packages..."
-    sudo apt -y install --no-cache \
-      python3
-    echo "Reboot needed to load potentially new kernel. Run 'vagrant reload' to reboot the VM..."
-  SHELL
+    pi.vm.provision "vm-setup", type: "shell", inline: <<-SHELL
+      echo "Upgrade all installed packages including the kernel..."
+      sudo truncate -s 0 /etc/apt/sources.list
+      sudo echo "deb https://debian.ethz.ch/debian stable main contrib non-free" >> /etc/apt/sources.list
+      sudo echo "deb-src https://debian.ethz.ch/debian stable main contrib non-free" >> /etc/apt/sources.list
+      sudo apt update
+      # sudo DEBIAN_FRONTEND=noninteractive apt -y \
+      #   -o Dpkg::Options::="--force-confdef" \
+      #   -o Dpkg::Options::="--force-confold" upgrade
+      echo "Install required packages..."
+      sudo DEBIAN_FRONTEND=noninteractive apt -y 
+        -o Dpkg::Options::="--force-confdef" \
+        -o Dpkg::Options::="--force-confold" install \
+        python3
+      echo "Reboot needed to load potentially new kernel. Run 'vagrant reload' to reboot the VM..."
+    SHELL
 
-  config.vm.provision "ansible", type: "ansible" do |ansible|
-    ansible.verbose = "v"
-    ansible.playbook = "../../ansible/deploy.yaml"
-    ansible.become = true # start ansible script with sudo and let the playbook handle privilege changes from there.
-    ansible.groups = { 
-      "deployserver" => [ "dev" ],
-      "configserver" => [ "localhost" ],
-      "configserver:vars" => { "ansible_connection" => "local" }
-    }
-    ansible.ask_vault_pass = true
-    ansible.raw_arguments = [
-      "--extra-vars=@../../ansible/commons/vars/dev.yaml",
-      "--extra-vars=@../../ansible/commons/vars/dev-secrets.yaml",
-      "--extra-vars=@../../ansible/pi/vars/dev.yaml",
-    ]
+    pi.vm.provision "ansible", type: "ansible" do |ansible|
+      ansible.verbose = "v"
+      ansible.playbook = "../../ansible/pi/deploy.yaml"
+      ansible.become = true # start ansible script with sudo and let the playbook handle privilege changes from there.
+      ansible.groups = { 
+        "deployserver" => [ "pi" ],
+      }
+      ansible.ask_vault_pass = true
+      ansible.raw_arguments = [
+        "--extra-vars=@../../ansible/commons/vars/dev.yaml",
+        "--extra-vars=@../../ansible/commons/vars/dev-secrets.yaml",
+        "--extra-vars=@../../ansible/pi/vars/dev.yaml",
+      ]
+    end
   end
 end
