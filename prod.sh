@@ -4,7 +4,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-platformstack="${$1:-server}"
+platformstack="${1:-server}"
 
 echo "Starting and configuring ssh-agent to populate ssh private key for later use by Ansible..."
 eval "$(ssh-agent -s)"
