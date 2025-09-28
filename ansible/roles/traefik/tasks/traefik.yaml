@@ -54,7 +54,7 @@
 - ansible.builtin.include_role:
     name: infrastructure/http-healthcheck
   vars:
-    service_name: traefik
+    service_name: "traefik-{{ traefik_subdomain_suffix }}"
     exposed_locally: false
     username: "{{ traefik_dashboard_username }}"
     password: "{{ traefik_dashboard_password }}"
