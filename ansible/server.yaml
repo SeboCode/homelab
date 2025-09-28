@@ -1,6 +1,6 @@
 ---
 - name: Configure server node
-  hosts: deployserver
+  hosts: server
   roles:
     - mirror
     - base
