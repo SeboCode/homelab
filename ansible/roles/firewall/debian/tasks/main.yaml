@@ -23,12 +23,6 @@
     port: ssh
     proto: tcp
 
-- name: Ensure dns connection is allowed
-  community.general.ufw:
-    rule: allow
-    port: '53'
-    proto: tcp
-
 - name: Ensure http connection is allowed
   community.general.ufw:
     rule: allow

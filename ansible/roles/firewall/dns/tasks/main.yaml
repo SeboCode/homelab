@@ -1,0 +1,13 @@
+---
+- name: Ensure dns connection is allowed
+  community.general.ufw:
+    rule: allow
+    port: '53'
+    proto: tcp
+
+- name: Ensure ufw rules are running and reloaded on boot
+  community.general.ufw:
+    state: enabled
+  async: 3
+  poll: 0
+
