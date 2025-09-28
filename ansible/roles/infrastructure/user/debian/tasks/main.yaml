@@ -1,0 +1,53 @@
+---
+- name: "Ensure {{ user_name }} is created"
+  ansible.builtin.user:
+    name: "{{ user_name }}"
+    create_home: true
+    home: "/home/{{ user_name }}"
+    password: "{{ user_password | password_hash('sha512') }}"
+    shell: /bin/bash
+    state: present
+
+- name: Ensure user linger is checked
+  ansible.builtin.stat:
+    path: "/var/lib/systemd/linger/{{ user_name }}"
+  register: user_lingering
+
+- name: "Ensure lingering for {{ user_name }} is enabled"
+  ansible.builtin.command: "loginctl enable-linger {{ user_name }}"
+  when: not user_lingering.stat.exists
+
+- name: "Ensure user lingering is reloaded and lingering of {{ user_name }} is active"
+  ansible.builtin.service:
+    name: systemd-logind.service
+    state: restarted
+  become: true
+  become_method: "{{ superuser_method }}"
+
+- name: Ensure systemd directory and user subdirectory exists
+  ansible.builtin.file:
+    path: "/home/{{ user_name }}/.config/systemd/user"
+    state: directory
+    owner: "{{ user_name }}"
+    group: "{{ user_name }}"
+    mode: 0755
+
+- name: Ensure podman tmp file storage environment variable is exported in .bashrc
+  ansible.builtin.lineinfile:
+    path: "/home/{{ user_name }}/.bashrc"
+    regexp: '^export XDG_RUNTIME_DIR'
+    line: 'export XDG_RUNTIME_DIR=/run/user/"$(id -u)"'
+    state: present
+    owner: "{{ user_name }}"
+    group: "{{ user_name }}"
+    create: true
+    insertafter: EOF
+
+- name: Ensure user's ansible tmp directory exists
+  ansible.builtin.file:
+    path: "/home/{{ user_name }}/.ansible/tmp"
+    state: directory
+    owner: "{{ user_name }}"
+    group: "{{ user_name }}"
+    mode: 0700
+
