@@ -1,4 +1,7 @@
 ---
+# Traefik
+traefik_subdomain_suffix: pi
+
 # Pihole
 pihole_user: pihole-user
 pihole_storage_directory: "/home/{{ pihole_user }}/pihole-storage"
