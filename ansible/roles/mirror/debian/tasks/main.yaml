@@ -1,0 +1,13 @@
+---
+- name: Ensure mirrors are configured
+  ansible.builtin.copy:
+    dest: /etc/apt/sources.list
+    content: |
+      deb https://debian.ethz.ch/debian stable main contrib non-free
+      deb-src https://debian.ethz.ch/debian stable main contrib non-free
+      deb https://mirror.init7.net/debian stable main contrib non-free
+      deb-src https://mirror.init7.net/debian stable main contrib non-free
+    owner: root
+    group: root
+    mode: 0644
+

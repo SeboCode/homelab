@@ -19,4 +19,6 @@
         - "{{ photoprism_server_port }}"
         - "{{ gitea_server_port }}"
         - "{{ traefik_dashboard_port }}"
+        - "{{ pihole_server_port }}"
+        - "{{ homeassistant_server_port }}"
 

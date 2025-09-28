@@ -1,0 +1,17 @@
+---
+- name: Ensure timezone data (tzdata) is installed
+  ansible.builtin.package:
+    name: tzdata
+    state: present
+
+- name: Ensure timezone is configured correctly
+  ansible.builtin.file:
+    src: /usr/share/zoneinfo/Europe/Zurich
+    dest: /etc/localtime
+    state: link
+
+- name: Ensure podman is installed
+  ansible.builtin.package:
+    name: podman
+    state: present
+

@@ -1,0 +1,19 @@
+---
+# Pihole
+pihole_user: pihole-user
+pihole_storage_directory: "/home/{{ pihole_user }}/pihole-storage"
+pihole_config_location: "{{ pihole_storage_directory }}/config"
+pihole_network: pihole_network
+pihole_server_image: TODO
+pihole_server_tag: TODO
+pihole_server_port: 20000
+
+# Home Assistant
+homeassistant_user: homeassistant-user
+homeassistant_storage_directory: "/home/{{ homeassistant_user }}/homeassistant-storage"
+homeassistant_config_location: "{{ filebrowser_storage_directory }}/config"
+homeassistant_network: homeassistant_network
+homeassistant_server_image: TODO
+homeassistant_server_tag: TODO
+homeassistant_server_port: 20100
+

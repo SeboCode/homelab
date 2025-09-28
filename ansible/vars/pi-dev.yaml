@@ -1,0 +1,11 @@
+---
+superuser_method: sudo
+
+# Pihole
+pihole_user_password: "123456"
+pihole_admin_username: admin
+pihole_admin_password: admin
+
+# Home Assistant
+homeassistant_user_password: "123456"
+
