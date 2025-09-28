@@ -1,14 +1,4 @@
 ---
-# Traefik
-traefik_user: traefik-user
-traefik_storage_directory: "/home/{{ traefik_user }}/traefik-storage"
-traefik_config_location: "{{ traefik_storage_directory }}/config"
-traefik_config_dynamic_location: "{{ traefik_storage_directory }}/config_dynamic"
-traefik_image: docker.io/traefik
-traefik_tag: v3.5.1
-traefik_web_port: 10080
-traefik_websecure_port: 10443
-
 # Immich
 immich_user: immich-user
 immich_storage_directory: "/home/{{ immich_user }}/immich-storage"
@@ -54,7 +44,7 @@ photoprism_mariadb_tag: 11.8.3
 photoprism_db_database_name: photoprism_database
 photoprism_db_username: photoprism_mariadb_user
 
-# gitea
+# Gitea
 gitea_user: gitea-user
 gitea_storage_directory: "/home/{{ gitea_user }}/gitea-storage"
 gitea_data_location: "{{ gitea_storage_directory }}/data"
