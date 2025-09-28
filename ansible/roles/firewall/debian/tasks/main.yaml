@@ -1,0 +1,49 @@
+---
+- name: Ensure ufw is installed
+  ansible.builtin.package:
+    name: "ufw"
+    state: present
+
+- name: Ensure incoming and routed traffic is denied by default
+  community.general.ufw:
+    default: deny
+    direction: "{{ item }}"
+  loop:
+    - incoming
+    - routed
+
+- name: Ensure outgoing traffic is allowed by default
+  community.general.ufw:
+    default: allow
+    direction: outgoing
+
+- name: Ensure ssh connection is allowed
+  community.general.ufw:
+    rule: allow
+    port: ssh
+    proto: tcp
+
+- name: Ensure dns connection is allowed
+  community.general.ufw:
+    rule: allow
+    port: '53'
+    proto: tcp
+
+- name: Ensure http connection is allowed
+  community.general.ufw:
+    rule: allow
+    port: http
+    proto: tcp
+
+- name: Ensure https connection is allowed
+  community.general.ufw:
+    rule: allow
+    port: https
+    proto: tcp
+
+- name: Ensure ufw rules are running and reloaded on boot
+  community.general.ufw:
+    state: enabled
+  async: 3
+  poll: 0
+
