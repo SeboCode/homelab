@@ -1,61 +1,52 @@
 Vagrant.configure("2") do |config|
-  staging_environments = [
-    {
-      :environment => "dev",
-      :ssh_port => "10022",
-    }
-  ]
+  config.vm.define "server" do |server|
+    server.vm.box = "generic/alpine319"
+    server.vm.box_version = "4.3.12"
+    server.vm.hostname = "server"
+    server.vm.network :forwarded_port, guest: 22, host: 10022, id: "ssh"
+    server.vm.network :forwarded_port, guest: 80, host: 80, id: "port-forwarded-to-traefik-http"
+    server.vm.network :forwarded_port, guest: 443, host: 443, id: "port-forwarded-to-traefik-https"
+    server.vm.network :forwarded_port, guest: 10080, host: 10080, id: "traefik-http"
+    server.vm.network :forwarded_port, guest: 10443, host: 10443, id: "traefik-https"
+    server.vm.network :forwarded_port, guest: 20000, host: 20000, id: "immich"
+    server.vm.network :forwarded_port, guest: 20100, host: 20100, id: "filebrowser"
+    server.vm.network :forwarded_port, guest: 20200, host: 20200, id: "photoprism"
+    server.vm.network :forwarded_port, guest: 20300, host: 20300, id: "gitea"
+    server.vm.network :forwarded_port, guest: 20322, host: 20322, id: "gitea-ssh"
 
-  staging_environments.each do |env|
-    config.vm.define env[:environment] do |env_config|
-      env_config.vm.box = "generic/alpine319"
-      env_config.vm.box_version = "4.3.12"
-      env_config.vm.hostname = env[:environment]
-      env_config.vm.network :forwarded_port, guest: 22, host: env[:ssh_port], id: "ssh"
-      env_config.vm.network :forwarded_port, guest: 80, host: 80, id: "port-forwarded-to-traefik-http"
-      env_config.vm.network :forwarded_port, guest: 443, host: 443, id: "port-forwarded-to-traefik-https"
-      env_config.vm.network :forwarded_port, guest: 10080, host: 10080, id: "traefik-http"
-      env_config.vm.network :forwarded_port, guest: 10443, host: 10443, id: "traefik-https"
-      env_config.vm.network :forwarded_port, guest: 20000, host: 20000, id: "immich"
-      env_config.vm.network :forwarded_port, guest: 20100, host: 20100, id: "filebrowser"
-      env_config.vm.network :forwarded_port, guest: 20200, host: 20200, id: "photoprism"
-      env_config.vm.network :forwarded_port, guest: 20300, host: 20300, id: "gitea"
-      env_config.vm.network :forwarded_port, guest: 20322, host: 20322, id: "gitea-ssh"
+    server.vm.provider "libvirt" do |lv|
+      lv.memory = 8192
+      lv.cpus = 4
+    end
 
-      env_config.vm.provider "libvirt" do |lv|
-        lv.memory = 8192
-        lv.cpus = 4
-      end
+    server.vm.provision "vm-setup", type: "shell", inline: <<-SHELL
+      echo "Set correct alpine mirror list..."
+      sudo truncate -s 0 /etc/apk/repositories
+      sudo echo "https://alpine.ethz.ch/alpine/v3.19/main" >> /etc/apk/repositories
+      sudo echo "https://alpine.ethz.ch/alpine/v3.19/community" >> /etc/apk/repositories
+      echo "Upgrade all installed packages including the kernel..."
+      sudo apk update
+      sudo apk upgrade
+      echo "Install required packages..."
+      sudo apk add --no-cache \
+        python3
+      echo "Reboot needed to load potentially new kernel. Run 'vagrant reload' to reboot the VM..."
+    SHELL
 
-      env_config.vm.provision "vm-setup", type: "shell", inline: <<-SHELL
-        echo "Set correct alpine mirror list..."
-        sudo truncate -s 0 /etc/apk/repositories
-        sudo echo "https://alpine.ethz.ch/alpine/v3.19/main" >> /etc/apk/repositories
-        sudo echo "https://alpine.ethz.ch/alpine/v3.19/community" >> /etc/apk/repositories
-        echo "Upgrade all installed packages including the kernel..."
-        sudo apk update
-        sudo apk upgrade
-        echo "Install required packages..."
-        sudo apk add --no-cache \
-          python3
-        echo "Reboot needed to load potentially new kernel. Run 'vagrant reload' to reboot the VM..."
-      SHELL
-
-      env_config.vm.provision "ansible", type: "ansible" do |ansible|
-        ansible.verbose = "v"
-        ansible.playbook = "../../ansible/server.yaml"
-        ansible.become = true # start ansible script with sudo and let the playbook handle privilege changes from there.
-        ansible.groups = { 
-          "deployserver" => [ env[:environment] ],
-        }
-        ansible.ask_vault_pass = true
-        ansible.raw_arguments = [
-          "--extra-vars=@../../ansible/group_vars/server.yaml",
-          "--extra-vars=@../../ansible/vars/#{env[:environment]}-secrets.yaml",
-          "--extra-vars=@../../ansible/vars/#{env[:environment]}.yaml",
-          "--extra-vars=@../../ansible/vars/#{env[:environment]}-server.yaml",
-        ]
-      end
+    server.vm.provision "ansible", type: "ansible" do |ansible|
+      ansible.verbose = "v"
+      ansible.playbook = "../../ansible/server.yaml"
+      ansible.become = true # start ansible script with sudo and let the playbook handle privilege changes from there.
+      ansible.groups = { 
+        "deployserver" => [ "server" ],
+      }
+      ansible.ask_vault_pass = true
+      ansible.raw_arguments = [
+        "--extra-vars=@../../ansible/group_vars/server.yaml",
+        "--extra-vars=@../../ansible/vars/dev-secrets.yaml",
+        "--extra-vars=@../../ansible/vars/dev.yaml",
+        "--extra-vars=@../../ansible/vars/dev-server.yaml",
+      ]
     end
   end
 end
