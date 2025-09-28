@@ -24,6 +24,5 @@ ansible-playbook "ansible/$platformstack.yaml" \
     --ask-vault-pass \
     --inventory="ansible/inventory/$platformstack.ini" \
     --extra-vars="@ansible/vars/prod.yaml"
-    --extra-vars="@ansible/vars/prod-secrets.yaml"
     --extra-vars="@ansible/vars/$platformstack.yaml"
 
