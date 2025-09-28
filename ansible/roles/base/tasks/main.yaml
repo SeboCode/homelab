@@ -1,0 +1,4 @@
+---
+- ansible.builtin.include_role:
+    name: "base/{{ platform }}"
+

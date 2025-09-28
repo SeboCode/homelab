@@ -2,8 +2,8 @@
 - name: Configure server node
   hosts: server
   roles:
-    - mirror/alpine
-    - base/alpine
+    - mirror
+    - base
     - firewall
     - traefik
     - service/immich

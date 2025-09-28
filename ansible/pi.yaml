@@ -2,6 +2,6 @@
 - name: Configure pi node
   hosts: pi
   roles:
-    - mirror/debian
-    - base/debian
+    - mirror
+    - base
 
