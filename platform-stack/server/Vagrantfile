@@ -47,8 +47,6 @@ Vagrant.configure("2") do |config|
         ansible.become = true # start ansible script with sudo and let the playbook handle privilege changes from there.
         ansible.groups = { 
           "deployserver" => [ env[:environment] ],
-          "configserver" => [ "localhost" ],
-          "configserver:vars" => { "ansible_connection" => "local" }
         }
         ansible.ask_vault_pass = true
         ansible.raw_arguments = [
