@@ -6,4 +6,5 @@
     - base
     - firewall
     - firewall/dns
+    - traefik
 
