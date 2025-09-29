@@ -17,23 +17,35 @@
     default: allow
     direction: outgoing
 
-- name: Ensure ssh connection is allowed
-  community.general.ufw:
-    rule: allow
-    port: ssh
-    proto: tcp
+- name: Ensure NAT rules are present in ufw manual configuration
+  ansible.builtin.blockinfile:
+    path: /etc/ufw/before.rules
+    marker: "# {mark} ANSIBLE NAT RULES"
+    block: |
+      *nat
+      :PREROUTING ACCEPT [0:0]
+      :OUTPUT ACCEPT [0:0]
+      :POSTROUTING ACCEPT [0:0]
 
-- name: Ensure http connection is allowed
-  community.general.ufw:
-    rule: allow
-    port: http
-    proto: tcp
+      -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports {{ traefik_web_port }}
+      -A PREROUTING -i eth0 -p tcp --dport 443 -j REDIRECT --to-ports {{ traefik_websecure_port }}
+      -A PREROUTING -i tailscale0 -p tcp --dport 80 -j REDIRECT --to-ports {{ traefik_web_port }}
+      -A PREROUTING -i tailscale0 -p tcp --dport 443 -j REDIRECT --to-ports {{ traefik_websecure_port }}
+      -A OUTPUT -o lo -p tcp --dport 80 -j REDIRECT --to-ports {{ traefik_web_port }}
+      -A OUTPUT -o lo -p tcp --dport 443 -j REDIRECT --to-ports {{ traefik_websecure_port }}
+      COMMIT
+    insertbefore: BOF
+    create: false
 
-- name: Ensure https connection is allowed
+- name: Ensure ssh and traefik connection is allowed
   community.general.ufw:
     rule: allow
-    port: https
+    port: "{{ item }}"
     proto: tcp
+  loop:
+    - ssh
+    - "{{ traefik_web_port }}"
+    - "{{ traefik_websecure_port }}"
 
 - name: Ensure ufw rules are running and reloaded on boot
   community.general.ufw:
