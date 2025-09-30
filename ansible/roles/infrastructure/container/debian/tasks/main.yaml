@@ -3,7 +3,7 @@
   ansible.builtin.systemd:
     scope: user
     name: "container-{{ container_name }}.service"
-    enabled: no
+    enabled: false
     state: stopped
   register: "result_container_stop"
   failed_when: "result_container_stop is failed and 'Could not find the requested service' not in result_container_stop.msg"
@@ -55,7 +55,7 @@
   ansible.builtin.systemd:
     scope: user
     name: "container-{{ container_name }}.service"
-    enabled: yes
-    daemon_reload: yes
+    enabled: true
+    daemon_reload: true
     state: started
 
