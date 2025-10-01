@@ -1,0 +1,62 @@
+---
+- name: Ensure homeassistant config location exists
+  ansible.builtin.file:
+    path: "{{ homeassistant_config_location }}"
+    state: directory
+    owner: "{{ homeassistant_user }}"
+    group: "{{ homeassistant_user }}"
+    mode: 0755
+    recurse: true
+
+- name: Instantiate homeassistant-server container
+  ansible.builtin.include_role:
+    name: infrastructure/container
+  vars:
+    container_name: homeassistant_server
+    container_image: "{{ homeassistant_server_image }}"
+    container_image_tag: "{{ homeassistant_server_tag }}"
+    container_volumes:
+      - "{{ homeassistant_config_location }}:/config:rw"
+      - /etc/localtime:/etc/localtime:ro
+    container_ports:
+      - "{{ homeassistant_server_port }}:8123"
+    container_networks:
+      - "{{ homeassistant_network }}"
+    container_network_aliases:
+      - homeassistant-server
+    container_user: "{{ homeassistant_user }}"
+
+- name: Ensure homeassistant is started and configuration exists (necessary if executed for the first time)
+  ansible.builtin.include_role:
+    name: infrastructure/http-healthcheck
+  vars:
+    service_name: homeassistant
+    service_port: "{{ homeassistant_server_port }}"
+    skip_reverse_proxy: true
+
+- name: Ensure homeassistant is configured correctly
+  ansible.builtin.blockinfile:
+    path: "{{ homeassistant_config_location }}/configuration.yaml"
+    marker: "# {mark} ANSIBLE CONFIGURATION"
+    block: |
+      http:
+        use_x_forwarded_for: true
+        trusted_proxies:
+          # This is not a viable option, if HA is exposed directly. The current setup only exposes it via
+          # the reverse proxy and in the local environment due to the firewall configuration. As such,
+          # this is acceptable.
+          - 0.0.0.0/0
+    insertafter: EOF
+    create: false
+
+- name: Restart homeassistant container to update configuration
+  containers.podman.podman_container:
+    name: homeassistant_server
+    restart: true
+
+- ansible.builtin.include_role:
+    name: infrastructure/http-healthcheck
+  vars:
+    service_name: homeassistant
+    service_port: "{{ homeassistant_server_port }}"
+
