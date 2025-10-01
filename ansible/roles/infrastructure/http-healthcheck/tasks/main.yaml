@@ -21,4 +21,5 @@
   until: result.status == 200
   retries: 30
   delay: 2
+  when: not skip_reverse_proxy
 
