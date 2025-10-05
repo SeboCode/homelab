@@ -8,6 +8,13 @@
     mode: 0755
     recurse: true
 
+- name: Ensure treafik is configured for immich
+  ansible.builtin.include_role:
+    name: infrastructure/traefik-service
+  vars:
+    service_name: immich
+    service_port: "{{ immich_server_port }}"
+
 - name: Instantiate immich-server container
   ansible.builtin.include_role:
     name: infrastructure/container

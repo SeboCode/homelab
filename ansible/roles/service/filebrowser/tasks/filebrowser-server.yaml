@@ -17,6 +17,13 @@
     src: settings.json
     dest: "{{ filebrowser_config_location }}"
 
+- name: Ensure treafik is configured for filebrowser
+  ansible.builtin.include_role:
+    name: infrastructure/traefik-service
+  vars:
+    service_name: filebrowser
+    service_port: "{{ filebrowser_server_port }}"
+
 - name: Instantiate filebrowser-server container
   ansible.builtin.include_role:
     name: infrastructure/container

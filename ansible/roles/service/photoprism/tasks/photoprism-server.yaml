@@ -11,6 +11,13 @@
     - "{{ photoprism_originals_location }}"
     - "{{ photoprism_storage_location }}"
 
+- name: Ensure treafik is configured for photoprism
+  ansible.builtin.include_role:
+    name: infrastructure/traefik-service
+  vars:
+    service_name: photoprism
+    service_port: "{{ photoprism_server_port }}"
+
 - name: Instantiate photoprism-server container
   ansible.builtin.include_role:
     name: infrastructure/container

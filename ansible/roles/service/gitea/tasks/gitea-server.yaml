@@ -11,6 +11,13 @@
     - "{{ gitea_data_location }}"
     - "{{ gitea_config_location }}"
 
+- name: Ensure treafik is configured for gitea
+  ansible.builtin.include_role:
+    name: infrastructure/traefik-service
+  vars:
+    service_name: gitea
+    service_port: "{{ gitea_server_port }}"
+
 - name: Instantiate gitea-server container
   ansible.builtin.include_role:
     name: infrastructure/container
