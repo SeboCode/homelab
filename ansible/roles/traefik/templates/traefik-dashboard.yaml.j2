@@ -3,7 +3,7 @@ http:
     dashboard:
       entryPoints:
         - websecure
-      rule: "Host(`traefik-{{ traefik_subdomain_suffix }}.{{ domain }}`)"
+      rule: "Host(`traefik.{{ domain }}`)"
       service: api@internal
       tls:
         certresolver: infomaniak

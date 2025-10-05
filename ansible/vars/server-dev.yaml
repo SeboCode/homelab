@@ -4,9 +4,6 @@ platform: alpine
 processor_microcode_package: intel-ucode
 superuser_method: sudo
 
-# Traefik
-traefik_subdomain_suffix: server
-
 # Immich
 immich_user_password: "123456"
 immich_db_password: immich-db-password
