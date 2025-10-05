@@ -19,4 +19,6 @@ pihole_admin_password: admin
 
 # Home Assistant
 homeassistant_user_password: "123456"
+homeassistant_mosquitto_homeassistant_username: homeassistant
+homeassistant_mosquitto_homeassistant_password: homeassistant
 

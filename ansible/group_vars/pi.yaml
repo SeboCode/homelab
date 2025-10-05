@@ -12,8 +12,11 @@ pihole_server_port: 20400
 homeassistant_user: homeassistant-user
 homeassistant_storage_directory: "/home/{{ homeassistant_user }}/homeassistant-storage"
 homeassistant_config_location: "{{ homeassistant_storage_directory }}/config"
+homeassistant_mosquitto_config_location: "{{ homeassistant_storage_directory }}/mosquitto-config"
 homeassistant_network: homeassistant_network
 homeassistant_server_image: ghcr.io/home-assistant/home-assistant
 homeassistant_server_tag: 2025.9.4
 homeassistant_server_port: 20500
+homeassistant_mosquitto_image: docker.io/eclipse-mosquitto
+homeassistant_mosquitto_tag: 2.0.22
 

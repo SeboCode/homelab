@@ -1,0 +1,41 @@
+---
+- name: Ensure mosquitto config location exists
+  ansible.builtin.file:
+    path: "{{ homeassistant_mosquitto_config_location }}"
+    state: directory
+    owner: "{{ homeassistant_user }}"
+    group: "{{ homeassistant_user }}"
+    mode: 0755
+    recurse: true
+
+- name: Ensure mosquitto config exists
+  ansible.builtin.copy:
+    dest: "{{ homeassistant_mosquitto_config_location }}"
+    src: mosquitto.conf
+    owner: "{{ homeassistant_user }}"
+    group: "{{ homeassistant_user }}"
+    mode: 0644
+
+- name: Ensure mosquitto password config exists
+  ansible.builtin.template:
+    dest: "{{ homeassistant_mosquitto_config_location }}/passwords"
+    src: mosquitto/passwords.j2
+    owner: "{{ homeassistant_user }}"
+    group: "{{ homeassistant_user }}"
+    mode: 0600
+
+- name: Instantiate mosquitto container
+  ansible.builtin.include_role:
+    name: infrastructure/container
+  vars:
+    container_name: mosquitto
+    container_image: "{{ homeassistant_mosquitto_image }}"
+    container_image_tag: "{{ homeassistant_mosquitto_tag }}"
+    container_volumes:
+      - "{{ homeassistant_mosquitto_config_location }}:/mosquitto/config:ro"
+    container_networks:
+      - "{{ homeassistant_network }}"
+    container_network_aliases:
+      - mosquitto
+    container_user: "{{ homeassistant_user }}"
+
