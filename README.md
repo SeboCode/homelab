@@ -102,6 +102,10 @@ The following services are available on the machine:
 | Gitea | 20300 - 20399 | | | | |
 | | | Gitea Server | 20300 | :x: | `gitea(.dev).homelab.*` |
 | | | Gitea Server SSH | 20322 | :x: | This is currently not working due to firewall and traefik configurations. Repositories can only be cloned via https. |
+| Pihole | 20400 - 20499 | | | | |
+| Homeassistant | 20500 - 20599 | | | | |
+| | | Homeassistant Server | 20500 | :x: | `homeassistant(.dev).homelab.*` |
+| | | Zigbee2MQTT Frontend | 20501 | :x: | `zigbee2mqtt(.dev).homelab.*` |
 
 ## Introduce new service
 
