@@ -1,10 +1,11 @@
 # Homelab
 
-This is the setup script to configure my private homelab server. It builds on Ansible to configure the homelab server
-and provision the services using Podman. The Ansible playbook is built such that it configures an Alpine Linux machine.
-For local development, the Ansible playbook is run on an Alpine Linux VM, provisioned using Vagrant.
+This is the setup script to configure my private homelab. It builds on Ansible to configure the homelab servers and
+provision the services using Podman. The Ansible playbook is built such that it configures an Alpine Linux machine
+for the server and a Debian based Pi OS Lite for the Raspberry Pi. For local development, the Ansible playbook is
+run on an Alpine/Debian Linux VM, provisioned using Vagrant.
 
-# Installation guide
+# Installation guide for server
 
 This is the installation guide describes how to set up ACME Let's Encrypt certificate configuration, how to prepare the
 local and remote DNS entries and how to install the os and perform manual setup steps.
@@ -84,28 +85,40 @@ updated.
 2. Check that the `ansible/inventory/prod.ini` file is configured correctly.
 3. Execute the bash script `prod.sh`.
 
+# Installation guide for Pi
+
+TODO
+
 # Services
 
-The following services are available on the machine:
+The following services are available on the server machine:
 | Service | Reserved Portrange | Exposed Service | Port of exposed Service | Directly accessible | Url Accessibility |
 | :------ | -----------------: | :-------------- | ----------------------: | :-----------------: | :---------------- |
 | Traefik | 10000 - 19999 | | | | |
-| | | Traefik API/Dashboard | 8080 | :x: | `traefik(.dev).homelab.*` |
+| | | Traefik API/Dashboard | 8080 | :x: | `traefik(.dev).*` |
 | | | Traefik Web | 10080 | :heavy_check_mark: | |
 | | | Traefik Websecure | 10443 | :heavy_check_mark: | |
 | Immich | 20000 - 20099 | | | | |
-| | | Immich Server | 20000 | :x: | `immich(.dev).homelab.*` |
+| | | Immich Server | 20000 | :x: | `immich(.dev).*` |
 | Filebrowser | 20100 - 20199 | | | | |
-| | | Filebrowser Server | 20100 | :x: | `filebrowser(.dev).homelab.*` |
+| | | Filebrowser Server | 20100 | :x: | `filebrowser(.dev).*` |
 | PhotoPrism | 20200 - 20299 | | | | |
-| | | PhotoPrism Server | 20200 | :x: | `photoprism(.dev).homelab.*` |
+| | | PhotoPrism Server | 20200 | :x: | `photoprism(.dev).*` |
 | Gitea | 20300 - 20399 | | | | |
-| | | Gitea Server | 20300 | :x: | `gitea(.dev).homelab.*` |
+| | | Gitea Server | 20300 | :x: | `gitea(.dev).*` |
 | | | Gitea Server SSH | 20322 | :x: | This is currently not working due to firewall and traefik configurations. Repositories can only be cloned via https. |
+
+The following services are available on the pi machine:
+| Service | Reserved Portrange | Exposed Service | Port of exposed Service | Directly accessible | Url Accessibility |
+| :------ | -----------------: | :-------------- | ----------------------: | :-----------------: | :---------------- |
+| Traefik | 10000 - 19999 | | | | |
+| | | Traefik API/Dashboard | 8080 | :x: | `traefik(.dev).*` |
+| | | Traefik Web | 10080 | :heavy_check_mark: | |
+| | | Traefik Websecure | 10443 | :heavy_check_mark: | |
 | Pihole | 20400 - 20499 | | | | |
 | Homeassistant | 20500 - 20599 | | | | |
-| | | Homeassistant Server | 20500 | :x: | `homeassistant(.dev).homelab.*` |
-| | | Zigbee2MQTT Frontend | 20501 | :x: | `zigbee2mqtt(.dev).homelab.*` |
+| | | Homeassistant Server | 20500 | :x: | `homeassistant(.dev).*` |
+| | | Zigbee2MQTT Frontend | 20501 | :x: | `zigbee2mqtt(.dev).*` |
 
 ## Introduce new service
 
