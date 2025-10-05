@@ -40,6 +40,7 @@
     env: "{{ container_env }}"
     volumes: "{{ container_volumes }}"
     ports: "{{ container_ports }}"
+    device: "{{ container_device }}"
     network: "{{ container_networks }}"
     network_aliases: "{{ container_network_aliases | default(omit) }}" # Cannot set alias in host network mode => used by traefik
     command: "{{ container_command | default(omit) }}"

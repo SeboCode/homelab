@@ -44,6 +44,7 @@ Vagrant.configure("2") do |config|
       ansible.raw_arguments = [
         "--extra-vars=@../../ansible/vars/dev-secrets.yaml",
         "--extra-vars=@../../ansible/vars/server-dev.yaml",
+        "--skip-tags=prod-only",
       ]
     end
   end

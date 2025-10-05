@@ -9,9 +9,9 @@
     recurse: true
 
 - name: Ensure mosquitto config exists
-  ansible.builtin.copy:
-    dest: "{{ homeassistant_mosquitto_config_location }}"
-    src: mosquitto.conf
+  ansible.builtin.template:
+    dest: "{{ homeassistant_mosquitto_config_location }}/mosquitto.conf"
+    src: mosquitto/mosquitto.conf.j2
     owner: "{{ homeassistant_user }}"
     group: "{{ homeassistant_user }}"
     mode: 0644

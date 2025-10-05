@@ -26,5 +26,6 @@
         state: present
 
     - include_tasks: mosquitto.yaml
+    - include_tasks: zigbee2mqtt.yaml
     - include_tasks: homeassistant-server.yaml
 

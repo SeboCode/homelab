@@ -2,3 +2,5 @@
 container_env: {}
 container_volumes: []
 container_ports: []
+container_device: []
+
