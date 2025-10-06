@@ -6,13 +6,19 @@ set -o pipefail
 
 platformstack="${1:-server}"
 
+if [[ $platformstack == server ]]; then
+    node="charon"
+else
+    node="daisy"
+fi
+
 echo "Starting and configuring ssh-agent to populate ssh private key for later use by Ansible..."
 eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/homelab
+ssh-add ~/.ssh/homelab-$node
 
 cleanup() {
     echo "Cleaning up ssh-agent and ssh private key..."
-    ssh-add -d ~/.ssh/homelab
+    ssh-add -d ~/.ssh/homelab-$node
     eval "$(ssh-agent -k)"
 }
 
