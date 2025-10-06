@@ -1,8 +1,6 @@
 ---
 - name: Configure pi node
-  hosts:
-    - pi
-    - homelab-daisy
+  hosts: pi
   roles:
     - mirror
     - base

@@ -1,8 +1,6 @@
 ---
 - name: Configure server node
-  hosts:
-    - server
-    - homelab-charon
+  hosts: server
   roles:
     - mirror
     - base
