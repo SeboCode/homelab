@@ -11,3 +11,7 @@
     group: root
     mode: 0644
 
+- name: Ensure apt cache is updated
+  ansible.builtin.apt:
+    update_cache: true
+
