@@ -40,6 +40,7 @@
     container_image_tag: "{{ homeassistant_zigbee2mqtt_tag }}"
     container_env:
       TZ: Europe/Zurich
+      # Use environment variable to let zigbee2mqtt handle proper escaping, if necessary.
       ZIGBEE2MQTT_CONFIG_FRONTEND_AUTH_TOKEN: "{{ homeassistant_zigbee2mqtt_frontend_auth_token }}"
       ZIGBEE2MQTT_CONFIG_MQTT_USER: "{{ homeassistant_mosquitto_zigbee2mqtt_username }}"
       ZIGBEE2MQTT_CONFIG_MQTT_PASSWORD: "{{ homeassistant_mosquitto_zigbee2mqtt_password }}"
