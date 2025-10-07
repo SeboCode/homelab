@@ -23,6 +23,14 @@
     service_name: zigbee2mqtt
     service_port: "{{ homeassistant_zigbee2mqtt_port }}"
 
+- name: "Ensure {{ homeassistant_user }} is the owner of the zigbee adapter device"
+  ansible.builtin.file:
+    path: "{{ homeassistant_zigbee2mqtt_zigbee_device_id }}"
+    owner: "{{ homeassistant_user }}"
+    group: "{{ homeassistant_user }}"
+  become: true
+  become_method: "{{ superuser_method }}"
+
 - name: Instantiate zigbee2mqtt container
   ansible.builtin.include_role:
     name: infrastructure/container
@@ -41,7 +49,7 @@
     container_ports:
       - "{{ homeassistant_zigbee2mqtt_port }}:8080"
     container_device:
-      - "{{ homeassistant_zigbee2mqtt_zigbee_device_id }}:/dev/ttyACM0"
+      - "{{ homeassistant_zigbee2mqtt_zigbee_device_id }}:/dev/ttyUSB0"
     container_networks:
       - "{{ homeassistant_network }}"
     container_network_aliases:

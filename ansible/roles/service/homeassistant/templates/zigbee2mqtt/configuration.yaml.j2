@@ -1,5 +1,7 @@
 frontend:
   enabled: true
+serial:
+  port: /dev/ttyUSB0
 mqtt:
   base_topic: homeassistant
   server: mqtt://mosquitto:{{ homeassistant_mosquitto_internal_port }}
