@@ -24,7 +24,8 @@
 
 - name: "Pull {{ container_name }} image"
   containers.podman.podman_image:
-    name: "{{ container_image }}:{{ container_image_tag }}"
+    name: "{{ container_image }}"
+    tag: "{{ container_image_tag }}"
     force: true
 
 - name: "Ensure {{ container_name }} container is created"
