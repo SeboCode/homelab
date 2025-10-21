@@ -137,15 +137,18 @@ To introduce a new service, follow these steps:
 # Post installation
 
 1. Setup Immich admin account and user accounts using the web overview.
-2. Setup Gitea admin account and user accounts using the web overview. In addition, set configuration flags during first
+2. Setup Filebrowser user accounts using the web overview.
+3. Setup Gitea admin account and user accounts using the web overview. In addition, set configuration flags during first
    setup as follows:
-   1. Check correct port of server domain.
-   2. Disable `Enable Local Mode`.
-   3. Disable `Enable OpenID Sign-In`.
-   4. Enable `Disable Self-Registration`.
-   5. Enable `Require Sign-In to View Pages`.
-   6. Enable `Allow Creation of Organizations by Default`.
-   7. Enable `Enable Time Tracking by Default`.
-   8. Set password hash algorithm to `argon2`, if memory is not a limiting factor. Otherwise, choose based on your
+   1. Set domain to `localhost`
+   2. Check that the ports are set to the containers internal ports, which are exposed to the host, not the ports over
+      which the service is accessible from the outside.
+   3. Disable `Enable Local Mode`.
+   4. Disable `Enable OpenID Sign-In`.
+   5. Enable `Disable Self-Registration`.
+   6. Enable `Require Sign-In to View Pages`.
+   7. Enable `Allow Creation of Organizations by Default`.
+   8. Enable `Enable Time Tracking by Default`.
+   9. Set password hash algorithm to `argon2`, if memory is not a limiting factor. Otherwise, choose based on your
       system configuration.
-   9. Set correct administrator credentials.
+   10. Set correct administrator credentials.
