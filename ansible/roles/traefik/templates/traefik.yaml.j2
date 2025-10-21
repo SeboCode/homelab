@@ -11,6 +11,11 @@ entryPoints:
           scheme: https
   websecure:
     address: ":{{ traefik_websecure_port }}"
+    # This disables upload restrictions for large files. If not set, traefik will kill the connection after a set amount
+    # of time.
+    transport:
+      respondingTimeouts:
+        readTimeout: "0s"
 certificatesResolvers:
     infomaniak:
       acme:
