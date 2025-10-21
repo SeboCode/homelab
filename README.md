@@ -101,7 +101,7 @@ The following services are available on the server machine:
 | Immich | 20000 - 20099 | | | | |
 | | | Immich Server | 20000 | :x: | `immich(.dev).*` |
 | Filebrowser | 20100 - 20199 | | | | |
-| | | Filebrowser Server | 20100 | :x: | `drive(.dev).*` |
+| | | Filebrowser Server | 20100 | :x: | `filebrowser(.dev).*` |
 | PhotoPrism | 20200 - 20299 | | | | |
 | | | PhotoPrism Server | 20200 | :x: | `photoprism(.dev).*` |
 | Gitea | 20300 - 20399 | | | | |
