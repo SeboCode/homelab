@@ -4,6 +4,12 @@ platform: alpine
 processor_microcode_package: intel-ucode
 superuser_method: sudo
 
+# Traefik
+traefik_user_password: "123456"
+traefik_ca_server: "https://acme-staging-v02.api.letsencrypt.org/directory"
+traefik_dashboard_username: admin
+traefik_dashboard_password: admin
+
 # Immich
 immich_user_password: "123456"
 immich_db_password: immich-db-password
