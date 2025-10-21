@@ -21,7 +21,7 @@
   ansible.builtin.include_role:
     name: infrastructure/traefik-service
   vars:
-    service_name: filebrowser
+    service_name: drive # filebrowser subdomain results in dns resolution issues.
     service_port: "{{ filebrowser_server_port }}"
 
 - name: Instantiate filebrowser-server container
@@ -47,6 +47,6 @@
 - ansible.builtin.include_role:
     name: infrastructure/http-healthcheck
   vars:
-    service_name: filebrowser
+    service_name: drive # filebrowser subdomain results in dns resolution issues.
     service_port: "{{ filebrowser_server_port }}"
 
