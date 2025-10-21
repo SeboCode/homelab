@@ -6,6 +6,8 @@ set -o pipefail
 
 platformstack="${1:-server}"
 
+source virtualenv.sh
+
 cd "./platform-stack/$platformstack"
 
 vagrant provision --provision-with=ansible
