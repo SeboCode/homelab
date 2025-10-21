@@ -88,6 +88,13 @@
   become: true
   when: superuser_method == "doas"
 
+- name: Ensure s6 supervisor service shutdown script is executed
+  ansible.builtin.command: "s6-svscanctl -t /home/{{ user_name }}/s6-services"
+  become: true
+  become_user: "{{ user_name }}"
+  become_method: "{{ superuser_method }}"
+  ignore_errors: true
+
 - name: Ensure s6 supervisor service startup script is executed
   ansible.builtin.shell: "s6-svscan /home/{{ user_name }}/s6-services &"
   become: true
