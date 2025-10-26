@@ -1,8 +1,27 @@
 frontend:
   enabled: true
+  url: "https://zigbee2mqtt.{{ domain }}"
 serial:
   port: /dev/ttyUSB0
 mqtt:
-  base_topic: homeassistant
+  base_topic: zigbee2mqtt
   server: mqtt://mosquitto:{{ homeassistant_mosquitto_internal_port }}
-
+homeassistant:
+  enabled: true
+devices:
+  '0x3425b4fffe12db4a':
+    friendly_name: living_room/temparature_and_humidity_sensor
+    homeassistant:
+      name: Living Room Temparature and Humidity Sensor
+  '0x001788010e3633e0':
+    friendly_name: living_room/ceiling_light
+    homeassistant:
+      name: Living Room Ceiling Light
+  '0x001788010e2bc677':
+    friendly_name: living_room/philips_hue_dimmer_switch
+    homeassistant:
+      name: Living Room Philips Hue Dimmer Switch
+  '0x3425b4fffe136b61':
+    friendly_name: bedroom/temparature_and_humidity_sensor
+    homeassistant:
+      name: Bedroom Temparature and Humidity Sensor
