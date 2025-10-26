@@ -6,6 +6,22 @@
     user_name: "{{ homeassistant_user }}"
     user_password: "{{ homeassistant_user_password }}"
 
+- name: "Ensure {{ homeassistant_user }} is the owner of the zigbee adapter device"
+  ansible.builtin.template:
+    dest: /etc/udev/rules.d/99-zigbee-stick.rules
+    src: zigbee2mqtt/99-zigbee-stick.rules.j2
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  become_method: "{{ superuser_method }}"
+
+- name: Reload udev rules
+  ansible.builtin.command: "{{ superuser_method }} udevadm control --reload-rules"
+
+- name: Trigger udev rule load
+  ansible.builtin.command: "{{ superuser_method }} udevadm trigger"
+
 - name: Ensure homeassistant is running
   become: true
   become_user: "{{ homeassistant_user }}"

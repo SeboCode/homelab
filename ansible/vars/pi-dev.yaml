@@ -21,5 +21,6 @@ homeassistant_mosquitto_homeassistant_password: homeassistant
 homeassistant_mosquitto_zigbee2mqtt_username: zigbee2mqtt
 homeassistant_mosquitto_zigbee2mqtt_password: zigbee2mqtt
 homeassistant_zigbee2mqtt_frontend_auth_token: admin
+homeassistant_zigbee2mqtt_zigbee_device_id_serial: 00000
 homeassistant_zigbee2mqtt_zigbee_device_id: /dev/null
 
