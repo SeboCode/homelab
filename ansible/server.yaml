@@ -4,6 +4,7 @@
   roles:
     - mirror
     - base
+    - wakeonlan
     - firewall
     - traefik
     - service/immich

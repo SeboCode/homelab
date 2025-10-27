@@ -1,0 +1,16 @@
+---
+- name: Ensure ethtool is installed
+  ansible.builtin.package:
+    name: ethtool
+    state: present
+
+- name: Ensure wake-on-lan configuration script to execute on local service startup
+  ansible.builtin.copy:
+    dest: "/etc/local.d/wake-on-lan.start"
+    content: |
+      #!/bin/sh
+      {{ superuser_method }} ethtool -s eth0 wol g
+    owner: root
+    group: root
+    mode: 0755
+
