@@ -8,4 +8,5 @@
     - firewall/dns
     - traefik
     - service/homeassistant
+    - service/karakeep
 

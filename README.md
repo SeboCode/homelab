@@ -119,6 +119,8 @@ The following services are available on the pi machine:
 | Homeassistant | 20500 - 20599 | | | | |
 | | | Homeassistant Server | 20500 | :x: | `homeassistant(.dev).*` |
 | | | Zigbee2MQTT Frontend | 20501 | :x: | `zigbee2mqtt(.dev).*` |
+| Karakeep | 20600 - 20699 | | | | |
+| | | Karakeep Server | 20600 | :x: | `karakeep(.dev).*` |
 
 ## Introduce new service
 

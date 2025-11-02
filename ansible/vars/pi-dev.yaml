@@ -24,3 +24,9 @@ homeassistant_zigbee2mqtt_frontend_auth_token: admin
 homeassistant_zigbee2mqtt_zigbee_device_id_serial: 00000
 homeassistant_zigbee2mqtt_zigbee_device_id: /dev/null
 
+# Karakeep
+karakeep_user_password: "123456"
+karakeep_nextauth_secret: karakeep_nextauth_secret
+karakeep_meilisearch_master_key: karakeep_meilisearch_master_key
+karakeep_disable_signups: "false"
+

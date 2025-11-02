@@ -1,0 +1,31 @@
+---
+- name: "Ensure {{ karakeep_user }} is created"
+  ansible.builtin.include_role:
+    name: infrastructure/user
+  vars:
+    user_name: "{{ karakeep_user }}"
+    user_password: "{{ karakeep_user_password }}"
+
+- name: Ensure karakeep is running
+  become: true
+  become_user: "{{ karakeep_user }}"
+  block:
+    - name: Ensure karakeep storage directory location exists
+      ansible.builtin.file:
+        path: "{{ karakeep_storage_directory }}"
+        state: directory
+        owner: "{{ karakeep_user }}"
+        group: "{{ karakeep_user }}"
+        mode: 0755
+
+    - name: Ensure karakeep container network is created
+      containers.podman.podman_network:
+        name: "{{ karakeep_network }}"
+        driver: bridge
+        recreate: false
+        state: present
+
+    - include_tasks: karakeep-chrome.yaml
+    - include_tasks: karakeep-meilisearch.yaml
+    - include_tasks: karakeep-server.yaml
+

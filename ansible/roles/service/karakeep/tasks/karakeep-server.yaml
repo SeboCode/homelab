@@ -1,0 +1,48 @@
+---
+- name: Ensure karakeep data location exist
+  ansible.builtin.file:
+    path: "{{ karakeep_data_location }}"
+    state: directory
+    owner: "{{ karakeep_user }}"
+    group: "{{ karakeep_user }}"
+    mode: 0755
+    recurse: true
+
+- name: Ensure treafik is configured for karakeep
+  ansible.builtin.include_role:
+    name: infrastructure/traefik-service
+  vars:
+    service_name: karakeep
+    service_port: "{{ karakeep_server_port }}"
+
+- name: Instantiate karakeep-server container
+  ansible.builtin.include_role:
+    name: infrastructure/container
+  vars:
+    container_name: karakeep_server
+    container_image: "{{ karakeep_server_image }}"
+    container_image_tag: "{{ karakeep_server_tag }}"
+    container_env:
+      DATA_DIR: /data
+      DISABLE_SIGNUPS: "{{ karakeep_disable_signups }}"
+      NEXTAUTH_URL: http://localhost:3000
+      NEXTAUTH_SECRET: "{{ karakeep_nextauth_secret }}"
+      MEILI_ADDR: http://meilisearch:7700
+      MEILI_MASTER_KEY: "{{ karakeep_meilisearch_master_key }}"
+      BROWSER_ADDR: http://chrome:9222
+    container_volumes:
+      - "{{ karakeep_data_location }}:/data"
+    container_ports:
+      - "{{ karakeep_server_port }}:3000"
+    container_networks:
+      - "{{ karakeep_network }}"
+    container_network_aliases:
+      - karakeep-server
+    container_user: "{{ karakeep_user }}"
+
+- ansible.builtin.include_role:
+    name: infrastructure/http-healthcheck
+  vars:
+    service_name: karakeep
+    service_port: "{{ karakeep_server_port }}"
+
