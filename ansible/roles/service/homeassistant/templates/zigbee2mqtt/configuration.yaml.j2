@@ -15,6 +15,8 @@ devices:
       name: Living Room Temparature and Humidity Sensor
   '0x001788010e3633e0':
     friendly_name: living_room/ceiling_lamp
+    availability:
+      timeout: 1 # This sets the device to unavailable after 1 minute at which point home assistant will set its state to off
     homeassistant:
       name: Living Room Ceiling Lamp
   '0x001788010e2bc677':
