@@ -9,3 +9,5 @@ traefik_tag: v3.5.1
 traefik_web_port: 10080
 traefik_websecure_port: 10443
 
+wol_poweroff_user: wol-poweroff-user
+
