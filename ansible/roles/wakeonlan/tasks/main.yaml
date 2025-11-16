@@ -14,3 +14,40 @@
     group: root
     mode: 0755
 
+- name: Ensure user to power off machine is created
+  ansible.builtin.user:
+    name: wol-poweroff-user
+    create_home: true
+    home: /home/wol-poweroff-user
+    password_lock: true
+    shell: /bin/sh
+    state: present
+
+- name: Ensure wol-poweroff-user can turn off the machine without beeing prompted for a password
+  ansible.builtin.lineinfile:
+    path: /etc/doas.conf
+    line: "permit nopass wol-poweroff-user as root cmd {{ superuser_method }} /sbin/poweroff"
+    state: present
+    owner: root
+    group: root
+    create: true
+    insertafter: EOF
+  become: true
+
+- name: Ensure ssh directory exists
+  ansible.builtin.file:
+    path: "/home/wol-poweroff-user/.ssh"
+    state: directory
+    owner: wol-poweroff-user
+    group: wol-poweroff-user
+    mode: 0755
+
+- name: Ensure ssh public key is in authorized_keys file
+  ansible.builtin.copy:
+    dest: "/home/wol-poweroff-user/.ssh/authorized_keys"
+    content: |
+      {{ wol_poweroff_user_ssh_public_key_base64 | b64decode }}
+    owner: wol-poweroff-user
+    group: wol-poweroff-user
+    mode: 0600
+
