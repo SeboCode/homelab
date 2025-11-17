@@ -4,6 +4,13 @@ platform: alpine
 processor_microcode_package: intel-ucode
 superuser_method: sudo
 
+# This public key is the counterpart to the private ssh key found in the pi variable file. It is stored as an authorized
+# key for the wol_poweroff_user, such that a remote actor with the private key counterpart can initiate a remote poweroff
+# command through an unprivileged user. In order to not need to deploy all nodes simultaneously, a key pair was created
+# ahead of time and stored in the variable files, as opposed to creating one during ansible execution time. The key
+# presented here is intended for local development only and should not be used with real systems. For non-local
+# environments a new ssh key pair can be created using ssh-keygen.
+# DO NOT USE IN PRODUCTION UNDER ANY CIRCUMSTANCES!!
 wol_poweroff_user_ssh_public_key_base64: c3NoLWVkMjU1MTkgQUFBQUMzTnphQzFsWkRJMU5URTVBQUFBSUxreWNQQTZYV2pFTWZ0Ykx3MkVYSFFLZ01KMG93YVZVKzE1Y2NnYTBxRy8gbWlrZUBtaWtlLWhvbWUtbGludXgK
 
 # Traefik
