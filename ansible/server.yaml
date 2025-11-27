@@ -4,6 +4,7 @@
   roles:
     - mirror
     - base
+    - zfs
     - wakeonlan
     - firewall
     - traefik

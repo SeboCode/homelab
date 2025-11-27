@@ -3,6 +3,9 @@ domain: dev.homelab.mikemarti.ch
 platform: alpine
 processor_microcode_package: intel-ucode
 superuser_method: sudo
+zfs_devices:
+  - /dev/vdb
+  - /dev/vdc
 
 # This public key is the counterpart to the private ssh key found in the pi variable file. It is stored as an authorized
 # key for the wol_poweroff_user, such that a remote actor with the private key counterpart can initiate a remote poweroff

@@ -1,0 +1,21 @@
+---
+- name: Ensure zfs is installed
+  ansible.builtin.package:
+    name: zfs
+    state: present
+
+- name: Ensure zfs module is loaded
+  community.general.modprobe:
+    name: zfs
+    state: present
+
+- name: Ensure toplevel zpool for service data is created
+  community.general.zpool:
+    name: service_data
+    state: present
+    filesystem_properties:
+      compression: lz4
+    vdevs:
+      - disks: "{{ zfs_devices }}"
+        type: mirror
+
