@@ -1,7 +1,10 @@
 ---
+# ZFS configuration
+zfs_service_data_pool_name: service_data
+
 # Immich
 immich_user: immich-user
-immich_storage_directory: "/home/{{ immich_user }}/immich-storage"
+immich_storage_directory: "/{{ zfs_service_data_pool_name }}/immich-storage"
 immich_upload_location: "{{ immich_storage_directory }}/library"
 immich_db_data_location: "{{ immich_storage_directory }}/postgres"
 immich_redis_data_location: "{{ immich_storage_directory }}/redis"
@@ -20,7 +23,7 @@ immich_db_username: immich_pg_user
 
 # Filebrowser
 filebrowser_user: filebrowser-user
-filebrowser_storage_directory: "/home/{{ filebrowser_user }}/filebrowser-storage"
+filebrowser_storage_directory: "/{{ zfs_service_data_pool_name }}/filebrowser-storage"
 filebrowser_config_location: "{{ filebrowser_storage_directory }}/config"
 filebrowser_data_location: "{{ filebrowser_storage_directory }}/data"
 filebrowser_db_data_location: "{{ filebrowser_storage_directory }}/database"
@@ -31,7 +34,7 @@ filebrowser_server_port: 20100
 
 # PhotoPrism
 photoprism_user: photoprism-user
-photoprism_storage_directory: "/home/{{ photoprism_user }}/photoprism-storage"
+photoprism_storage_directory: "/{{ zfs_service_data_pool_name }}/photoprism-storage"
 photoprism_originals_location: "{{ photoprism_storage_directory }}/originals"
 photoprism_storage_location: "{{ photoprism_storage_directory }}/storage"
 photoprism_db_data_location: "{{ photoprism_storage_directory }}/mariadb"
@@ -46,7 +49,7 @@ photoprism_db_username: photoprism_mariadb_user
 
 # Gitea
 gitea_user: gitea-user
-gitea_storage_directory: "/home/{{ gitea_user }}/gitea-storage"
+gitea_storage_directory: "/{{ zfs_service_data_pool_name }}/gitea-storage"
 gitea_data_location: "{{ gitea_storage_directory }}/data"
 gitea_config_location: "{{ gitea_storage_directory }}/config"
 gitea_db_data_location: "{{ gitea_storage_directory }}/postgres"

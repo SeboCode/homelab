@@ -1,0 +1,9 @@
+---
+- name: Create storage directory
+  ansible.builtin.file:
+    path: "{{ path }}"
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: 0755
+

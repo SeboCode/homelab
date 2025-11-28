@@ -11,7 +11,7 @@
 
 - name: Ensure toplevel zpool for service data is created
   community.general.zpool:
-    name: service_data
+    name: "{{ zfs_service_data_pool_name }}"
     state: present
     filesystem_properties:
       compression: lz4

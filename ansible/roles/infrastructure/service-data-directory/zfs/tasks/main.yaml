@@ -1,0 +1,16 @@
+---
+- name: Create file system in data storage zfs pool
+  community.general.zfs:
+    name: "{{ path | regex_replace('^\\/', '') }}"
+    state: present
+    extra_zfs_properties:
+      checksum: on
+      snapdir: visible
+
+- name: Set correct ownership of data folder
+  ansible.builtin.file:
+    path: "{{ path }}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: 0755
+

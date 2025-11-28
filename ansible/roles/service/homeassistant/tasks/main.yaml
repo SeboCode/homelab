@@ -22,18 +22,17 @@
 - name: Trigger udev rule load
   ansible.builtin.command: "{{ superuser_method }} udevadm trigger"
 
+- name: Ensure homeassistant storage directory location exists
+  ansible.builtin.include_role:
+    name: infrastructure/service-data-directory
+  vars:
+    path: "{{ homeassistant_storage_directory }}"
+    user: "{{ homeassistant_user }}"
+
 - name: Ensure homeassistant is running
   become: true
   become_user: "{{ homeassistant_user }}"
   block:
-    - name: Ensure homeassistant storage directory location exists
-      ansible.builtin.file:
-        path: "{{ homeassistant_storage_directory }}"
-        state: directory
-        owner: "{{ homeassistant_user }}"
-        group: "{{ homeassistant_user }}"
-        mode: 0755
-
     - name: Ensure homeassistant container network is created
       containers.podman.podman_network:
         name: "{{ homeassistant_network }}"

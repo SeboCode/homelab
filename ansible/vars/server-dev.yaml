@@ -3,6 +3,7 @@ domain: dev.homelab.mikemarti.ch
 platform: alpine
 processor_microcode_package: intel-ucode
 superuser_method: sudo
+service_data_filesystem: zfs
 zfs_devices:
   - /dev/vdb
   - /dev/vdc

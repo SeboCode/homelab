@@ -6,18 +6,17 @@
     user_name: "{{ gitea_user }}"
     user_password: "{{ gitea_user_password }}"
 
+- name: Ensure gitea storage directory location exists
+  ansible.builtin.include_role:
+    name: infrastructure/service-data-directory
+  vars:
+    path: "{{ gitea_storage_directory }}"
+    user: "{{ gitea_user }}"
+
 - name: Ensure gitea is running
   become: true
   become_user: "{{ gitea_user }}"
   block:
-    - name: Ensure gitea storage directory location exists
-      ansible.builtin.file:
-        path: "{{ gitea_storage_directory }}"
-        state: directory
-        owner: "{{ gitea_user }}"
-        group: "{{ gitea_user }}"
-        mode: 0755
-
     - name: Ensure gitea container network is created
       containers.podman.podman_network:
         name: "{{ gitea_network }}"

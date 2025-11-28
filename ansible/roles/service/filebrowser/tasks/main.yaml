@@ -6,18 +6,17 @@
     user_name: "{{ filebrowser_user }}"
     user_password: "{{ filebrowser_user_password }}"
 
+- name: Ensure filebrowser storage directory location exists
+  ansible.builtin.include_role:
+    name: infrastructure/service-data-directory
+  vars:
+    path: "{{ filebrowser_storage_directory }}"
+    user: "{{ filebrowser_user }}"
+
 - name: Ensure filebrowser is running
   become: true
   become_user: "{{ filebrowser_user }}"
   block:
-    - name: Ensure filebrowser storage directory location exists
-      ansible.builtin.file:
-        path: "{{ filebrowser_storage_directory }}"
-        state: directory
-        owner: "{{ filebrowser_user }}"
-        group: "{{ filebrowser_user }}"
-        mode: 0755
-
     - name: Ensure filebrowser container network is created
       containers.podman.podman_network:
         name: "{{ filebrowser_network }}"
