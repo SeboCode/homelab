@@ -1,13 +1,13 @@
 ---
 - name: "Ensure {{ immich_user }} is created"
-  ansible.builtin.include_role:
+  ansible.builtin.import_role:
     name: infrastructure/user
   vars:
     user_name: "{{ immich_user }}"
     user_password: "{{ immich_user_password }}"
 
 - name: Ensure immich storage directory location exists
-  ansible.builtin.include_role:
+  ansible.builtin.import_role:
     name: infrastructure/service-data-directory
   vars:
     path: "{{ immich_storage_directory }}"
@@ -24,8 +24,8 @@
         recreate: false
         state: present
 
-    - include_tasks: immich-database.yaml
-    - include_tasks: immich-redis.yaml
-    - include_tasks: immich-machine-learning.yaml
-    - include_tasks: immich-server.yaml
+    - import_tasks: immich-database.yaml
+    - import_tasks: immich-redis.yaml
+    - import_tasks: immich-machine-learning.yaml
+    - import_tasks: immich-server.yaml
 

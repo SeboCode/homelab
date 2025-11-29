@@ -9,7 +9,7 @@
     recurse: true
 
 - name: Instantiate immich-redis container
-  ansible.builtin.include_role:
+  ansible.builtin.import_role:
     name: infrastructure/container
   vars:
     container_name: immich_redis

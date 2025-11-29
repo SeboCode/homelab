@@ -1,13 +1,13 @@
 ---
 - name: "Ensure {{ photoprism_user }} is created"
-  ansible.builtin.include_role:
+  ansible.builtin.import_role:
     name: infrastructure/user
   vars:
     user_name: "{{ photoprism_user }}"
     user_password: "{{ photoprism_user_password }}"
 
 - name: Ensure photoprism storage directory location exists
-  ansible.builtin.include_role:
+  ansible.builtin.import_role:
     name: infrastructure/service-data-directory
   vars:
     path: "{{ photoprism_storage_directory }}"
@@ -24,6 +24,6 @@
         recreate: false
         state: present
 
-    - include_tasks: photoprism-database.yaml
-    - include_tasks: photoprism-server.yaml
+    - import_tasks: photoprism-database.yaml
+    - import_tasks: photoprism-server.yaml
 

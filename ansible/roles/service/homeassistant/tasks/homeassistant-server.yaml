@@ -9,14 +9,14 @@
     recurse: true
 
 - name: Ensure treafik is configured for homeassistant
-  ansible.builtin.include_role:
+  ansible.builtin.import_role:
     name: infrastructure/traefik-service
   vars:
     service_name: homeassistant
     service_port: "{{ homeassistant_server_port }}"
 
 - name: Instantiate homeassistant-server container
-  ansible.builtin.include_role:
+  ansible.builtin.import_role:
     name: infrastructure/container
   vars:
     container_name: homeassistant_server
@@ -34,7 +34,7 @@
     container_user: "{{ homeassistant_user }}"
 
 - name: Ensure homeassistant is started and configuration exists (necessary if executed for the first time)
-  ansible.builtin.include_role:
+  ansible.builtin.import_role:
     name: infrastructure/http-healthcheck
   vars:
     service_name: homeassistant
@@ -89,7 +89,7 @@
     name: homeassistant_server
     restart: true
 
-- ansible.builtin.include_role:
+- ansible.builtin.import_role:
     name: infrastructure/http-healthcheck
   vars:
     service_name: homeassistant

@@ -35,7 +35,7 @@
     dest: "{{ traefik_config_dynamic_location }}/traefik-dashboard.yaml"
 
 - name: Instantiate traefik container
-  ansible.builtin.include_role:
+  ansible.builtin.import_role:
     name: infrastructure/container
   vars:
     container_name: traefik
@@ -51,7 +51,7 @@
       - host # Has to be exposed to the host, as it needs access to all services in its localhost network
     container_user: "{{ traefik_user }}"
 
-- ansible.builtin.include_role:
+- ansible.builtin.import_role:
     name: infrastructure/http-healthcheck
   vars:
     service_name: "traefik"

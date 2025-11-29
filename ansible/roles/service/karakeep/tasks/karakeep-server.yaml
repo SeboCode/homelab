@@ -9,14 +9,14 @@
     recurse: true
 
 - name: Ensure treafik is configured for karakeep
-  ansible.builtin.include_role:
+  ansible.builtin.import_role:
     name: infrastructure/traefik-service
   vars:
     service_name: karakeep
     service_port: "{{ karakeep_server_port }}"
 
 - name: Instantiate karakeep-server container
-  ansible.builtin.include_role:
+  ansible.builtin.import_role:
     name: infrastructure/container
   vars:
     container_name: karakeep_server
@@ -40,7 +40,7 @@
       - karakeep-server
     container_user: "{{ karakeep_user }}"
 
-- ansible.builtin.include_role:
+- ansible.builtin.import_role:
     name: infrastructure/http-healthcheck
   vars:
     service_name: karakeep

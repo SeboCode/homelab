@@ -1,6 +1,6 @@
 ---
 - name: "Ensure {{ homeassistant_user }} is created"
-  ansible.builtin.include_role:
+  ansible.builtin.import_role:
     name: infrastructure/user
   vars:
     user_name: "{{ homeassistant_user }}"
@@ -23,7 +23,7 @@
   ansible.builtin.command: "{{ superuser_method }} udevadm trigger"
 
 - name: Ensure homeassistant storage directory location exists
-  ansible.builtin.include_role:
+  ansible.builtin.import_role:
     name: infrastructure/service-data-directory
   vars:
     path: "{{ homeassistant_storage_directory }}"
@@ -40,7 +40,7 @@
         recreate: false
         state: present
 
-    - include_tasks: mosquitto.yaml
-    - include_tasks: zigbee2mqtt.yaml
-    - include_tasks: homeassistant-server.yaml
+    - import_tasks: mosquitto.yaml
+    - import_tasks: zigbee2mqtt.yaml
+    - import_tasks: homeassistant-server.yaml
 

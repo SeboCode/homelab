@@ -5,7 +5,7 @@
     name: model-cache
 
 - name: Instantiate immich-machine-learning container
-  ansible.builtin.include_role:
+  ansible.builtin.import_role:
     name: infrastructure/container
   vars:
     container_name: immich_machine_learning

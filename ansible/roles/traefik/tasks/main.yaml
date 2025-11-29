@@ -1,6 +1,6 @@
 ---
 - name: "Ensure {{ traefik_user }} is created"
-  ansible.builtin.include_role:
+  ansible.builtin.import_role:
     name: infrastructure/user
   vars:
     user_name: "{{ traefik_user }}"
@@ -18,5 +18,5 @@
         group: "{{ traefik_user }}"
         mode: 0755
 
-    - include_tasks: traefik.yaml
+    - import_tasks: traefik.yaml
 

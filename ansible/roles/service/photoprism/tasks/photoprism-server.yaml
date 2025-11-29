@@ -12,14 +12,14 @@
     - "{{ photoprism_storage_location }}"
 
 - name: Ensure treafik is configured for photoprism
-  ansible.builtin.include_role:
+  ansible.builtin.import_role:
     name: infrastructure/traefik-service
   vars:
     service_name: photoprism
     service_port: "{{ photoprism_server_port }}"
 
 - name: Instantiate photoprism-server container
-  ansible.builtin.include_role:
+  ansible.builtin.import_role:
     name: infrastructure/container
   vars:
     container_name: photoprism_server
@@ -76,7 +76,7 @@
       - photoprism-server
     container_user: "{{ photoprism_user }}"
 
-- ansible.builtin.include_role:
+- ansible.builtin.import_role:
     name: infrastructure/http-healthcheck
   vars:
     service_name: photoprism

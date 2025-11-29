@@ -1,13 +1,13 @@
 ---
 - name: "Ensure {{ karakeep_user }} is created"
-  ansible.builtin.include_role:
+  ansible.builtin.import_role:
     name: infrastructure/user
   vars:
     user_name: "{{ karakeep_user }}"
     user_password: "{{ karakeep_user_password }}"
 
 - name: Ensure karakeep storage directory location exists
-  ansible.builtin.include_role:
+  ansible.builtin.import_role:
     name: infrastructure/service-data-directory
   vars:
     path: "{{ karakeep_storage_directory }}"
@@ -24,7 +24,7 @@
         recreate: false
         state: present
 
-    - include_tasks: karakeep-chrome.yaml
-    - include_tasks: karakeep-meilisearch.yaml
-    - include_tasks: karakeep-server.yaml
+    - import_tasks: karakeep-chrome.yaml
+    - import_tasks: karakeep-meilisearch.yaml
+    - import_tasks: karakeep-server.yaml
 

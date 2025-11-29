@@ -1,6 +1,6 @@
 ---
 - name: Instantiate karakeep-chrome container
-  ansible.builtin.include_role:
+  ansible.builtin.import_role:
     name: infrastructure/container
   vars:
     container_name: karakeep_chrome

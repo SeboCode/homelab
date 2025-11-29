@@ -17,14 +17,14 @@
     mode: 0600
 
 - name: Ensure treafik is configured for zigbee2mqtt
-  ansible.builtin.include_role:
+  ansible.builtin.import_role:
     name: infrastructure/traefik-service
   vars:
     service_name: zigbee2mqtt
     service_port: "{{ homeassistant_zigbee2mqtt_port }}"
 
 - name: Instantiate zigbee2mqtt container
-  ansible.builtin.include_role:
+  ansible.builtin.import_role:
     name: infrastructure/container
   vars:
     container_name: zigbee2mqtt
@@ -49,7 +49,7 @@
       - zigbee2mqtt
     container_user: "{{ homeassistant_user }}"
 
-- ansible.builtin.include_role:
+- ansible.builtin.import_role:
     name: infrastructure/http-healthcheck
   vars:
     service_name: zigbee2mqtt

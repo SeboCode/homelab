@@ -9,7 +9,7 @@
     recurse: true
 
 - name: Instantiate gitea-postgres container
-  ansible.builtin.include_role:
+  ansible.builtin.import_role:
     name: infrastructure/container
   vars:
     container_name: gitea_postgres

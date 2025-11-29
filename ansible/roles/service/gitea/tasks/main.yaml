@@ -1,13 +1,13 @@
 ---
 - name: "Ensure {{ gitea_user }} is created"
-  ansible.builtin.include_role:
+  ansible.builtin.import_role:
     name: infrastructure/user
   vars:
     user_name: "{{ gitea_user }}"
     user_password: "{{ gitea_user_password }}"
 
 - name: Ensure gitea storage directory location exists
-  ansible.builtin.include_role:
+  ansible.builtin.import_role:
     name: infrastructure/service-data-directory
   vars:
     path: "{{ gitea_storage_directory }}"
@@ -24,6 +24,6 @@
         recreate: false
         state: present
 
-    - include_tasks: gitea-database.yaml
-    - include_tasks: gitea-server.yaml
+    - import_tasks: gitea-database.yaml
+    - import_tasks: gitea-server.yaml
 
