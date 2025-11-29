@@ -21,4 +21,5 @@
         - "{{ traefik_dashboard_port }}"
         - "{{ pihole_server_port }}"
         - "{{ homeassistant_server_port }}"
+        - "{{ karakeep_server_port }}"
 
