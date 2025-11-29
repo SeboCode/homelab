@@ -7,7 +7,5 @@ that can be avoided this way is minimal, the complexity introduced into the setu
 The current structure is as follows:
 | Filename | Description |
 | :------- | :---------- |
-| dev-secrets.yaml | Secrets used during the dev setup (e.g. DNS write token for the provided domain). |
-| <node>-dev.yaml | Dev variables for node <node>. |
-| prod.yaml | Production variables (including secrets) that stay the same for all nodes (e.g. DNS write token for the provided domain). |
-| <node>.yaml | Production variables (including secrets) for node <node>. |
+| <env>/shared-secrets.yaml | Secrets used during the setup of <env> environment for all nodes (e.g. DNS write token for the provided domain). |
+| <env>/<node>.yaml | <env> variables (including secrets) for node <node>. |

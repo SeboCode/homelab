@@ -43,8 +43,8 @@ Vagrant.configure("2") do |config|
       }
       ansible.ask_vault_pass = true
       ansible.raw_arguments = [
-        "--extra-vars=@../../ansible/vars/dev-secrets.yaml",
-        "--extra-vars=@../../ansible/vars/pi-dev.yaml",
+        "--extra-vars=@../../ansible/vars/dev/shared-secrets.yaml",
+        "--extra-vars=@../../ansible/vars/dev/pi.yaml",
         "--skip-tags=prod-only",
       ]
     end
