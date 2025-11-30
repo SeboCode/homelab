@@ -1,0 +1,5 @@
+---
+- name: "Build and expose {{ service }} configuration"
+  ansible.builtin.set_fact:
+    "{{ service }}": "{{ lookup('vars', service ~ '_global') | ansible.builtin.combine(lookup('vars', service ~ '_env'), recursive=true) }}"
+

@@ -1,7 +1,8 @@
 ---
-- name: Build and expose traefik configuration
-  ansible.builtin.set_fact:
-    traefik: "{{ traefik_global | ansible.builtin.combine(traefik_env, recursive=true) }}"
+- ansible.builtin.import_role:
+    name: infrastructure/build_vars
+  vars:
+    service: traefik
 
 - name: "Ensure {{ traefik.user.name }} is created"
   ansible.builtin.import_role:
