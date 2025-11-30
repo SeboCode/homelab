@@ -2,10 +2,10 @@
 - name: "Ensure traefik service config for service {{ service_name }} is available"
   ansible.builtin.template:
     src: service.yaml.j2
-    dest: "{{ traefik_config_dynamic_location }}/{{ service_name }}.yaml"
-    owner: "{{ traefik_user }}"
-    group: "{{ traefik_user }}"
+    dest: "{{ traefik.data_storage.config_dynamic }}/{{ service_name }}.yaml"
+    owner: "{{ traefik.user.name }}"
+    group: "{{ traefik.user.name }}"
     mode: 0755
   become: true
-  become_user: "{{ traefik_user }}"
+  become_user: "{{ traefik.user.name }}"
 

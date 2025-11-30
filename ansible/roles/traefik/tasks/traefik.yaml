@@ -1,61 +1,61 @@
 ---
 - name: Ensure traefik dynamic configuration location is cleared to avoid exposing subdomains that no longer serve services
   ansible.builtin.file:
-    path: "{{ traefik_config_dynamic_location }}"
+    path: "{{ traefik.data_storage.config_dynamic }}"
     state: absent
 
 - name: Ensure traefik configuration location exists
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    owner: "{{ traefik_user }}"
-    group: "{{ traefik_user }}"
+    owner: "{{ traefik.user.name }}"
+    group: "{{ traefik.user.name }}"
     mode: 0755
     recurse: true
   loop:
-    - "{{ traefik_config_location }}"
-    - "{{ traefik_config_dynamic_location }}"
+    - "{{ traefik.data_storage.config }}"
+    - "{{ traefik.data_storage.config_dynamic }}"
 
 - name: Ensure acme config file exists, as traefik does not create it during startup and fails silently
   ansible.builtin.file:
-    path: "{{ traefik_config_location }}/acme.json"
+    path: "{{ traefik.data_storage.config }}/acme.json"
     state: touch
-    owner: "{{ traefik_user }}"
-    group: "{{ traefik_user }}"
+    owner: "{{ traefik.user.name }}"
+    group: "{{ traefik.user.name }}"
     mode: 0600
 
 - name: Ensure traefik config is available
   ansible.builtin.template:
     src: traefik.yaml.j2
-    dest: "{{ traefik_config_location }}/traefik.yaml"
+    dest: "{{ traefik.data_storage.config }}/traefik.yaml"
 
 - name: Ensure traefik dashboard config is available
   ansible.builtin.template:
     src: traefik-dashboard.yaml.j2
-    dest: "{{ traefik_config_dynamic_location }}/traefik-dashboard.yaml"
+    dest: "{{ traefik.data_storage.config_dynamic }}/traefik-dashboard.yaml"
 
 - name: Instantiate traefik container
   ansible.builtin.import_role:
     name: infrastructure/container
   vars:
     container_name: traefik
-    container_image: "{{ traefik_image }}"
-    container_image_tag: "{{ traefik_tag }}"
+    container_image: "{{ traefik.image }}"
+    container_image_tag: "{{ traefik.tag }}"
     container_env:
       INFOMANIAK_ACCESS_TOKEN: "{{ infomaniak_dns_api_token }}"
     container_volumes:
-      - "{{ traefik_config_location }}/acme.json:/etc/traefik/acme.json:rw"
-      - "{{ traefik_config_location }}/traefik.yaml:/etc/traefik/traefik.yaml:ro" # This is a default location which traefik searches for a static configuration file.
-      - "{{ traefik_config_dynamic_location }}:/etc/traefik/dynamic:ro"
+      - "{{ traefik.data_storage.config }}/acme.json:/etc/traefik/acme.json:rw"
+      - "{{ traefik.data_storage.config }}/traefik.yaml:/etc/traefik/traefik.yaml:ro" # This is a default location which traefik searches for a static configuration file.
+      - "{{ traefik.data_storage.config_dynamic }}:/etc/traefik/dynamic:ro"
     container_networks:
       - host # Has to be exposed to the host, as it needs access to all services in its localhost network
-    container_user: "{{ traefik_user }}"
+    container_user: "{{ traefik.user.name }}"
 
 - ansible.builtin.import_role:
     name: infrastructure/http-healthcheck
   vars:
     service_name: "traefik"
     exposed_locally: false
-    username: "{{ traefik_dashboard_username }}"
-    password: "{{ traefik_dashboard_password }}"
+    username: "{{ traefik.dashboard.username }}"
+    password: "{{ traefik.dashboard.password }}"
 

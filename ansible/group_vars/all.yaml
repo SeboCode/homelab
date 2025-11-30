@@ -1,13 +1,15 @@
 ---
-# Traefik
-traefik_user: traefik-user
-traefik_storage_directory: "/home/{{ traefik_user }}/traefik-storage"
-traefik_config_location: "{{ traefik_storage_directory }}/config"
-traefik_config_dynamic_location: "{{ traefik_storage_directory }}/config_dynamic"
-traefik_image: docker.io/traefik
-traefik_tag: v3.5.1
-traefik_web_port: 10080
-traefik_websecure_port: 10443
+traefik_global:
+  user:
+    name: traefik-user
+  data_storage:
+    root: "/home/{{ traefik_global.user.name }}/traefik-storage"
+    config: "{{ traefik_global.data_storage.root }}/config"
+    config_dynamic: "{{ traefik_global.data_storage.root }}/config_dynamic"
+  image: docker.io/traefik
+  tag: v3.5.1
+  web_port: 10080
+  websecure_port: 10443
 
 wol_poweroff_user: wol-poweroff-user
 

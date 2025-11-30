@@ -3,8 +3,8 @@
 
   "service": {
     "traefik": [
-      { "proto": "tcp", "port": {{ traefik_web_port }} },
-      { "proto": "tcp", "port": {{ traefik_websecure_port }} }
+      { "proto": "tcp", "port": {{ traefik_global.web_port }} },
+      { "proto": "tcp", "port": {{ traefik_global.websecure_port }} }
     ]
   },
 
@@ -27,22 +27,22 @@
     {
       "in": "internet",
       "service": "http",
-      "to-port": {{ traefik_web_port }}
+      "to-port": {{ traefik_global.web_port }}
     },
     {
       "in": "vpn",
       "service": "http",
-      "to-port": {{ traefik_web_port }}
+      "to-port": {{ traefik_global.web_port }}
     },
     {
       "in": "internet",
       "service": "https",
-      "to-port": {{ traefik_websecure_port }}
+      "to-port": {{ traefik_global.websecure_port }}
     },
     {
       "in": "vpn",
       "service": "https",
-      "to-port": {{ traefik_websecure_port }}
+      "to-port": {{ traefik_global.websecure_port }}
     }
   ]
 }

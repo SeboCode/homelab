@@ -59,8 +59,8 @@
     to_ports: "{{ item.to }}"
     state: present
   loop:
-    - {from: 80, to: "{{ traefik_web_port }}"}
-    - {from: 443, to: "{{ traefik_websecure_port }}",}
+    - {from: 80, to: "{{ traefik_global.web_port }}"}
+    - {from: 443, to: "{{ traefik_global.websecure_port }}",}
 
 - name: Ensure firewall rules stay persested after system restart
   ansible.builtin.command: rc-service iptables save

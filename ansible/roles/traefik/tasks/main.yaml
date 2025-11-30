@@ -1,21 +1,25 @@
 ---
-- name: "Ensure {{ traefik_user }} is created"
+- name: Build and expose traefik configuration
+  ansible.builtin.set_fact:
+    traefik: "{{ traefik_global | ansible.builtin.combine(traefik_env, recursive=true) }}"
+
+- name: "Ensure {{ traefik.user.name }} is created"
   ansible.builtin.import_role:
     name: infrastructure/user
   vars:
-    user_name: "{{ traefik_user }}"
-    user_password: "{{ traefik_user_password }}"
+    user_name: "{{ traefik.user.name }}"
+    user_password: "{{ traefik.user.password }}"
 
 - name: Ensure traefik is running
   become: true
-  become_user: "{{ traefik_user }}"
+  become_user: "{{ traefik.user.name }}"
   block:
     - name: Ensure traefik storage directory location exists
       ansible.builtin.file:
-        path: "{{ traefik_storage_directory }}"
+        path: "{{ traefik.data_storage.root }}"
         state: directory
-        owner: "{{ traefik_user }}"
-        group: "{{ traefik_user }}"
+        owner: "{{ traefik.user.name }}"
+        group: "{{ traefik.user.name }}"
         mode: 0755
 
     - import_tasks: traefik.yaml
