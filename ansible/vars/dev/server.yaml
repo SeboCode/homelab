@@ -26,11 +26,13 @@ traefik_dashboard_password: admin
 # Immich
 immich_user_password: "123456"
 immich_db_password: immich-db-password
+immich_zfs_encryption_key: "12345678901234567890123456789012"
 
 # Filebrowser
 filebrowser_user_password: "123456"
 filebrowser_admin_username: admin
 filebrowser_admin_password: adminadmin123*
+filebrowser_zfs_encryption_key: "12345678901234567890123456789012"
 
 # PhotoPrism
 photoprism_user_password: "123456"
@@ -38,8 +40,10 @@ photoprism_db_password: photoprism-db-password
 photoprism_db_root_password: photoprism-db-root-password
 photoprism_admin_username: admin # PhotoPrism does not allow to create users in the free version. This is also the user to use the application with.
 photoprism_admin_password: admin
+photoprism_zfs_encryption_key: "12345678901234567890123456789012"
 
 # Gitea
 gitea_user_password: "123456"
 gitea_db_password: gitea-db-password
+gitea_zfs_encryption_key: "12345678901234567890123456789012"
 

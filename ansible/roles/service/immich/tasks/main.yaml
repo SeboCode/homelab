@@ -12,6 +12,7 @@
   vars:
     path: "{{ immich_storage_directory }}"
     user: "{{ immich_user }}"
+    zfs_encryption_key: "{{ immich_zfs_encryption_key }}"
 
 - name: Ensure immich is running
   become: true

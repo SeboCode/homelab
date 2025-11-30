@@ -12,6 +12,7 @@
   vars:
     path: "{{ gitea_storage_directory }}"
     user: "{{ gitea_user }}"
+    zfs_encryption_key: "{{ gitea_zfs_encryption_key }}"
 
 - name: Ensure gitea is running
   become: true

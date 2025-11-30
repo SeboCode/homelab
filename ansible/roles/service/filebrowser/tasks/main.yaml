@@ -12,6 +12,7 @@
   vars:
     path: "{{ filebrowser_storage_directory }}"
     user: "{{ filebrowser_user }}"
+    zfs_encryption_key: "{{ filebrowser_zfs_encryption_key }}"
 
 - name: Ensure filebrowser is running
   become: true

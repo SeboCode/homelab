@@ -12,6 +12,7 @@
   vars:
     path: "{{ photoprism_storage_directory }}"
     user: "{{ photoprism_user }}"
+    zfs_encryption_key: "{{ photoprism_zfs_encryption_key }}"
 
 - name: Ensure photoprism is running
   become: true
