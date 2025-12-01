@@ -11,17 +11,15 @@
     user_name: "{{ traefik.user.name }}"
     user_password: "{{ traefik.user.password }}"
 
+- name: Ensure traefik storage directory location exists
+  ansible.builtin.import_role:
+    name: infrastructure/service-data-directory
+  vars:
+    data_storage: "{{ traefik.data_storage }}"
+    user: "{{ traefik.user.name }}"
+
 - name: Ensure traefik is running
+  import_tasks: traefik.yaml
   become: true
   become_user: "{{ traefik.user.name }}"
-  block:
-    - name: Ensure traefik storage directory location exists
-      ansible.builtin.file:
-        path: "{{ traefik.data_storage.root }}"
-        state: directory
-        owner: "{{ traefik.user.name }}"
-        group: "{{ traefik.user.name }}"
-        mode: 0755
-
-    - import_tasks: traefik.yaml
 

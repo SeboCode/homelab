@@ -1,41 +1,73 @@
 ---
-# Pihole
-pihole_user: pihole-user
-pihole_storage_directory: "/home/{{ pihole_user }}/pihole-storage"
-pihole_config_location: "{{ pihole_storage_directory }}/config"
-pihole_network: pihole_network
-pihole_server_image: TODO
-pihole_server_tag: TODO
-pihole_server_port: 20400
+platform: debian
 
-# Home Assistant
-homeassistant_user: homeassistant-user
-homeassistant_storage_directory: "/home/{{ homeassistant_user }}/homeassistant-storage"
-homeassistant_config_location: "{{ homeassistant_storage_directory }}/config"
-homeassistant_mosquitto_config_location: "{{ homeassistant_storage_directory }}/mosquitto-config"
-homeassistant_zigbee2mqtt_config_location: "{{ homeassistant_storage_directory }}/zigbee2mqtt-config"
-homeassistant_network: homeassistant_network
-homeassistant_server_image: ghcr.io/home-assistant/home-assistant
-homeassistant_server_tag: 2025.9.4
-homeassistant_server_port: 20500
-homeassistant_mosquitto_image: docker.io/eclipse-mosquitto
-homeassistant_mosquitto_tag: 2.0.22
-homeassistant_mosquitto_internal_port: 1883
-homeassistant_zigbee2mqtt_image: ghcr.io/koenkk/zigbee2mqtt
-homeassistant_zigbee2mqtt_tag: 2.6.2
-homeassistant_zigbee2mqtt_port: 20501
+pihole_global:
+  user:
+    name: pihole-user
+  data_storage:
+    filesystem: ext4
+    root: "/home/{{ pihole_global.user.name }}/pihole-storage"
+  container:
+    network: pihole_network
+    server:
+      image: TODO
+      tag: TODO
+      config:
+        port: 20400
+      storage:
+        config: "{{ pihole_global.data_storage.root }}/config"
 
-# Karakeep
-karakeep_user: karakeep-user
-karakeep_storage_directory: "/home/{{ karakeep_user }}/karakeep-storage"
-karakeep_data_location: "{{ karakeep_storage_directory }}/data"
-karakeep_meilisearch_data_location: "{{ karakeep_storage_directory }}/meilisearch-data"
-karakeep_network: karakeep_network
-karakeep_server_image: ghcr.io/karakeep-app/karakeep
-karakeep_server_tag: 0.27.1
-karakeep_server_port: 20600
-karakeep_chrome_image: gcr.io/zenika-hub/alpine-chrome
-karakeep_chrome_tag: 124
-karakeep_meilisearch_image: docker.io/getmeili/meilisearch
-karakeep_meilisearch_tag: v1.13.3
+homeassistant_global:
+  user:
+    name: homeassistant-user
+  data_storage:
+    filesystem: ext4
+    root: "/home/{{ homeassistant_global.user.name }}/homeassistant-storage"
+  container:
+    network: homeassistant_network
+    server:
+      image: ghcr.io/home-assistant/home-assistant
+      tag: 2025.9.4
+      config:
+        port: 20500
+      storage:
+        config: "{{ homeassistant_global.data_storage.root }}/config"
+    mosquitto:
+      image: docker.io/eclipse-mosquitto
+      tag: 2.0.22
+      config:
+        internal_port: 1883
+      storage:
+        config: "{{ homeassistant_global.data_storage.root }}/mosquitto-config"
+    zigbee2mqtt:
+      image: ghcr.io/koenkk/zigbee2mqtt
+      tag: 2.6.2
+      config:
+        port: 20501
+      storage:
+        config: "{{ homeassistant_global.data_storage.root }}/zigbee2mqtt-config"
+
+karakeep_global:
+  user:
+    name: karakeep-user
+  data_storage:
+    filesystem: ext4
+    root: "/home/{{ karakeep_global.user.name }}/karakeep-storage"
+  container:
+    network: karakeep_network
+    server:
+      image: ghcr.io/karakeep-app/karakeep
+      tag: 0.27.1
+      config:
+        port: 20600
+      storage:
+        data: "{{ karakeep_global.data_storage.root }}/data"
+    chrome:
+      image: gcr.io/zenika-hub/alpine-chrome
+      tag: 124
+    meilisearch:
+      image: docker.io/getmeili/meilisearch
+      tag: v1.13.3
+      storage:
+        data: "{{ karakeep_global.data_storage.root }}/meilisearch-data"
 

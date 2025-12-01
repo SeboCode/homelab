@@ -1,7 +1,7 @@
 ---
 - name: Create zfs key file
   ansible.builtin.copy:
-    content: "{{ zfs_encryption_key }}"
+    content: "{{ data_storage.zfs_encryption_key }}"
     dest: "/home/{{ user }}/.zfs-encrypt.key"
     owner: "{{ user }}"
     group: "{{ user }}"
@@ -9,7 +9,7 @@
 
 - name: Create file system in data storage zfs pool
   community.general.zfs:
-    name: "{{ path | regex_replace('^\\/', '') }}"
+    name: "{{ data_storage.root | regex_replace('^\\/', '') }}"
     state: present
     extra_zfs_properties:
       checksum: on
@@ -20,7 +20,7 @@
 
 - name: Set correct ownership of data folder
   ansible.builtin.file:
-    path: "{{ path }}"
+    path: "{{ data_storage.root }}"
     owner: "{{ user }}"
     group: "{{ user }}"
     mode: 0755

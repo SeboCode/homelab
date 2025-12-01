@@ -13,5 +13,5 @@ http:
     auth:
       basicAuth:
         users:
-          - "{{ traefik.dashboard.username }}:{{ traefik.dashboard.password | password_hash('bcrypt') }}"
+          - "{{ traefik.container.server.config.dashboard.username }}:{{ traefik.container.server.config.dashboard.password | password_hash('bcrypt') }}"
 

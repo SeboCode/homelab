@@ -3,14 +3,14 @@ global:
   sendAnonymousUsage: false
 entryPoints:
   web:
-    address: ":{{ traefik.web_port }}"
+    address: ":{{ traefik.container.server.config.web_port }}"
     http:
       redirections:
         entryPoint:
           to: websecure
           scheme: https
   websecure:
-    address: ":{{ traefik.websecure_port }}"
+    address: ":{{ traefik.container.server.config.websecure_port }}"
     # This disables upload restrictions for large files. If not set, traefik will kill the connection after a set amount
     # of time.
     transport:
@@ -21,7 +21,7 @@ certificatesResolvers:
       acme:
         email: acme@mikemarti.ch
         storage: /etc/traefik/acme.json
-        caServer: "{{ traefik.ca_server }}"
+        caServer: "{{ traefik.container.server.config.ca_server }}"
         keyType: EC256
         dnsChallenge:
           provider: infomaniak

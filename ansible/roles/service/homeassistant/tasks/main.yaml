@@ -1,12 +1,17 @@
 ---
-- name: "Ensure {{ homeassistant_user }} is created"
+- ansible.builtin.import_role:
+    name: infrastructure/build_vars
+  vars:
+    service: homeassistant
+
+- name: "Ensure {{ homeassistant.user.name }} is created"
   ansible.builtin.import_role:
     name: infrastructure/user
   vars:
-    user_name: "{{ homeassistant_user }}"
-    user_password: "{{ homeassistant_user_password }}"
+    user_name: "{{ homeassistant.user.name }}"
+    user_password: "{{ homeassistant.user.password }}"
 
-- name: "Ensure {{ homeassistant_user }} is the owner of the zigbee adapter device"
+- name: "Ensure {{ homeassistant.user.name }} is the owner of the zigbee adapter device"
   ansible.builtin.template:
     dest: /etc/udev/rules.d/99-zigbee-stick.rules
     src: zigbee2mqtt/99-zigbee-stick.rules.j2
@@ -26,16 +31,16 @@
   ansible.builtin.import_role:
     name: infrastructure/service-data-directory
   vars:
-    path: "{{ homeassistant_storage_directory }}"
-    user: "{{ homeassistant_user }}"
+    data_storage: "{{ homeassistant.data_storage }}"
+    user: "{{ homeassistant.user.name }}"
 
 - name: Ensure homeassistant is running
   become: true
-  become_user: "{{ homeassistant_user }}"
+  become_user: "{{ homeassistant.user.name }}"
   block:
     - name: Ensure homeassistant container network is created
       containers.podman.podman_network:
-        name: "{{ homeassistant_network }}"
+        name: "{{ homeassistant.container.network }}"
         driver: bridge
         recreate: false
         state: present

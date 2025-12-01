@@ -1,26 +1,30 @@
 ---
-- name: "Ensure {{ filebrowser_user }} is created"
+- ansible.builtin.import_role:
+    name: infrastructure/build_vars
+  vars:
+    service: filebrowser
+
+- name: "Ensure {{ filebrowser.user.name }} is created"
   ansible.builtin.import_role:
     name: infrastructure/user
   vars:
-    user_name: "{{ filebrowser_user }}"
-    user_password: "{{ filebrowser_user_password }}"
+    user_name: "{{ filebrowser.user.name }}"
+    user_password: "{{ filebrowser.user.password }}"
 
 - name: Ensure filebrowser storage directory location exists
   ansible.builtin.import_role:
     name: infrastructure/service-data-directory
   vars:
-    path: "{{ filebrowser_storage_directory }}"
-    user: "{{ filebrowser_user }}"
-    zfs_encryption_key: "{{ filebrowser_zfs_encryption_key }}"
+    data_storage: "{{ filebrowser.data_storage }}"
+    user: "{{ filebrowser.user.name }}"
 
 - name: Ensure filebrowser is running
   become: true
-  become_user: "{{ filebrowser_user }}"
+  become_user: "{{ filebrowser.user.name }}"
   block:
     - name: Ensure filebrowser container network is created
       containers.podman.podman_network:
-        name: "{{ filebrowser_network }}"
+        name: "{{ filebrowser.container.network }}"
         driver: bridge
         recreate: false
         state: present

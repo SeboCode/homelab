@@ -1,33 +1,33 @@
 ---
 - name: Database file state
   ansible.builtin.stat:
-    path: "{{ filebrowser_db_data_location }}/filebrowser.db"
+    path: "{{ filebrowser.container.server.storage.db_data }}/filebrowser.db"
   register: database_file
 
 - name: Get uid of filebrowser user
-  ansible.builtin.command: "id -u {{ filebrowser_user }}"
+  ansible.builtin.command: "id -u {{ filebrowser.user.name }}"
   register: filebrowser_user_uid
 
 - name: Get gid of filebrowser user
-  ansible.builtin.command: "id -g {{ filebrowser_user }}"
+  ansible.builtin.command: "id -g {{ filebrowser.user.name }}"
   register: filebrowser_user_gid
 
 - name: Ensure filebrowser server is configured correctly
   containers.podman.podman_container:
     name: filebrowser_server_config
-    image: "{{ filebrowser_server_image }}:{{ filebrowser_server_tag }}"
+    image: "{{ filebrowser.container.server.image }}:{{ filebrowser.container.server.tag }}"
     user: "{{ filebrowser_user_uid.stdout }}:{{ filebrowser_user_gid.stdout }}"
     userns: keep-id
     recreate: false
     restart_policy: "no"
     state: started
     volumes:
-      - "{{ filebrowser_data_location }}:/srv"
-      - "{{ filebrowser_db_data_location }}:/database"
-      - "{{ filebrowser_config_location }}:/config"
+      - "{{ filebrowser.container.server.storage.data }}:/srv"
+      - "{{ filebrowser.container.server.storage.db_data }}:/database"
+      - "{{ filebrowser.container.server.storage.config }}:/config"
     command: "{{ item }}"
   loop:
     - "config init --create-user-dir --port 8080"
-    - "users add {{ filebrowser_admin_username }} {{ filebrowser_admin_password }} --perm.admin=true"
+    - "users add {{ filebrowser.container.server.config.admin.username }} {{ filebrowser.container.server.config.admin.password }} --perm.admin=true"
   when: not database_file.stat.exists
 

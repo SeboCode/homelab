@@ -9,13 +9,18 @@
     name: zfs
     state: present
 
+- ansible.builtin.import_role:
+    name: infrastructure/build_vars
+  vars:
+    service: zfs
+
 - name: Ensure toplevel zpool for service data is created
   community.general.zpool:
-    name: "{{ zfs_service_data_pool_name }}"
+    name: "{{ zfs.service_data_pool_name }}"
     state: present
     filesystem_properties:
       compression: lz4
     vdevs:
-      - disks: "{{ zfs_devices }}"
+      - disks: "{{ zfs.devices }}"
         type: mirror
 

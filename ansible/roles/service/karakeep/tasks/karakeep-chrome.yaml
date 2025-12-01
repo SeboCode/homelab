@@ -4,8 +4,8 @@
     name: infrastructure/container
   vars:
     container_name: karakeep_chrome
-    container_image: "{{ karakeep_chrome_image }}"
-    container_image_tag: "{{ karakeep_chrome_tag }}"
+    container_image: "{{ karakeep.container.chrome.image }}"
+    container_image_tag: "{{ karakeep.container.chrome.tag }}"
     container_command:
       - "--no-sandbox"
       - "--disable-gpu"
@@ -14,8 +14,8 @@
       - "--remote-debugging-port=9222"
       - "--hide-scrollbars"
     container_networks:
-      - "{{ karakeep_network }}"
+      - "{{ karakeep.container.network }}"
     container_network_aliases:
       - chrome
-    container_user: "{{ karakeep_user }}"
+    container_user: "{{ karakeep.user.name }}"
 

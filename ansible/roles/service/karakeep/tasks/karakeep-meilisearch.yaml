@@ -1,10 +1,10 @@
 ---
 - name: Ensure karakeep meilisearch data location exists
   ansible.builtin.file:
-    path: "{{ karakeep_meilisearch_data_location }}"
+    path: "{{ karakeep.container.meilisearch.storage.data }}"
     state: directory
-    owner: "{{ karakeep_user }}"
-    group: "{{ karakeep_user }}"
+    owner: "{{ karakeep.user.name }}"
+    group: "{{ karakeep.user.name }}"
     mode: 0755
     recurse: true
 
@@ -13,16 +13,16 @@
     name: infrastructure/container
   vars:
     container_name: karakeep_meilisearch
-    container_image: "{{ karakeep_meilisearch_image }}"
-    container_image_tag: "{{ karakeep_meilisearch_tag }}"
+    container_image: "{{ karakeep.container.meilisearch.image }}"
+    container_image_tag: "{{ karakeep.container.meilisearch.tag }}"
     container_env:
-      MEILI_MASTER_KEY: "{{ karakeep_meilisearch_master_key }}"
+      MEILI_MASTER_KEY: "{{ karakeep.container.meilisearch.config.master_key }}"
       MEILI_NO_ANALYTICS: "true"
     container_volumes:
-      - "{{ karakeep_meilisearch_data_location }}:/meili_data"
+      - "{{ karakeep.container.meilisearch.storage.data }}:/meili_data"
     container_networks:
-      - "{{ karakeep_network }}"
+      - "{{ karakeep.container.network }}"
     container_network_aliases:
       - meilisearch
-    container_user: "{{ karakeep_user }}"
+    container_user: "{{ karakeep.user.name }}"
 

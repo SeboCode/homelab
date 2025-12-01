@@ -1,10 +1,10 @@
 ---
 - name: Ensure karakeep data location exist
   ansible.builtin.file:
-    path: "{{ karakeep_data_location }}"
+    path: "{{ karakeep.container.server.storage.data }}"
     state: directory
-    owner: "{{ karakeep_user }}"
-    group: "{{ karakeep_user }}"
+    owner: "{{ karakeep.user.name }}"
+    group: "{{ karakeep.user.name }}"
     mode: 0755
     recurse: true
 
@@ -13,36 +13,36 @@
     name: infrastructure/traefik-service
   vars:
     service_name: karakeep
-    service_port: "{{ karakeep_server_port }}"
+    service_port: "{{ karakeep.container.server.config.port }}"
 
 - name: Instantiate karakeep-server container
   ansible.builtin.import_role:
     name: infrastructure/container
   vars:
     container_name: karakeep_server
-    container_image: "{{ karakeep_server_image }}"
-    container_image_tag: "{{ karakeep_server_tag }}"
+    container_image: "{{ karakeep.container.server.image }}"
+    container_image_tag: "{{ karakeep.container.server.tag }}"
     container_env:
       DATA_DIR: /data
-      DISABLE_SIGNUPS: "{{ karakeep_disable_signups }}"
+      DISABLE_SIGNUPS: "{{ karakeep.container.server.config.disable_signups }}"
       NEXTAUTH_URL: "https://karakeep.{{ domain }}"
-      NEXTAUTH_SECRET: "{{ karakeep_nextauth_secret }}"
+      NEXTAUTH_SECRET: "{{ karakeep.container.server.config.nextauth_secret }}"
       MEILI_ADDR: http://meilisearch:7700
-      MEILI_MASTER_KEY: "{{ karakeep_meilisearch_master_key }}"
+      MEILI_MASTER_KEY: "{{ karakeep.container.meilisearch.config.master_key }}"
       BROWSER_ADDR: http://chrome:9222
     container_volumes:
-      - "{{ karakeep_data_location }}:/data"
+      - "{{ karakeep.container.server.storage.data }}:/data"
     container_ports:
-      - "{{ karakeep_server_port }}:3000"
+      - "{{ karakeep.container.server.config.port }}:3000"
     container_networks:
-      - "{{ karakeep_network }}"
+      - "{{ karakeep.container.network }}"
     container_network_aliases:
       - karakeep-server
-    container_user: "{{ karakeep_user }}"
+    container_user: "{{ karakeep.user.name }}"
 
 - ansible.builtin.import_role:
     name: infrastructure/http-healthcheck
   vars:
     service_name: karakeep
-    service_port: "{{ karakeep_server_port }}"
+    service_port: "{{ karakeep.container.server.config.port }}"
 

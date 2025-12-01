@@ -1,10 +1,10 @@
 ---
 - name: Ensure redis data location exists
   ansible.builtin.file:
-    path: "{{ immich_redis_data_location }}"
+    path: "{{ immich.container.redis.storage.data }}"
     state: directory
-    owner: "{{ immich_user }}"
-    group: "{{ immich_user }}"
+    owner: "{{ immich.user.name }}"
+    group: "{{ immich.user.name }}"
     mode: 0755
     recurse: true
 
@@ -13,13 +13,13 @@
     name: infrastructure/container
   vars:
     container_name: immich_redis
-    container_image: "{{ immich_redis_image }}"
-    container_image_tag: "{{ immich_redis_tag }}"
+    container_image: "{{ immich.container.redis.image }}"
+    container_image_tag: "{{ immich.container.redis.tag }}"
     container_volumes:
-      - "{{ immich_redis_data_location }}:/data:rw"
+      - "{{ immich.container.redis.storage.data }}:/data:rw"
     container_networks:
-      - "{{ immich_network }}"
+      - "{{ immich.container.network }}"
     container_network_aliases:
       - redis
-    container_user: "{{ immich_user }}"
+    container_user: "{{ immich.user.name }}"
 

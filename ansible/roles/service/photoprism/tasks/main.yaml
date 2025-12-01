@@ -1,26 +1,30 @@
 ---
-- name: "Ensure {{ photoprism_user }} is created"
+- ansible.builtin.import_role:
+    name: infrastructure/build_vars
+  vars:
+    service: photoprism
+
+- name: "Ensure {{ photoprism.user.name }} is created"
   ansible.builtin.import_role:
     name: infrastructure/user
   vars:
-    user_name: "{{ photoprism_user }}"
-    user_password: "{{ photoprism_user_password }}"
+    user_name: "{{ photoprism.user.name }}"
+    user_password: "{{ photoprism.user.password }}"
 
 - name: Ensure photoprism storage directory location exists
   ansible.builtin.import_role:
     name: infrastructure/service-data-directory
   vars:
-    path: "{{ photoprism_storage_directory }}"
-    user: "{{ photoprism_user }}"
-    zfs_encryption_key: "{{ photoprism_zfs_encryption_key }}"
+    data_storage: "{{ photoprism.data_storage }}"
+    user: "{{ photoprism.user.name }}"
 
 - name: Ensure photoprism is running
   become: true
-  become_user: "{{ photoprism_user }}"
+  become_user: "{{ photoprism.user.name }}"
   block:
     - name: Ensure photoprism container network is created
       containers.podman.podman_network:
-        name: "{{ photoprism_network }}"
+        name: "{{ photoprism.container.network }}"
         driver: bridge
         recreate: false
         state: present

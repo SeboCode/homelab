@@ -1,4 +1,4 @@
 ---
 - ansible.builtin.include_role:
-    name: "infrastructure/service-data-directory/{{ service_data_filesystem }}"
+    name: "infrastructure/service-data-directory/{{ data_storage.filesystem }}"
 

@@ -5,7 +5,7 @@ serial:
   port: /dev/ttyUSB0
 mqtt:
   base_topic: zigbee2mqtt
-  server: mqtt://mosquitto:{{ homeassistant_mosquitto_internal_port }}
+  server: mqtt://mosquitto:{{ homeassistant.container.mosquitto.config.internal_port }}
 homeassistant:
   enabled: true
 devices:

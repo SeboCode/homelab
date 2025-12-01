@@ -1,19 +1,19 @@
 ---
 - name: Ensure zigbee2mqtt config location exists
   ansible.builtin.file:
-    path: "{{ homeassistant_zigbee2mqtt_config_location }}"
+    path: "{{ homeassistant.container.zigbee2mqtt.storage.config }}"
     state: directory
-    owner: "{{ homeassistant_user }}"
-    group: "{{ homeassistant_user }}"
+    owner: "{{ homeassistant.user.name }}"
+    group: "{{ homeassistant.user.name }}"
     mode: 0755
     recurse: true
 
 - name: Ensure zigbee2mqtt config exists
   ansible.builtin.template:
-    dest: "{{ homeassistant_zigbee2mqtt_config_location }}/configuration.yaml"
+    dest: "{{ homeassistant.container.zigbee2mqtt.storage.config }}/configuration.yaml"
     src: zigbee2mqtt/configuration.yaml.j2
-    owner: "{{ homeassistant_user }}"
-    group: "{{ homeassistant_user }}"
+    owner: "{{ homeassistant.user.name }}"
+    group: "{{ homeassistant.user.name }}"
     mode: 0600
 
 - name: Ensure treafik is configured for zigbee2mqtt
@@ -21,39 +21,39 @@
     name: infrastructure/traefik-service
   vars:
     service_name: zigbee2mqtt
-    service_port: "{{ homeassistant_zigbee2mqtt_port }}"
+    service_port: "{{ homeassistant.container.zigbee2mqtt.config.port }}"
 
 - name: Instantiate zigbee2mqtt container
   ansible.builtin.import_role:
     name: infrastructure/container
   vars:
     container_name: zigbee2mqtt
-    container_image: "{{ homeassistant_zigbee2mqtt_image }}"
-    container_image_tag: "{{ homeassistant_zigbee2mqtt_tag }}"
+    container_image: "{{ homeassistant.container.zigbee2mqtt.image }}"
+    container_image_tag: "{{ homeassistant.container.zigbee2mqtt.tag }}"
     container_env:
       TZ: Europe/Zurich
       # Use environment variable to let zigbee2mqtt handle proper escaping, if necessary.
-      ZIGBEE2MQTT_CONFIG_FRONTEND_AUTH_TOKEN: "{{ homeassistant_zigbee2mqtt_frontend_auth_token }}"
-      ZIGBEE2MQTT_CONFIG_MQTT_USER: "{{ homeassistant_mosquitto_zigbee2mqtt_username }}"
-      ZIGBEE2MQTT_CONFIG_MQTT_PASSWORD: "{{ homeassistant_mosquitto_zigbee2mqtt_password }}"
+      ZIGBEE2MQTT_CONFIG_FRONTEND_AUTH_TOKEN: "{{ homeassistant.container.zigbee2mqtt.config.frontend_auth_token }}"
+      ZIGBEE2MQTT_CONFIG_MQTT_USER: "{{ homeassistant.container.mosquitto.config.zigbee2mqtt.username }}"
+      ZIGBEE2MQTT_CONFIG_MQTT_PASSWORD: "{{ homeassistant.container.mosquitto.config.zigbee2mqtt.password }}"
     container_volumes:
-      - "{{ homeassistant_zigbee2mqtt_config_location }}:/app/data:rw"
+      - "{{ homeassistant.container.zigbee2mqtt.storage.config }}:/app/data:rw"
       - "/run/udev:/run/udev:ro"
     container_ports:
-      - "{{ homeassistant_zigbee2mqtt_port }}:8080"
+      - "{{ homeassistant.container.zigbee2mqtt.config.port }}:8080"
     container_device:
-      - "{{ homeassistant_zigbee2mqtt_zigbee_device_id }}:/dev/ttyUSB0"
+      - "{{ homeassistant.container.zigbee2mqtt.config.zigbee_device_id }}:/dev/ttyUSB0"
     container_networks:
-      - "{{ homeassistant_network }}"
+      - "{{ homeassistant.container.network }}"
     container_network_aliases:
       - zigbee2mqtt
-    container_user: "{{ homeassistant_user }}"
+    container_user: "{{ homeassistant.user.name }}"
 
 - ansible.builtin.import_role:
     name: infrastructure/http-healthcheck
   vars:
     service_name: zigbee2mqtt
-    service_port: "{{ homeassistant_zigbee2mqtt_port }}"
+    service_port: "{{ homeassistant.container.zigbee2mqtt.config.port }}"
   tags:
     # zigbee2mqtt checks if the device provided to the container exists and fails otherwise.
     # As we do not have a dummy device for dev testing, this task has to be skipped. It is

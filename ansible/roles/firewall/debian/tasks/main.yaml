@@ -27,12 +27,12 @@
       :OUTPUT ACCEPT [0:0]
       :POSTROUTING ACCEPT [0:0]
 
-      -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports {{ traefik_web_port }}
-      -A PREROUTING -i eth0 -p tcp --dport 443 -j REDIRECT --to-ports {{ traefik_websecure_port }}
-      -A PREROUTING -i tailscale0 -p tcp --dport 80 -j REDIRECT --to-ports {{ traefik_web_port }}
-      -A PREROUTING -i tailscale0 -p tcp --dport 443 -j REDIRECT --to-ports {{ traefik_websecure_port }}
-      -A OUTPUT -o lo -p tcp --dport 80 -j REDIRECT --to-ports {{ traefik_web_port }}
-      -A OUTPUT -o lo -p tcp --dport 443 -j REDIRECT --to-ports {{ traefik_websecure_port }}
+      -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports {{ traefik_global.container.server.config.web_port }}
+      -A PREROUTING -i eth0 -p tcp --dport 443 -j REDIRECT --to-ports {{ traefik_global.container.server.config.websecure_port }}
+      -A PREROUTING -i tailscale0 -p tcp --dport 80 -j REDIRECT --to-ports {{ traefik_global.container.server.config.web_port }}
+      -A PREROUTING -i tailscale0 -p tcp --dport 443 -j REDIRECT --to-ports {{ traefik_global.container.server.config.websecure_port }}
+      -A OUTPUT -o lo -p tcp --dport 80 -j REDIRECT --to-ports {{ traefik_global.container.server.config.web_port }}
+      -A OUTPUT -o lo -p tcp --dport 443 -j REDIRECT --to-ports {{ traefik_global.container.server.config.websecure_port }}
       COMMIT
     insertbefore: BOF
     create: false
@@ -44,8 +44,8 @@
     proto: tcp
   loop:
     - ssh
-    - "{{ traefik_web_port }}"
-    - "{{ traefik_websecure_port }}"
+    - "{{ traefik_global.container.server.config.web_port }}"
+    - "{{ traefik_global.container.server.config.websecure_port }}"
 
 - name: Ensure ufw rules are running and reloaded on boot
   community.general.ufw:

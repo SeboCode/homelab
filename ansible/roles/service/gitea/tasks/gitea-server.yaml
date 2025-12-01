@@ -3,50 +3,50 @@
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    owner: "{{ gitea_user }}"
-    group: "{{ gitea_user }}"
+    owner: "{{ gitea.user.name }}"
+    group: "{{ gitea.user.name }}"
     mode: 0755
     recurse: true
   loop:
-    - "{{ gitea_data_location }}"
-    - "{{ gitea_config_location }}"
+    - "{{ gitea.container.server.storage.data }}"
+    - "{{ gitea.container.server.storage.config }}"
 
 - name: Ensure treafik is configured for gitea
   ansible.builtin.import_role:
     name: infrastructure/traefik-service
   vars:
     service_name: gitea
-    service_port: "{{ gitea_server_port }}"
+    service_port: "{{ gitea.container.server.config.port }}"
 
 - name: Instantiate gitea-server container
   ansible.builtin.import_role:
     name: infrastructure/container
   vars:
     container_name: gitea_server
-    container_image: "{{ gitea_server_image }}"
-    container_image_tag: "{{ gitea_server_tag }}"
+    container_image: "{{ gitea.container.server.image }}"
+    container_image_tag: "{{ gitea.container.server.tag }}"
     container_env:
       GITEA__database__DB_TYPE: postgres
       GITEA__database__HOST: database:5432
-      GITEA__database__NAME: "{{ gitea_db_database_name }}"
-      GITEA__database__USER: "{{ gitea_db_username }}"
-      GITEA__database__PASSWD: "{{ gitea_db_password }}"
+      GITEA__database__NAME: "{{ gitea.container.postgres.config.db.name }}"
+      GITEA__database__USER: "{{ gitea.container.postgres.config.db.username }}"
+      GITEA__database__PASSWD: "{{ gitea.container.postgres.config.db.password }}"
     container_volumes:
-      - "{{ gitea_data_location }}:/var/lib/gitea:rw"
-      - "{{ gitea_data_location }}:/etc/gitea:rw"
+      - "{{ gitea.container.server.storage.data }}:/var/lib/gitea:rw"
+      - "{{ gitea.container.server.storage.config }}:/etc/gitea:rw"
       - /etc/localtime:/etc/localtime:ro
     container_ports:
-      - "{{ gitea_server_port }}:3000"
-      - "{{ gitea_server_ssh_port }}:2222"
+      - "{{ gitea.container.server.config.port }}:3000"
+      - "{{ gitea.container.server.config.ssh_port }}:2222"
     container_networks:
-      - "{{ gitea_network }}"
+      - "{{ gitea.container.network }}"
     container_network_aliases:
       - gitea-server
-    container_user: "{{ gitea_user }}"
+    container_user: "{{ gitea.user.name }}"
 
 - ansible.builtin.import_role:
     name: infrastructure/http-healthcheck
   vars:
     service_name: gitea
-    service_port: "{{ gitea_server_port }}"
+    service_port: "{{ gitea.container.server.config.port }}"
 

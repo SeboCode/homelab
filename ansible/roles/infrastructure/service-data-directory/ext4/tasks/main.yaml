@@ -1,7 +1,7 @@
 ---
 - name: Create storage directory
   ansible.builtin.file:
-    path: "{{ path }}"
+    path: "{{ data_storage.root }}"
     state: directory
     owner: "{{ user }}"
     group: "{{ user }}"

@@ -3,31 +3,31 @@
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    owner: "{{ photoprism_user }}"
-    group: "{{ photoprism_user }}"
+    owner: "{{ photoprism.user.name }}"
+    group: "{{ photoprism.user.name }}"
     mode: 0755
     recurse: true
   loop:
-    - "{{ photoprism_originals_location }}"
-    - "{{ photoprism_storage_location }}"
+    - "{{ photoprism.container.server.storage.originals }}"
+    - "{{ photoprism.container.server.storage.storage }}"
 
 - name: Ensure treafik is configured for photoprism
   ansible.builtin.import_role:
     name: infrastructure/traefik-service
   vars:
     service_name: photoprism
-    service_port: "{{ photoprism_server_port }}"
+    service_port: "{{ photoprism.container.server.config.port }}"
 
 - name: Instantiate photoprism-server container
   ansible.builtin.import_role:
     name: infrastructure/container
   vars:
     container_name: photoprism_server
-    container_image: "{{ photoprism_server_image }}"
-    container_image_tag: "{{ photoprism_server_tag }}"
+    container_image: "{{ photoprism.container.server.image }}"
+    container_image_tag: "{{ photoprism.container.server.tag }}"
     container_env:
-      PHOTOPRISM_ADMIN_USER: "{{ photoprism_admin_username }}" # admin login username
-      PHOTOPRISM_ADMIN_PASSWORD: "{{ photoprism_admin_password }}" # initial admin password (8-72 characters)
+      PHOTOPRISM_ADMIN_USER: "{{ photoprism.container.server.config.admin.username }}" # admin login username
+      PHOTOPRISM_ADMIN_PASSWORD: "{{ photoprism.container.server.config.admin.password }}" # initial admin password (8-72 characters)
       PHOTOPRISM_AUTH_MODE: "password" # authentication mode (public, password)
       PHOTOPRISM_DISABLE_TLS: "false" # disables HTTPS/TLS even if the site URL starts with https:// and a certificate is available
       PHOTOPRISM_DEFAULT_TLS: "true" # defaults to a self-signed HTTPS/TLS certificate if no other certificate is available
@@ -59,26 +59,26 @@
       PHOTOPRISM_HTTP_COMPRESSION: "gzip" # improves transfer speed and bandwidth utilization (none or gzip)
       PHOTOPRISM_DATABASE_DRIVER: "mysql" # MariaDB 10.5.12+ (MySQL successor) offers significantly better performance compared to SQLite
       PHOTOPRISM_DATABASE_SERVER: "database:3306" # MariaDB database server (hostname:port)
-      PHOTOPRISM_DATABASE_NAME: "{{ photoprism_db_database_name }}" # MariaDB database, see MARIADB_DATABASE in the mariadb service
-      PHOTOPRISM_DATABASE_USER: "{{ photoprism_db_username }}" # MariaDB database username, must be the same as MARIADB_USER
-      PHOTOPRISM_DATABASE_PASSWORD: "{{ photoprism_db_password }}" # MariaDB database password, must be the same as MARIADB_PASSWORD
+      PHOTOPRISM_DATABASE_NAME: "{{ photoprism.container.mariadb.config.db.name }}" # MariaDB database, see MARIADB_DATABASE in the mariadb service
+      PHOTOPRISM_DATABASE_USER: "{{ photoprism.container.mariadb.config.db.username }}" # MariaDB database username, must be the same as MARIADB_USER
+      PHOTOPRISM_DATABASE_PASSWORD: "{{ photoprism.container.mariadb.config.db.password }}" # MariaDB database password, must be the same as MARIADB_PASSWORD
       PHOTOPRISM_INIT: "https tensorflow" # options: update https tensorflow tensorflow-gpu intel gpu davfs yt-dlp
       PHOTOPRISM_ORIGINALS_PATH: "/var/photoprism/originals"
       PHOTOPRISM_STORAGE_PATH: "/var/photoprism/storage"
     container_volumes:
-      - "{{ photoprism_originals_location }}:/var/photoprism/originals"
-      - "{{ photoprism_storage_location }}:/var/photoprism/storage"
+      - "{{ photoprism.container.server.storage.originals }}:/var/photoprism/originals"
+      - "{{ photoprism.container.server.storage.storage }}:/var/photoprism/storage"
     container_ports:
-      - "{{ photoprism_server_port }}:2342"
+      - "{{ photoprism.container.server.config.port }}:2342"
     container_networks:
-      - "{{ photoprism_network }}"
+      - "{{ photoprism.container.network }}"
     container_network_aliases:
       - photoprism-server
-    container_user: "{{ photoprism_user }}"
+    container_user: "{{ photoprism.user.name }}"
 
 - ansible.builtin.import_role:
     name: infrastructure/http-healthcheck
   vars:
     service_name: photoprism
-    service_port: "{{ photoprism_server_port }}"
+    service_port: "{{ photoprism.container.server.config.port }}"
 

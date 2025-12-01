@@ -1,10 +1,10 @@
 ---
 - name: Ensure immich upload location exists
   ansible.builtin.file:
-    path: "{{ immich_upload_location }}"
+    path: "{{ immich.container.server.storage.upload }}"
     state: directory
-    owner: "{{ immich_user }}"
-    group: "{{ immich_user }}"
+    owner: "{{ immich.user.name }}"
+    group: "{{ immich.user.name }}"
     mode: 0755
     recurse: true
 
@@ -13,33 +13,33 @@
     name: infrastructure/traefik-service
   vars:
     service_name: immich
-    service_port: "{{ immich_server_port }}"
+    service_port: "{{ immich.container.server.config.port }}"
 
 - name: Instantiate immich-server container
   ansible.builtin.import_role:
     name: infrastructure/container
   vars:
     container_name: immich_server
-    container_image: "{{ immich_server_image }}"
-    container_image_tag: "{{ immich_server_tag }}"
+    container_image: "{{ immich.container.server.image }}"
+    container_image_tag: "{{ immich.container.server.tag }}"
     container_env:
-      DB_DATABASE_NAME: "{{ immich_db_database_name }}"
-      DB_USERNAME: "{{ immich_db_username }}"
-      DB_PASSWORD: "{{ immich_db_password }}"
+      DB_DATABASE_NAME: "{{ immich.container.postgres.config.db.name }}"
+      DB_USERNAME: "{{ immich.container.postgres.config.db.username }}"
+      DB_PASSWORD: "{{ immich.container.postgres.config.db.password }}"
     container_volumes:
-      - "{{ immich_upload_location }}:/usr/src/app/upload:rw"
+      - "{{ immich.container.server.storage.upload }}:/usr/src/app/upload:rw"
       - /etc/localtime:/etc/localtime:ro
     container_ports:
-      - "{{ immich_server_port }}:2283"
+      - "{{ immich.container.server.config.port }}:2283"
     container_networks:
-      - "{{ immich_network }}"
+      - "{{ immich.container.network }}"
     container_network_aliases:
       - immich-server
-    container_user: "{{ immich_user }}"
+    container_user: "{{ immich.user.name }}"
 
 - ansible.builtin.import_role:
     name: infrastructure/http-healthcheck
   vars:
     service_name: immich
-    service_port: "{{ immich_server_port }}"
+    service_port: "{{ immich.container.server.config.port }}"
 

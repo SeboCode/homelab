@@ -1,10 +1,10 @@
 ---
 - name: Ensure homeassistant config location exists
   ansible.builtin.file:
-    path: "{{ homeassistant_config_location }}"
+    path: "{{ homeassistant.container.server.storage.config }}"
     state: directory
-    owner: "{{ homeassistant_user }}"
-    group: "{{ homeassistant_user }}"
+    owner: "{{ homeassistant.user.name }}"
+    group: "{{ homeassistant.user.name }}"
     mode: 0755
     recurse: true
 
@@ -13,54 +13,54 @@
     name: infrastructure/traefik-service
   vars:
     service_name: homeassistant
-    service_port: "{{ homeassistant_server_port }}"
+    service_port: "{{ homeassistant.container.server.config.port }}"
 
 - name: Instantiate homeassistant-server container
   ansible.builtin.import_role:
     name: infrastructure/container
   vars:
     container_name: homeassistant_server
-    container_image: "{{ homeassistant_server_image }}"
-    container_image_tag: "{{ homeassistant_server_tag }}"
+    container_image: "{{ homeassistant.container.server.image }}"
+    container_image_tag: "{{ homeassistant.container.server.tag }}"
     container_volumes:
-      - "{{ homeassistant_config_location }}:/config:rw"
+      - "{{ homeassistant.container.server.storage.config }}:/config:rw"
       - /etc/localtime:/etc/localtime:ro
     container_ports:
-      - "{{ homeassistant_server_port }}:8123"
+      - "{{ homeassistant.container.server.config.port }}:8123"
     container_networks:
-      - "{{ homeassistant_network }}"
+      - "{{ homeassistant.container.network }}"
     container_network_aliases:
       - homeassistant-server
-    container_user: "{{ homeassistant_user }}"
+    container_user: "{{ homeassistant.user.name }}"
 
 - name: Ensure homeassistant is started and configuration exists (necessary if executed for the first time)
   ansible.builtin.import_role:
     name: infrastructure/http-healthcheck
   vars:
     service_name: homeassistant
-    service_port: "{{ homeassistant_server_port }}"
+    service_port: "{{ homeassistant.container.server.config.port }}"
     skip_reverse_proxy: true
 
 - name: Ensure ssh directory exists
   ansible.builtin.file:
-    path: "/home/{{ homeassistant_user }}/.ssh"
+    path: "/home/{{ homeassistant.user.name }}/.ssh"
     state: directory
-    owner: "{{ homeassistant_user }}"
-    group: "{{ homeassistant_user }}"
+    owner: "{{ homeassistant.user.name }}"
+    group: "{{ homeassistant.user.name }}"
     mode: 0755
 
 - name: Ensure ssh private key to turn of server exists
   ansible.builtin.copy:
-    dest: "/home/{{ homeassistant_user }}/.ssh/server_ssh_key"
+    dest: "/home/{{ homeassistant.user.name }}/.ssh/server_ssh_key"
     content: |
-      {{ homeassistant_server_wol_poweroff_user_ssh_private_key_base64 | b64decode }}
-    owner: "{{ homeassistant_user }}"
-    group: "{{ homeassistant_user }}"
+      {{ homeassistant.container.server.config.wol_poweroff_user_ssh_private_key_base64 | b64decode }}
+    owner: "{{ homeassistant.user.name }}"
+    group: "{{ homeassistant.user.name }}"
     mode: 0600
 
 - name: Ensure homeassistant is configured correctly
   ansible.builtin.blockinfile:
-    path: "{{ homeassistant_config_location }}/configuration.yaml"
+    path: "{{ homeassistant.container.server.storage.config }}/configuration.yaml"
     marker: "# {mark} ANSIBLE CONFIGURATION"
     block: |
       http:
@@ -80,7 +80,7 @@
           turn_off:
             action: shell_command.turn_off_charon
       shell_command:
-        turn_off_charon: 'ssh {{ wol_poweroff_user }}@192.168.1.3 -i /home/{{ homeassistant_user }}/.ssh/server_ssh_key {{ server_superuser_method }} /sbin/poweroff'
+        turn_off_charon: 'ssh {{ wol_poweroff_user }}@192.168.1.3 -i /home/{{ homeassistant.user.name }}/.ssh/server_ssh_key {{ server_superuser_method }} /sbin/poweroff'
     insertafter: EOF
     create: false
 
@@ -93,5 +93,5 @@
     name: infrastructure/http-healthcheck
   vars:
     service_name: homeassistant
-    service_port: "{{ homeassistant_server_port }}"
+    service_port: "{{ homeassistant.container.server.config.port }}"
 

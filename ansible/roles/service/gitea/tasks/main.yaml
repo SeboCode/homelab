@@ -1,26 +1,30 @@
 ---
-- name: "Ensure {{ gitea_user }} is created"
+- ansible.builtin.import_role:
+    name: infrastructure/build_vars
+  vars:
+    service: gitea
+
+- name: "Ensure {{ gitea.user.name }} is created"
   ansible.builtin.import_role:
     name: infrastructure/user
   vars:
-    user_name: "{{ gitea_user }}"
-    user_password: "{{ gitea_user_password }}"
+    user_name: "{{ gitea.user.name }}"
+    user_password: "{{ gitea.user.password }}"
 
 - name: Ensure gitea storage directory location exists
   ansible.builtin.import_role:
     name: infrastructure/service-data-directory
   vars:
-    path: "{{ gitea_storage_directory }}"
-    user: "{{ gitea_user }}"
-    zfs_encryption_key: "{{ gitea_zfs_encryption_key }}"
+    data_storage: "{{ gitea.data_storage }}"
+    user: "{{ gitea.user.name }}"
 
 - name: Ensure gitea is running
   become: true
-  become_user: "{{ gitea_user }}"
+  become_user: "{{ gitea.user.name }}"
   block:
     - name: Ensure gitea container network is created
       containers.podman.podman_network:
-        name: "{{ gitea_network }}"
+        name: "{{ gitea.container.network }}"
         driver: bridge
         recreate: false
         state: present

@@ -1,25 +1,30 @@
 ---
-- name: "Ensure {{ karakeep_user }} is created"
+- ansible.builtin.import_role:
+    name: infrastructure/build_vars
+  vars:
+    service: karakeep
+
+- name: "Ensure {{ karakeep.user.name }} is created"
   ansible.builtin.import_role:
     name: infrastructure/user
   vars:
-    user_name: "{{ karakeep_user }}"
-    user_password: "{{ karakeep_user_password }}"
+    user_name: "{{ karakeep.user.name }}"
+    user_password: "{{ karakeep.user.password }}"
 
 - name: Ensure karakeep storage directory location exists
   ansible.builtin.import_role:
     name: infrastructure/service-data-directory
   vars:
-    path: "{{ karakeep_storage_directory }}"
-    user: "{{ karakeep_user }}"
+    data_storage: "{{ karakeep.data_storage }}"
+    user: "{{ karakeep.user.name }}"
 
 - name: Ensure karakeep is running
   become: true
-  become_user: "{{ karakeep_user }}"
+  become_user: "{{ karakeep.user.name }}"
   block:
     - name: Ensure karakeep container network is created
       containers.podman.podman_network:
-        name: "{{ karakeep_network }}"
+        name: "{{ karakeep.container.network }}"
         driver: bridge
         recreate: false
         state: present

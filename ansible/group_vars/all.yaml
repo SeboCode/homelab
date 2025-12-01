@@ -3,13 +3,18 @@ traefik_global:
   user:
     name: traefik-user
   data_storage:
+    filesystem: ext4
     root: "/home/{{ traefik_global.user.name }}/traefik-storage"
-    config: "{{ traefik_global.data_storage.root }}/config"
-    config_dynamic: "{{ traefik_global.data_storage.root }}/config_dynamic"
-  image: docker.io/traefik
-  tag: v3.5.1
-  web_port: 10080
-  websecure_port: 10443
+  container:
+    server:
+      image: docker.io/traefik
+      tag: v3.5.1
+      config:
+        web_port: 10080
+        websecure_port: 10443
+      storage:
+        config: "{{ traefik_global.data_storage.root }}/config"
+        config_dynamic: "{{ traefik_global.data_storage.root }}/config_dynamic"
 
 wol_poweroff_user: wol-poweroff-user
 

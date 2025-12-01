@@ -3,26 +3,26 @@
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    owner: "{{ filebrowser_user }}"
-    group: "{{ filebrowser_user }}"
+    owner: "{{ filebrowser.user.name }}"
+    group: "{{ filebrowser.user.name }}"
     mode: 0755
     recurse: true
   loop:
-    - "{{ filebrowser_config_location }}"
-    - "{{ filebrowser_db_data_location }}"
-    - "{{ filebrowser_data_location }}"
+    - "{{ filebrowser.container.server.storage.config }}"
+    - "{{ filebrowser.container.server.storage.data }}"
+    - "{{ filebrowser.container.server.storage.db_data }}"
 
 - name: Ensure apache configs for none root port usage are available for mounting
   ansible.builtin.copy:
     src: settings.json
-    dest: "{{ filebrowser_config_location }}"
+    dest: "{{ filebrowser.container.server.storage.config }}"
 
 - name: Ensure treafik is configured for filebrowser
   ansible.builtin.import_role:
     name: infrastructure/traefik-service
   vars:
     service_name: filebrowser
-    service_port: "{{ filebrowser_server_port }}"
+    service_port: "{{ filebrowser.container.server.config.port }}"
 
 - name: Instantiate filebrowser-server container
   ansible.builtin.import_role:
@@ -30,23 +30,23 @@
   vars:
     post_container_creation_tasks: roles/service/filebrowser/tasks/filebrowser-configuration.yaml
     container_name: filebrowser_server
-    container_image: "{{ filebrowser_server_image }}"
-    container_image_tag: "{{ filebrowser_server_tag }}"
+    container_image: "{{ filebrowser.container.server.image }}"
+    container_image_tag: "{{ filebrowser.container.server.tag }}"
     container_volumes:
-      - "{{ filebrowser_data_location }}:/srv"
-      - "{{ filebrowser_db_data_location }}:/database"
-      - "{{ filebrowser_config_location }}:/config"
+      - "{{ filebrowser.container.server.storage.data }}:/srv"
+      - "{{ filebrowser.container.server.storage.db_data }}:/database"
+      - "{{ filebrowser.container.server.storage.config }}:/config"
     container_ports:
-      - "{{ filebrowser_server_port }}:8080"
+      - "{{ filebrowser.container.server.config.port }}:8080"
     container_networks:
-      - "{{ filebrowser_network }}"
+      - "{{ filebrowser.container.network }}"
     container_network_aliases:
       - filebrowser-server
-    container_user: "{{ filebrowser_user }}"
+    container_user: "{{ filebrowser.user.name }}"
 
 - ansible.builtin.import_role:
     name: infrastructure/http-healthcheck
   vars:
     service_name: filebrowser
-    service_port: "{{ filebrowser_server_port }}"
+    service_port: "{{ filebrowser.container.server.config.port }}"
 

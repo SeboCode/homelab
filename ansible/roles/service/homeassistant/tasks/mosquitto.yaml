@@ -1,27 +1,27 @@
 ---
 - name: Ensure mosquitto config location exists
   ansible.builtin.file:
-    path: "{{ homeassistant_mosquitto_config_location }}"
+    path: "{{ homeassistant.container.mosquitto.storage.config }}"
     state: directory
-    owner: "{{ homeassistant_user }}"
-    group: "{{ homeassistant_user }}"
+    owner: "{{ homeassistant.user.name }}"
+    group: "{{ homeassistant.user.name }}"
     mode: 0755
     recurse: true
 
 - name: Ensure mosquitto config exists
   ansible.builtin.template:
-    dest: "{{ homeassistant_mosquitto_config_location }}/mosquitto.conf"
+    dest: "{{ homeassistant.container.mosquitto.storage.config }}/mosquitto.conf"
     src: mosquitto/mosquitto.conf.j2
-    owner: "{{ homeassistant_user }}"
-    group: "{{ homeassistant_user }}"
+    owner: "{{ homeassistant.user.name }}"
+    group: "{{ homeassistant.user.name }}"
     mode: 0644
 
 - name: Ensure mosquitto password config exists
   ansible.builtin.template:
-    dest: "{{ homeassistant_mosquitto_config_location }}/passwords"
+    dest: "{{ homeassistant.container.mosquitto.storage.config }}/passwords"
     src: mosquitto/passwords.j2
-    owner: "{{ homeassistant_user }}"
-    group: "{{ homeassistant_user }}"
+    owner: "{{ homeassistant.user.name }}"
+    group: "{{ homeassistant.user.name }}"
     mode: 0600
 
 - name: Instantiate mosquitto container
@@ -29,13 +29,13 @@
     name: infrastructure/container
   vars:
     container_name: mosquitto
-    container_image: "{{ homeassistant_mosquitto_image }}"
-    container_image_tag: "{{ homeassistant_mosquitto_tag }}"
+    container_image: "{{ homeassistant.container.mosquitto.image }}"
+    container_image_tag: "{{ homeassistant.container.mosquitto.tag }}"
     container_volumes:
-      - "{{ homeassistant_mosquitto_config_location }}:/mosquitto/config:ro"
+      - "{{ homeassistant.container.mosquitto.storage.config }}:/mosquitto/config:ro"
     container_networks:
-      - "{{ homeassistant_network }}"
+      - "{{ homeassistant.container.network }}"
     container_network_aliases:
       - mosquitto
-    container_user: "{{ homeassistant_user }}"
+    container_user: "{{ homeassistant.user.name }}"
 

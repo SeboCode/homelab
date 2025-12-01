@@ -1,65 +1,111 @@
 ---
-# ZFS configuration
-zfs_service_data_pool_name: service_data
+platform: alpine
+processor_microcode_package: intel-ucode
 
-# Immich
-immich_user: immich-user
-immich_storage_directory: "/{{ zfs_service_data_pool_name }}/immich-storage"
-immich_upload_location: "{{ immich_storage_directory }}/library"
-immich_db_data_location: "{{ immich_storage_directory }}/postgres"
-immich_redis_data_location: "{{ immich_storage_directory }}/redis"
-immich_network: immich_network
-immich_server_image: ghcr.io/immich-app/immich-server
-immich_server_tag: v2.1.0
-immich_server_port: 20000
-immich_machine_learning_image: ghcr.io/immich-app/immich-machine-learning
-immich_machine_learning_tag: v2.1.0
-immich_redis_image: docker.io/valkey/valkey
-immich_redis_tag: 8-bookworm@sha256:fea8b3e67b15729d4bb70589eb03367bab9ad1ee89c876f54327fc7c6e618571
-immich_postgres_image: ghcr.io/immich-app/postgres
-immich_postgres_tag: 14-vectorchord0.4.3-pgvectors0.2.0@sha256:bcf63357191b76a916ae5eb93464d65c07511da41e3bf7a8416db519b40b1c23
-immich_db_database_name: immich_database
-immich_db_username: immich_pg_user
+zfs_global:
+  service_data_pool_name: service_data
 
-# Filebrowser
-filebrowser_user: filebrowser-user
-filebrowser_storage_directory: "/{{ zfs_service_data_pool_name }}/filebrowser-storage"
-filebrowser_config_location: "{{ filebrowser_storage_directory }}/config"
-filebrowser_data_location: "{{ filebrowser_storage_directory }}/data"
-filebrowser_db_data_location: "{{ filebrowser_storage_directory }}/database"
-filebrowser_network: filebrowser_network
-filebrowser_server_image: docker.io/filebrowser/filebrowser
-filebrowser_server_tag: v2.44.1
-filebrowser_server_port: 20100
+immich_global:
+  user:
+    name: immich-user
+  data_storage:
+    filesystem: zfs
+    root: "/{{ zfs.service_data_pool_name }}/immich-storage"
+  container:
+    network: immich_network
+    server:
+      image: ghcr.io/immich-app/immich-server
+      tag: v2.1.0
+      config:
+        port: 20000
+      storage:
+        upload: "{{ immich_global.data_storage.root }}/library"
+    machine_learning:
+      image: ghcr.io/immich-app/immich-machine-learning
+      tag: v2.1.0
+    redis:
+      image: docker.io/valkey/valkey
+      tag: 8-bookworm@sha256:fea8b3e67b15729d4bb70589eb03367bab9ad1ee89c876f54327fc7c6e618571
+      storage:
+        data: "{{ immich_global.data_storage.root }}/redis"
+    postgres:
+      image: ghcr.io/immich-app/postgres
+      tag: 14-vectorchord0.4.3-pgvectors0.2.0@sha256:bcf63357191b76a916ae5eb93464d65c07511da41e3bf7a8416db519b40b1c23
+      config:
+        db:
+          name: immich_database
+          username: immich_pg_user
+      storage:
+        data: "{{ immich_global.data_storage.root }}/postgres"
 
-# PhotoPrism
-photoprism_user: photoprism-user
-photoprism_storage_directory: "/{{ zfs_service_data_pool_name }}/photoprism-storage"
-photoprism_originals_location: "{{ photoprism_storage_directory }}/originals"
-photoprism_storage_location: "{{ photoprism_storage_directory }}/storage"
-photoprism_db_data_location: "{{ photoprism_storage_directory }}/mariadb"
-photoprism_network: photoprism_network
-photoprism_server_image: docker.io/photoprism/photoprism
-photoprism_server_tag: 250707
-photoprism_server_port: 20200
-photoprism_mariadb_image: docker.io/mariadb
-photoprism_mariadb_tag: 11.8.3
-photoprism_db_database_name: photoprism_database
-photoprism_db_username: photoprism_mariadb_user
+filebrowser_global:
+  user:
+    name: filebrowser-user
+  data_storage:
+    filesystem: zfs
+    root: "/{{ zfs.service_data_pool_name }}/filebrowser-storage"
+  container:
+    network: filebrowser_network
+    server:
+      image: docker.io/filebrowser/filebrowser
+      tag: v2.44.1
+      config:
+        port: 20100
+      storage:
+        config: "{{ filebrowser_global.data_storage.root }}/config"
+        data: "{{ filebrowser_global.data_storage.root }}/data"
+        db_data: "{{ filebrowser_global.data_storage.root }}/database"
 
-# Gitea
-gitea_user: gitea-user
-gitea_storage_directory: "/{{ zfs_service_data_pool_name }}/gitea-storage"
-gitea_data_location: "{{ gitea_storage_directory }}/data"
-gitea_config_location: "{{ gitea_storage_directory }}/config"
-gitea_db_data_location: "{{ gitea_storage_directory }}/postgres"
-gitea_network: gitea_network
-gitea_server_image: docker.gitea.com/gitea
-gitea_server_tag: 1.24.6-rootless
-gitea_server_port: 20300
-gitea_server_ssh_port: 20322
-gitea_postgres_image: docker.io/postgres
-gitea_postgres_tag: 14.19
-gitea_db_database_name: gitea_database
-gitea_db_username: gitea_pg_user
+photoprism_global:
+  user:
+    name: photoprism-user
+  data_storage:
+    filesystem: zfs
+    root: "/{{ zfs.service_data_pool_name }}/photoprism-storage"
+  container:
+    network: photoprism_network
+    server:
+      image: docker.io/photoprism/photoprism
+      tag: 250707
+      config:
+        port: 20200
+      storage:
+        originals: "{{ photoprism_global.data_storage.root }}/originals"
+        storage: "{{ photoprism_global.data_storage.root }}/storage"
+    mariadb:
+      image: docker.io/mariadb
+      tag: 11.8.3
+      config:
+        db:
+          name: photoprism_database
+          username: photoprism_mariadb_user
+      storage:
+        data: "{{ photoprism_global.data_storage.root }}/mariadb"
+
+gitea_global:
+  user:
+    name: gitea-user
+  data_storage:
+    filesystem: zfs
+    root: "/{{ zfs.service_data_pool_name }}/gitea-storage"
+  container:
+    network: gitea_network
+    server:
+      image: docker.gitea.com/gitea
+      tag: 1.24.6-rootless
+      config:
+        port: 20300
+        ssh_port: 20322
+      storage:
+        data: "{{ gitea_global.data_storage.root }}/data"
+        config: "{{ gitea_global.data_storage.root }}/config"
+    postgres:
+      image: docker.io/postgres
+      tag: 14.19
+      config:
+        db:
+          name: gitea_database
+          username: gitea_pg_user
+      storage:
+        data: "{{ gitea_global.data_storage.root }}/postgres"
 
