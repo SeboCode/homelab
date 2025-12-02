@@ -1,7 +1,7 @@
 ---
 - name: Ensure immich postgres data location exists
   ansible.builtin.file:
-    path: "{{ immich.container.postgres.config.db.data }}"
+    path: "{{ immich.container.postgres.storage.data }}"
     state: directory
     owner: "{{ immich.user.name }}"
     group: "{{ immich.user.name }}"
@@ -23,7 +23,7 @@
       # Uncomment the DB_STORAGE_TYPE: 'HDD' var if your database isn't stored on SSDs
       DB_STORAGE_TYPE: "HDD"
     container_volumes:
-      - "{{ immich.container.postgres.configdb.data }}:/var/lib/postgresql/data"
+      - "{{ immich.container.postgres.storage.data }}:/var/lib/postgresql/data"
     container_networks:
       - "{{ immich.container.network }}"
     container_network_aliases:
