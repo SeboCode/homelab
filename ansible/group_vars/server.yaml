@@ -3,7 +3,7 @@ platform: alpine
 processor_microcode_package: intel-ucode
 
 zfs_global:
-  service_data_pool_name: service_data
+  service_data_pool_name: service-data
 
 immich_global:
   user:
