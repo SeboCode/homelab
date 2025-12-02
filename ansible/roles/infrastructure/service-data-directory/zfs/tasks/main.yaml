@@ -7,9 +7,19 @@
     group: "{{ user }}"
     mode: 0400
 
-- name: Create file system in data storage zfs pool
+- name: Compute zfs dataset name
+  ansible.builtin.set_fact:
+    zfs_dataset_name: "{{ data_storage.root | regex_replace('^\\/', '') }}"
+
+- name: "Check if {{ zfs_dataset_name }} dataset exists"
+  ansible.builtin.command: "zfs list -H -o name {{ zfs_dataset_name }}"
+  register: zfs_dataset_check
+  failed_when: false
+  changed_when: false
+
+- name: "Create {{ zfs_dataset_name }} dataset in data storage zfs pool"
   community.general.zfs:
-    name: "{{ data_storage.root | regex_replace('^\\/', '') }}"
+    name: "{{ zfs_dataset_name }}"
     state: present
     extra_zfs_properties:
       checksum: on
@@ -17,6 +27,9 @@
       encryption: on
       keyformat: raw
       keylocation: "file:///home/{{ user }}/.zfs-encrypt.key"
+  # The zfs task tries to set all defined properties every time it is executed.
+  # This fails, as encryption can only be set during the initial creation of the dataset.
+  when: zfs_dataset_check.rc != 0
 
 - name: Set correct ownership of data folder
   ansible.builtin.file:
