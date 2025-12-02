@@ -21,10 +21,11 @@ traefik_env:
     password: "123456"
   container:
     server:
-      ca_server: "https://acme-staging-v02.api.letsencrypt.org/directory"
-      dashboard:
-        username: admin
-        password: admin
+      config:
+        ca_server: "https://acme-staging-v02.api.letsencrypt.org/directory"
+        dashboard:
+          username: admin
+          password: admin
 
 immich_env:
   user:
