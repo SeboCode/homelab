@@ -24,3 +24,21 @@
       - disks: "{{ zfs.devices }}"
         type: mirror
 
+- name: Ensure zfs pools are imported on boot
+  ansible.builtin.file:
+    src: /etc/init.d/zfs-import
+    dest: /etc/runlevels/boot/zfs-import
+    state: link
+
+- name: Ensure zfs dataset encryption keys are loaded at boot
+  ansible.builtin.file:
+    src: /etc/init.d/zfs-load-key
+    dest: /etc/runlevels/boot/zfs-load-key
+    state: link
+
+- name: Ensure zfs datasets are mounted at boot
+  ansible.builtin.file:
+    src: /etc/init.d/zfs-mount
+    dest: /etc/runlevels/boot/zfs-mount
+    state: link
+
