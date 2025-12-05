@@ -26,7 +26,7 @@
 - name: "Ensure {{ wol_poweroff_user }} can turn off the machine without beeing prompted for a password"
   ansible.builtin.lineinfile:
     path: /etc/doas.conf
-    line: "permit nopass {{ wol_poweroff_user }} as root cmd {{ superuser_method }} /sbin/poweroff"
+    line: "permit nopass {{ wol_poweroff_user }} as root cmd /sbin/poweroff"
     state: present
     owner: root
     group: root
