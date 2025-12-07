@@ -1,0 +1,49 @@
+---
+- name: Ensure pihole storage location exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ pihole_user }}"
+    group: "{{ pihole_user }}"
+    mode: 0755
+    recurse: true
+  loop:
+    - "{{ pihole_storage_location }}"
+
+- name: Ensure treafik is configured for pihole
+  ansible.builtin.include_role:
+    name: infrastructure/traefik-service
+  vars:
+    service_name: pihole
+    service_port: "{{ pihole_server_port }}"
+
+- name: Instantiate pihole-server container
+  ansible.builtin.include_role:
+    name: infrastructure/container
+  vars:
+    container_name: pihole_server
+    container_image: "{{ pihole_server_image }}"
+    container_image_tag: "{{ pihole_server_tag }}"
+    container_env:
+      TZ: "Europe/Zurich"
+      FTLCONF_webserver_api_password: "{{ pihole_admin_password }}"
+      # If using Docker's default `bridge` network setting the dns listening mode should be set to 'all'
+      FTLCONF_dns_listeningMode: 'all'
+    container_volumes:
+      - "{{ pihole_storage_location }}:/etc/pihole"
+    container_ports:
+      - "{{ pihole_server_port }}:443/tcp"
+    container_networks:
+      - "{{ pihole_network }}"
+    container_network_aliases:
+      - pihole-server
+    container_user: "{{ pihole_user }}"
+    container_capabilities:
+      - CAP_NET_BIND_SERVICE
+
+- ansible.builtin.include_role:
+    name: infrastructure/http-healthcheck
+  vars:
+    service_name: pihole
+    service_port: "{{ pihole_server_port }}"
+

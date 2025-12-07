@@ -11,7 +11,6 @@ traefik_dashboard_password: admin
 
 # Pihole
 pihole_user_password: "123456"
-pihole_admin_username: admin
 pihole_admin_password: admin
 
 # Home Assistant

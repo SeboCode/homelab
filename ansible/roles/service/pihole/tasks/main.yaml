@@ -1,0 +1,29 @@
+---
+- name: "Ensure {{ pihole_user }} is created"
+  ansible.builtin.include_role:
+    name: infrastructure/user
+  vars:
+    user_name: "{{ pihole_user }}"
+    user_password: "{{ pihole_user_password }}"
+
+- name: Ensure pihole is running
+  become: true
+  become_user: "{{ pihole_user }}"
+  block:
+    - name: Ensure pihole storage directory location exists
+      ansible.builtin.file:
+        path: "{{ pihole_storage_directory }}"
+        state: directory
+        owner: "{{ pihole_user }}"
+        group: "{{ pihole_user }}"
+        mode: 0755
+
+    - name: Ensure pihole container network is created
+      containers.podman.podman_network:
+        name: "{{ pihole_network }}"
+        driver: bridge
+        recreate: false
+        state: present
+
+    - include_tasks: pihole-server.yaml
+
