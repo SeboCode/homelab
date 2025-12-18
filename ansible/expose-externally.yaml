@@ -14,12 +14,12 @@
         zone: public
         state: enabled
       loop:
-        - "{{ immich_server_port }}"
-        - "{{ filebrowser_server_port }}"
-        - "{{ photoprism_server_port }}"
-        - "{{ gitea_server_port }}"
-        - "{{ traefik_dashboard_port }}"
-        - "{{ pihole_server_port }}"
-        - "{{ homeassistant_server_port }}"
-        - "{{ karakeep_server_port }}"
+        - "{{ immich.container.server.config.port }}"
+        - "{{ filebrowser.container.server.config.port }}"
+        - "{{ photoprism.container.server.config.port }}"
+        - "{{ gitea.container.server.config.port }}"
+        - "{{ traefik.container.server.config.port }}"
+        - "{{ pihole.container.server.config.port }}"
+        - "{{ homeassistant.container.server.config.port }}"
+        - "{{ karakeep.container.server.config.port }}"
 
