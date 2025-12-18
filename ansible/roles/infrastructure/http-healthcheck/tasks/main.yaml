@@ -1,7 +1,7 @@
 ---
 - name: "Wait for {{ service_name }} to be healthy locally"
   ansible.builtin.uri:
-    url: "http://localhost:{{ service_port }}"
+    url: "http://localhost:{{ service_port }}{{ path }}"
     status_code: 200
     validate_certs: false
   register: result
@@ -12,7 +12,7 @@
 
 - name: "Wait for {{ service_name }} to be available via traefik"
   ansible.builtin.uri:
-    url: "https://{{ service_name }}.{{ domain }}"
+    url: "https://{{ service_name }}.{{ domain }}{{ path }}"
     user: "{{ username | default(omit) }}"
     password: "{{ password | default(omit) }}"
     status_code: 200

@@ -1,4 +1,5 @@
 ---
+path: ""
 exposed_locally: true
 skip_reverse_proxy: false
 
