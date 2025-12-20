@@ -1,9 +1,15 @@
 ---
-- name: Ensure dns connection is allowed
-  community.general.ufw:
-    rule: allow
-    port: '53'
-    proto: tcp
+- name: Ensure DNS port forward rules are present in ufw manual configuration
+  ansible.builtin.blockinfile:
+    path: /etc/ufw/before.rules
+    marker: "# {mark} ANSIBLE NAT RULES FOR DNS"
+    block: |
+      -A PREROUTING -i eth0 -p tcp --dport 53 -j REDIRECT --to-ports {{ pihole_global.container.server.config.dns.port }}
+      -A PREROUTING -i eth0 -p tcp --dport 53 -j REDIRECT --to-ports {{ pihole_global.container.server.config.dns.port }}
+      -A PREROUTING -i tailscale0 -p tcp --dport 53 -j REDIRECT --to-ports {{ pihole_global.container.server.config.dns.port }}
+      -A PREROUTING -i tailscale0 -p tcp --dport 53 -j REDIRECT --to-ports {{ pihole_global.container.server.config.dns.port }}
+    insertafter: "# NAT_RULE_MARKER"
+    create: false
 
 - name: Ensure ufw rules are running and reloaded on boot
   community.general.ufw:

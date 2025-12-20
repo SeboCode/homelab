@@ -27,14 +27,24 @@
       :OUTPUT ACCEPT [0:0]
       :POSTROUTING ACCEPT [0:0]
 
+      # NAT_RULE_MARKER
+
+      COMMIT
+    insertbefore: BOF
+    create: false
+
+- name: Ensure NAT rules are present in ufw manual configuration
+  ansible.builtin.blockinfile:
+    path: /etc/ufw/before.rules
+    marker: "# {mark} ANSIBLE NAT RULES FOR HTTP/HTTPS"
+    block: |
       -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports {{ traefik_global.container.server.config.web_port }}
       -A PREROUTING -i eth0 -p tcp --dport 443 -j REDIRECT --to-ports {{ traefik_global.container.server.config.websecure_port }}
       -A PREROUTING -i tailscale0 -p tcp --dport 80 -j REDIRECT --to-ports {{ traefik_global.container.server.config.web_port }}
       -A PREROUTING -i tailscale0 -p tcp --dport 443 -j REDIRECT --to-ports {{ traefik_global.container.server.config.websecure_port }}
       -A OUTPUT -o lo -p tcp --dport 80 -j REDIRECT --to-ports {{ traefik_global.container.server.config.web_port }}
       -A OUTPUT -o lo -p tcp --dport 443 -j REDIRECT --to-ports {{ traefik_global.container.server.config.websecure_port }}
-      COMMIT
-    insertbefore: BOF
+    insertafter: "# NAT_RULE_MARKER"
     create: false
 
 - name: Ensure ssh and traefik connection is allowed
