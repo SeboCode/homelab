@@ -38,7 +38,7 @@
     name: "{{ container_name }}"
     hostname: "{{ container_name }}"
     image: "{{ container_image }}:{{ container_image_tag }}"
-    user: "{{ container_user_id }}"
+    user: "{{ container_user_override | default(container_user_id) }}"
     userns: keep-id
     recreate: false
     restart_policy: "no" # s6 manages container lifecycle

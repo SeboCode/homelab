@@ -8,6 +8,8 @@ Vagrant.configure("2") do |config|
     pi.vm.network :forwarded_port, guest: 443, host: 443, id: "port-forwarded-to-traefik-https"
     pi.vm.network :forwarded_port, guest: 10080, host: 10080, id: "traefik-http"
     pi.vm.network :forwarded_port, guest: 10443, host: 10443, id: "traefik-https"
+    pi.vm.network :forwarded_port, guest: 20400, host: 20400, id: "pihole"
+    pi.vm.network :forwarded_port, guest: 20453, host: 20453, id: "pihole-dns"
     pi.vm.network :forwarded_port, guest: 20500, host: 20500, id: "homeassistant"
     pi.vm.network :forwarded_port, guest: 20600, host: 20600, id: "karakeep"
 

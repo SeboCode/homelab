@@ -1,0 +1,50 @@
+---
+- ansible.builtin.import_role:
+    name: infrastructure/build_vars
+  vars:
+    service: pihole
+
+- name: "Ensure {{ pihole.user.name }} is created"
+  ansible.builtin.import_role:
+    name: infrastructure/user
+  vars:
+    user_name: "{{ pihole.user.name }}"
+    user_password: "{{ pihole.user.password }}"
+
+- name: Ensure pihole storage directory location exists
+  ansible.builtin.import_role:
+    name: infrastructure/service-data-directory
+  vars:
+    data_storage: "{{ pihole.data_storage }}"
+    user: "{{ pihole.user.name }}"
+
+# We have to perform these operations with a root user, as pihole will chown the mounted directories, which will lead to
+# missmatching uid and gid values due to podmans userns mapping.
+- name: Ensure pihole storage location exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ pihole.user.name }}"
+    group: "{{ pihole.user.name }}"
+    mode: 0755
+    recurse: true
+  loop:
+    - "{{ pihole.container.server.storage.config }}"
+    - "{{ pihole.container.server.storage.dnsmasq }}"
+    - "{{ pihole.container.server.storage.logs }}"
+  become: true
+  become_method: "{{ superuser_method }}"
+
+- name: Ensure pihole is running
+  become: true
+  become_user: "{{ pihole.user.name }}"
+  block:
+    - name: Ensure pihole container network is created
+      containers.podman.podman_network:
+        name: "{{ pihole.container.network }}"
+        driver: bridge
+        recreate: false
+        state: present
+
+    - import_tasks: pihole-server.yaml
+

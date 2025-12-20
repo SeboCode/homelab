@@ -20,8 +20,7 @@ pihole_env:
   container:
     server:
       config:
-        admin:
-          username: admin
+        webserver:
           password: admin
 
 homeassistant_env:

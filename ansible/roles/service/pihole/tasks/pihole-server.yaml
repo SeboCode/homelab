@@ -1,0 +1,59 @@
+---
+- name: Ensure treafik is configured for pihole
+  ansible.builtin.include_role:
+    name: infrastructure/traefik-service
+  vars:
+    service_name: pihole
+    service_port: "{{ pihole.container.server.config.webserver.port }}"
+
+- name: Get uid of pihole user
+  ansible.builtin.command: "id -u {{ pihole.user.name }}"
+  register: pihole_user_uid
+
+- name: Get gid of pihole user
+  ansible.builtin.command: "id -g {{ pihole.user.name }}"
+  register: pihole_user_gid
+
+- name: Instantiate pihole-server container
+  ansible.builtin.include_role:
+    name: infrastructure/container
+  vars:
+    container_name: pihole_server
+    container_image: "{{ pihole.container.server.image }}"
+    container_image_tag: "{{ pihole.container.server.tag }}"
+    container_env:
+      TZ: "Europe/Zurich"
+      PIHOLE_UID: "{{ pihole_user_uid.stdout }}"
+      PIHOLE_GID: "{{ pihole_user_gid.stdout }}"
+      FTLCONF_webserver_port: "8080"
+      FTLCONF_webserver_api_password: "{{ pihole.container.server.config.webserver.password }}"
+      # If using Docker's default `bridge` network setting the dns listening mode should be set to "all"
+      FTLCONF_dns_listeningMode: "all"
+      FTLCONF_dns_port: "8053"
+      FTLCONF_dns_upstreams: "{{ pihole.container.server.config.dns.upstreams }}"
+      FTLCONF_dns_hosts: "{{ pihole.container.server.config.dns.hosts | regex_replace('\n', ';') }}"
+    container_volumes:
+      - "{{ pihole.container.server.storage.config }}:/etc/pihole"
+      - "{{ pihole.container.server.storage.dnsmasq }}:/etc/dnsmasq.d"
+      - "{{ pihole.container.server.storage.logs }}:/var/log/pihole"
+    container_ports:
+      - "{{ pihole.container.server.config.webserver.port }}:8080"
+      - "{{ pihole.container.server.config.dns.port }}:8053/tcp"
+      - "{{ pihole.container.server.config.dns.port }}:8053/udp"
+    container_networks:
+      - "{{ pihole.container.network }}"
+    container_network_aliases:
+      - pihole-server
+    container_user: "{{ pihole.user.name }}"
+    # The startup script inside of the container has to be executed as the root user.
+    # Pihole itself will later on be started as the unprivileged pihole user, which
+    # has the same uid and gid as the host user due to the set environment variable.
+    container_user_override: root
+
+- ansible.builtin.include_role:
+    name: infrastructure/http-healthcheck
+  vars:
+    service_name: pihole
+    service_port: "{{ pihole.container.server.config.webserver.port }}"
+    path: "/admin/login"
+
