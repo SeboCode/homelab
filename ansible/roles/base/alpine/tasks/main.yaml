@@ -62,3 +62,9 @@
     state: started
     enabled: true
 
+# Useful when creating manual backups of zfs snapshot
+- name: Ensure pv is installed to monitor process data through a pipeline
+  ansible.builtin.package:
+    name: pv
+    state: present
+
