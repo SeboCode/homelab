@@ -27,7 +27,7 @@
     owner: "{{ pihole.user.name }}"
     group: "{{ pihole.user.name }}"
     mode: 0755
-    recurse: true
+    recurse: true # Necessary to perform ownership change on all subdirectories as well.
   loop:
     - "{{ pihole.container.server.storage.config }}"
     - "{{ pihole.container.server.storage.dnsmasq }}"

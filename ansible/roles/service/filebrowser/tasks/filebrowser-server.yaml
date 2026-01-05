@@ -6,7 +6,6 @@
     owner: "{{ filebrowser.user.name }}"
     group: "{{ filebrowser.user.name }}"
     mode: 0755
-    recurse: true
   loop:
     - "{{ filebrowser.container.server.storage.config }}"
     - "{{ filebrowser.container.server.storage.data }}"

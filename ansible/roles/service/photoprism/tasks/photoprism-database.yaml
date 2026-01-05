@@ -6,7 +6,6 @@
     owner: "{{ photoprism.user.name }}"
     group: "{{ photoprism.user.name }}"
     mode: 0755
-    recurse: true
 
 - name: Instantiate photoprism-mariadb container
   ansible.builtin.import_role:

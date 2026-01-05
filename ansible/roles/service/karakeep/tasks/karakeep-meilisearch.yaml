@@ -6,7 +6,6 @@
     owner: "{{ karakeep.user.name }}"
     group: "{{ karakeep.user.name }}"
     mode: 0755
-    recurse: true
 
 - name: Instantiate karakeep-meilisearch container
   ansible.builtin.import_role:

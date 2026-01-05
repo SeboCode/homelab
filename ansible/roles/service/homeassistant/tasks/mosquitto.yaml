@@ -6,7 +6,6 @@
     owner: "{{ homeassistant.user.name }}"
     group: "{{ homeassistant.user.name }}"
     mode: 0755
-    recurse: true
 
 - name: Ensure mosquitto config exists
   ansible.builtin.template:

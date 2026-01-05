@@ -6,7 +6,6 @@
     owner: "{{ immich.user.name }}"
     group: "{{ immich.user.name }}"
     mode: 0755
-    recurse: true
 
 - name: Instantiate immich-postgres container
   ansible.builtin.import_role:
