@@ -8,7 +8,7 @@ traefik_global:
   container:
     server:
       image: docker.io/traefik
-      tag: v3.5.1
+      tag: v3.6.6
       config:
         web_port: 10080
         websecure_port: 10443

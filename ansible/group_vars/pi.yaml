@@ -43,7 +43,7 @@ homeassistant_global:
     network: homeassistant_network
     server:
       image: ghcr.io/home-assistant/home-assistant
-      tag: 2025.9.4
+      tag: 2025.12.5
       config:
         port: 20500
       storage:
@@ -57,7 +57,7 @@ homeassistant_global:
         config: "{{ homeassistant_global.data_storage.root }}/mosquitto-config"
     zigbee2mqtt:
       image: ghcr.io/koenkk/zigbee2mqtt
-      tag: 2.6.2
+      tag: 2.7.2
       config:
         port: 20501
       storage:
@@ -73,7 +73,7 @@ karakeep_global:
     network: karakeep_network
     server:
       image: ghcr.io/karakeep-app/karakeep
-      tag: 0.27.1
+      tag: 0.30.0
       config:
         port: 20600
       storage:
