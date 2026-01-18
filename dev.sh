@@ -11,8 +11,6 @@ delete_vitual_device_volume() {
 
 platformstack="${1:-server}"
 
-source virtualenv.sh
-
 cd "./platform-stack/$platformstack"
 
 vagrant destroy -f

@@ -6,8 +6,6 @@ set -o pipefail
 
 platformstack="${1:-server}"
 
-source virtualenv.sh
-
 if [[ $platformstack == server ]]; then
     node="charon"
 else
