@@ -1,18 +1,18 @@
 # Homelab
 
-This is the setup script to configure my private homelab. It builds on Ansible to configure the homelab servers and
+This is the setup script to configure my private homelab. It builds on Ansible to configure the homelab nodes and
 provision the services using Podman. The Ansible playbook is built such that it configures an Alpine Linux machine
-for the server and a Debian based Pi OS Lite for the Raspberry Pi. For local development, the Ansible playbook is
+for Charon and a Debian based Pi OS Lite for Daisy. For local development, the Ansible playbook is
 run on an Alpine/Debian Linux VM, provisioned using Vagrant.
 
-# Installation guide for server
+# Installation guide for Charon
 
 This is the installation guide describes how to set up ACME Let's Encrypt certificate configuration, how to prepare the
 local and remote DNS entries and how to install the os and perform manual setup steps.
 
 ## OS installation and manual Ansible preparation
 
-1. Install Alpine Linux on the server.
+1. Install Alpine Linux on Charon.
    1. Download the latest basic Alpine Linux iso from the official [website](https://alpinelinux.org/downloads/) and verify its integrity and authenticity.
    2. Setup Alpine Linux according to the documentation in "System Disk Mode (sys)".
       1. Create a none-root user during this step (or later on). This user should be used by Ansible to configure the server. It is advised to create this user, to avoid running Ansible with the root user.
@@ -44,14 +44,14 @@ local and remote DNS entries and how to install the os and perform manual setup 
 
 ## (Optional) Setup Tailscale
 
-To access the services from anywhere in the world, without the need to expose the server into the internet, a VPN
+To access the services from anywhere in the world, without the need to expose the node into the internet, a VPN
 solution, such as Tailscale, can be used.
 
 1.  Install Tailscale using `apk add tailscale`.
 2.  Add Tailscale to autostart list `doas rc-update add tailscale`.
 3.  Start Tailscale service `doas rc-service tailscale start`. See the status using `rc-service tailscale status`.
 4.  Connect to Tailnet `doas tailscale up`.
-5.  Disable key expiry in the Tailscale admin panel for the server, to avoid need for reauthentication of the node
+5.  Disable key expiry in the Tailscale admin panel for the node, to avoid need for reauthentication of the node
     after token is expired. If this step is not performed, the service might no longer be accessible at some point,
     until it is reauthenticated using `doas tailscale up`.
 
@@ -71,7 +71,7 @@ updated.
 1. To improve network speed and avoid unnecessary routing, it is advised to setup a DNS entry in the local gateway. This
    can be done in the appropriate admin panel of the home router.
 2. To setup remote access over Tailscale, additional DNS entries have to be manually added to the NameServer of the
-   domain to be used. An A and AAAA record should be added with the IPv4 and IPv6 of the server node in the Tailnet,
+   domain to be used. An A and AAAA record should be added with the IPv4 and IPv6 of the node in the Tailnet,
    respectively.
 
 ## Automatic setup using Ansible and manual configurations
@@ -85,13 +85,13 @@ updated.
 2. Check that the `ansible/inventory/prod.ini` file is configured correctly.
 3. Execute the bash script `prod.sh`.
 
-# Installation guide for Pi
+# Installation guide for Daisy
 
 TODO
 
 # Services
 
-The following services are available on the server machine:
+The following services are available on Charon:
 | Service | Reserved Portrange | Exposed Service | Port of exposed Service | Directly accessible | Url Accessibility |
 | :------ | -----------------: | :-------------- | ----------------------: | :-----------------: | :---------------- |
 | Traefik | 10000 - 19999 | | | | |
@@ -108,7 +108,7 @@ The following services are available on the server machine:
 | | | Gitea Server | 20300 | :x: | `gitea(.dev).*` |
 | | | Gitea Server SSH | 20322 | :x: | This is currently not working due to firewall and traefik configurations. Repositories can only be cloned via https. |
 
-The following services are available on the pi machine:
+The following services are available on Daisy:
 | Service | Reserved Portrange | Exposed Service | Port of exposed Service | Directly accessible | Url Accessibility |
 | :------ | -----------------: | :-------------- | ----------------------: | :-----------------: | :---------------- |
 | Traefik | 10000 - 19999 | | | | |

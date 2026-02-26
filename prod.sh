@@ -7,11 +7,7 @@ set -o pipefail
 node="${1:-}"
 
 case "$node" in
-    charon)
-        platformstack="server"
-        ;;
-    daisy)
-        platformstack="pi"
+    charon|daisy)
         ;;
     *)
         echo "Error: Invalid or missing node '${node}'. Valid options: charon, daisy" >&2
@@ -33,9 +29,8 @@ trap cleanup EXIT
 trap cleanup INT
 trap cleanup TERM
 
-ansible-playbook "ansible/$platformstack.yaml" \
+ansible-playbook "ansible/$node.yaml" \
     --ask-vault-pass \
-    --inventory="ansible/inventory/$platformstack.ini" \
+    --inventory="ansible/inventory/$node.ini" \
     --extra-vars="@ansible/vars/prod/shared-secrets.yaml" \
-    --extra-vars="@ansible/vars/prod/$platformstack.yaml"
-
+    --extra-vars="@ansible/vars/prod/$node.yaml"

@@ -1,24 +1,24 @@
 Vagrant.configure("2") do |config|
-  config.vm.define "dev" do |pi|
-    pi.vm.box = "generic/debian12"
-    pi.vm.box_version = "4.3.12"
-    pi.vm.hostname = "pi"
-    pi.vm.network :forwarded_port, guest: 22, host: 10122, id: "ssh"
-    pi.vm.network :forwarded_port, guest: 80, host: 80, id: "port-forwarded-to-traefik-http"
-    pi.vm.network :forwarded_port, guest: 443, host: 443, id: "port-forwarded-to-traefik-https"
-    pi.vm.network :forwarded_port, guest: 10080, host: 10080, id: "traefik-http"
-    pi.vm.network :forwarded_port, guest: 10443, host: 10443, id: "traefik-https"
-    pi.vm.network :forwarded_port, guest: 20400, host: 20400, id: "pihole"
-    pi.vm.network :forwarded_port, guest: 20453, host: 20453, id: "pihole-dns"
-    pi.vm.network :forwarded_port, guest: 20500, host: 20500, id: "homeassistant"
-    pi.vm.network :forwarded_port, guest: 20600, host: 20600, id: "karakeep"
+  config.vm.define "dev" do |daisy|
+    daisy.vm.box = "generic/debian12"
+    daisy.vm.box_version = "4.3.12"
+    daisy.vm.hostname = "daisy"
+    daisy.vm.network :forwarded_port, guest: 22, host: 10122, id: "ssh"
+    daisy.vm.network :forwarded_port, guest: 80, host: 80, id: "port-forwarded-to-traefik-http"
+    daisy.vm.network :forwarded_port, guest: 443, host: 443, id: "port-forwarded-to-traefik-https"
+    daisy.vm.network :forwarded_port, guest: 10080, host: 10080, id: "traefik-http"
+    daisy.vm.network :forwarded_port, guest: 10443, host: 10443, id: "traefik-https"
+    daisy.vm.network :forwarded_port, guest: 20400, host: 20400, id: "pihole"
+    daisy.vm.network :forwarded_port, guest: 20453, host: 20453, id: "pihole-dns"
+    daisy.vm.network :forwarded_port, guest: 20500, host: 20500, id: "homeassistant"
+    daisy.vm.network :forwarded_port, guest: 20600, host: 20600, id: "karakeep"
 
-    pi.vm.provider "libvirt" do |lv|
+    daisy.vm.provider "libvirt" do |lv|
       lv.memory = 8192
       lv.cpus = 4
     end
 
-    pi.vm.provision "vm-setup", type: "shell", inline: <<-SHELL
+    daisy.vm.provision "vm-setup", type: "shell", inline: <<-SHELL
       echo "Upgrade all installed packages including the kernel..."
       sudo truncate -s 0 /etc/apt/sources.list
       sudo echo "deb https://debian.ethz.ch/debian stable main contrib non-free" >> /etc/apt/sources.list
@@ -36,17 +36,17 @@ Vagrant.configure("2") do |config|
       echo "Reboot needed to load potentially new kernel. Run 'vagrant reload' to reboot the VM..."
     SHELL
 
-    pi.vm.provision "ansible", type: "ansible" do |ansible|
+    daisy.vm.provision "ansible", type: "ansible" do |ansible|
       ansible.verbose = "v"
-      ansible.playbook = "../../ansible/pi.yaml"
+      ansible.playbook = "../../ansible/daisy.yaml"
       ansible.become = true # start ansible script with sudo and let the playbook handle privilege changes from there.
-      ansible.groups = { 
-        "pi" => [ "dev" ],
+      ansible.groups = {
+        "daisy" => [ "dev" ],
       }
       ansible.ask_vault_pass = true
       ansible.raw_arguments = [
         "--extra-vars=@../../ansible/vars/dev/shared-secrets.yaml",
-        "--extra-vars=@../../ansible/vars/dev/pi.yaml",
+        "--extra-vars=@../../ansible/vars/dev/daisy.yaml",
         "--skip-tags=prod-only",
       ]
     end

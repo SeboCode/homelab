@@ -1,6 +1,6 @@
 ---
-- name: Configure server node
-  hosts: server
+- name: Configure charon node
+  hosts: charon
   roles:
     - mirror
     - base

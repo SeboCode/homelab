@@ -12,17 +12,17 @@ delete_vitual_device_volume() {
 platformstack="${1:-}"
 
 case "$platformstack" in
-    server)
+    charon)
         cd "./platform-stack/$platformstack"
         vagrant destroy -f
-        delete_vitual_device_volume server_dev-vdb.qcow2
-        delete_vitual_device_volume server_dev-vdc.qcow2
+        delete_vitual_device_volume charon_dev-vdb.qcow2
+        delete_vitual_device_volume charon_dev-vdc.qcow2
         vagrant up --no-provision
         vagrant provision --provision-with vm-setup
         vagrant reload --no-provision
         vagrant provision --provision-with ansible
         ;;
-    pi)
+    daisy)
         cd "./platform-stack/$platformstack"
         vagrant destroy -f
         vagrant up --no-provision
@@ -31,8 +31,7 @@ case "$platformstack" in
         vagrant provision --provision-with ansible
         ;;
     *)
-        echo "Error: Invalid or missing platform stack '${platformstack}'. Valid options: server, pi" >&2
+        echo "Error: Invalid or missing platform stack '${platformstack}'. Valid options: charon, daisy" >&2
         exit 1
         ;;
 esac
-

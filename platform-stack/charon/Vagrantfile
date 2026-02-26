@@ -1,0 +1,53 @@
+Vagrant.configure("2") do |config|
+  config.vm.define "dev" do |charon|
+    charon.vm.box = "generic/alpine319"
+    charon.vm.box_version = "4.3.12"
+    charon.vm.hostname = "charon"
+    charon.vm.network :forwarded_port, guest: 22, host: 10022, id: "ssh"
+    charon.vm.network :forwarded_port, guest: 80, host: 80, id: "port-forwarded-to-traefik-http"
+    charon.vm.network :forwarded_port, guest: 443, host: 443, id: "port-forwarded-to-traefik-https"
+    charon.vm.network :forwarded_port, guest: 10080, host: 10080, id: "traefik-http"
+    charon.vm.network :forwarded_port, guest: 10443, host: 10443, id: "traefik-https"
+    charon.vm.network :forwarded_port, guest: 20000, host: 20000, id: "immich"
+    charon.vm.network :forwarded_port, guest: 20100, host: 20100, id: "filebrowser"
+    charon.vm.network :forwarded_port, guest: 20200, host: 20200, id: "photoprism"
+    charon.vm.network :forwarded_port, guest: 20300, host: 20300, id: "gitea"
+    charon.vm.network :forwarded_port, guest: 20322, host: 20322, id: "gitea-ssh"
+
+    charon.vm.provider "libvirt" do |lv|
+      lv.memory = 8192
+      lv.cpus = 4
+      lv.storage :file, :size => '500M', :device => 'vdb'
+      lv.storage :file, :size => '500M', :device => 'vdc'
+    end
+
+    charon.vm.provision "vm-setup", type: "shell", inline: <<-SHELL
+      echo "Set correct alpine mirror list..."
+      sudo truncate -s 0 /etc/apk/repositories
+      sudo echo "https://alpine.ethz.ch/alpine/v3.19/main" >> /etc/apk/repositories
+      sudo echo "https://alpine.ethz.ch/alpine/v3.19/community" >> /etc/apk/repositories
+      echo "Upgrade all installed packages including the kernel..."
+      sudo apk update
+      sudo apk upgrade
+      echo "Install required packages..."
+      sudo apk add --no-cache \
+        python3
+      echo "Reboot needed to load potentially new kernel. Run 'vagrant reload' to reboot the VM..."
+    SHELL
+
+    charon.vm.provision "ansible", type: "ansible" do |ansible|
+      ansible.verbose = "v"
+      ansible.playbook = "../../ansible/charon.yaml"
+      ansible.become = true # start ansible script with sudo and let the playbook handle privilege changes from there.
+      ansible.groups = {
+        "charon" => [ "dev" ],
+      }
+      ansible.ask_vault_pass = true
+      ansible.raw_arguments = [
+        "--extra-vars=@../../ansible/vars/dev/shared-secrets.yaml",
+        "--extra-vars=@../../ansible/vars/dev/charon.yaml",
+        "--skip-tags=prod-only",
+      ]
+    end
+  end
+end

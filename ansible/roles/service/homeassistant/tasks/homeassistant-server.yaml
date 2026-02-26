@@ -48,9 +48,9 @@
     group: "{{ homeassistant.user.name }}"
     mode: 0755
 
-- name: Ensure ssh private key to turn of server exists
+- name: Ensure ssh private key to turn off Charon exists
   ansible.builtin.copy:
-    dest: "/home/{{ homeassistant.user.name }}/.ssh/server_ssh_key"
+    dest: "/home/{{ homeassistant.user.name }}/.ssh/charon_ssh_key"
     content: |
       {{ homeassistant.container.server.config.wol_poweroff_user_ssh_private_key_base64 | b64decode }}
     owner: "{{ homeassistant.user.name }}"
@@ -79,7 +79,7 @@
           turn_off:
             action: shell_command.turn_off_charon
       shell_command:
-        turn_off_charon: 'ssh {{ wol_poweroff_user }}@192.168.1.3 -i /home/{{ homeassistant.user.name }}/.ssh/server_ssh_key {{ server_superuser_method }} /sbin/poweroff'
+        turn_off_charon: 'ssh {{ wol_poweroff_user }}@192.168.1.3 -i /home/{{ homeassistant.user.name }}/.ssh/charon_ssh_key {{ charon_superuser_method }} /sbin/poweroff'
     insertafter: EOF
     create: false
 

@@ -1,6 +1,6 @@
 ---
-- name: Configure pi node
-  hosts: pi
+- name: Configure daisy node
+  hosts: daisy
   roles:
     - mirror
     - base
