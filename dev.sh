@@ -9,15 +9,30 @@ delete_vitual_device_volume() {
     sudo virsh vol-delete --pool default $volume || echo "Ignoring volume deletion error, as the volume simply must not exist before execution."
 }
 
-platformstack="${1:-server}"
+platformstack="${1:-}"
 
-cd "./platform-stack/$platformstack"
-
-vagrant destroy -f
-delete_vitual_device_volume server_dev-vdb.qcow2
-delete_vitual_device_volume server_dev-vdc.qcow2
-vagrant up --no-provision
-vagrant provision --provision-with vm-setup
-vagrant reload --no-provision
-vagrant provision --provision-with ansible
+case "$platformstack" in
+    server)
+        cd "./platform-stack/$platformstack"
+        vagrant destroy -f
+        delete_vitual_device_volume server_dev-vdb.qcow2
+        delete_vitual_device_volume server_dev-vdc.qcow2
+        vagrant up --no-provision
+        vagrant provision --provision-with vm-setup
+        vagrant reload --no-provision
+        vagrant provision --provision-with ansible
+        ;;
+    pi)
+        cd "./platform-stack/$platformstack"
+        vagrant destroy -f
+        vagrant up --no-provision
+        vagrant provision --provision-with vm-setup
+        vagrant reload --no-provision
+        vagrant provision --provision-with ansible
+        ;;
+    *)
+        echo "Error: Invalid or missing platform stack '${platformstack}'. Valid options: server, pi" >&2
+        exit 1
+        ;;
+esac
 

@@ -4,9 +4,16 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-platformstack="${1:-server}"
+platformstack="${1:-}"
 
-cd "./platform-stack/$platformstack"
-
-vagrant provision --provision-with=ansible
+case "$platformstack" in
+    server|pi)
+        cd "./platform-stack/$platformstack"
+        vagrant provision --provision-with=ansible
+        ;;
+    *)
+        echo "Error: Invalid or missing platform stack '${platformstack}'. Valid options: server, pi" >&2
+        exit 1
+        ;;
+esac
 

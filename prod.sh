@@ -4,13 +4,20 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-platformstack="${1:-server}"
+node="${1:-}"
 
-if [[ $platformstack == server ]]; then
-    node="charon"
-else
-    node="daisy"
-fi
+case "$node" in
+    charon)
+        platformstack="server"
+        ;;
+    daisy)
+        platformstack="pi"
+        ;;
+    *)
+        echo "Error: Invalid or missing node '${node}'. Valid options: charon, daisy" >&2
+        exit 1
+        ;;
+esac
 
 echo "Starting and configuring ssh-agent to populate ssh private key for later use by Ansible..."
 eval "$(ssh-agent -s)"
