@@ -20,9 +20,9 @@
     - tcp
     - udp
 
-- name: Ensure ufw rules are running and reloaded on boot
+- name: Ensure ufw rules are reloaded after updating dns specific rules
   community.general.ufw:
-    state: enabled
+    state: reloaded
   async: 3
   poll: 0
 
