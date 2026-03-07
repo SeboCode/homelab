@@ -10,4 +10,5 @@
     - service/pihole
     - service/homeassistant
     - service/karakeep
+    # - dhcp # TODO once isp fixes the closed dns port issue
 
