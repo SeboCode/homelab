@@ -4,6 +4,9 @@
   vars:
     service: pihole
 
+- ansible.builtin.import_role:
+    name: service/pihole/dns-firewall
+
 - name: "Ensure {{ pihole.user.name }} is created"
   ansible.builtin.import_role:
     name: infrastructure/user

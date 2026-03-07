@@ -5,7 +5,6 @@
     - mirror
     - base
     - firewall
-    - firewall/dns
     - traefik
     - service/pihole
     - service/homeassistant
