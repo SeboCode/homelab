@@ -1,0 +1,27 @@
+---
+- name: Ensure miniflux postgres data location exists
+  ansible.builtin.file:
+    path: "{{ miniflux.container.postgres.storage.data }}"
+    state: directory
+    owner: "{{ miniflux.user.name }}"
+    group: "{{ miniflux.user.name }}"
+    mode: 0755
+
+- name: Instantiate miniflux-postgres container
+  ansible.builtin.import_role:
+    name: infrastructure/container
+  vars:
+    container_name: miniflux_postgres
+    container_image: "{{ miniflux.container.postgres.image }}"
+    container_image_tag: "{{ miniflux.container.postgres.tag }}"
+    container_env:
+      POSTGRES_DB: "{{ miniflux.container.postgres.config.db.name }}"
+      POSTGRES_USER: "{{ miniflux.container.postgres.config.db.username }}"
+      POSTGRES_PASSWORD: "{{ miniflux.container.postgres.config.db.password }}"
+    container_volumes:
+      - "{{ miniflux.container.postgres.storage.data }}:/var/lib/postgresql"
+    container_networks:
+      - "{{ miniflux.container.network }}"
+    container_network_aliases:
+      - database
+    container_user: "{{ miniflux.user.name }}"

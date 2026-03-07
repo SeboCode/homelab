@@ -60,3 +60,17 @@ karakeep_env:
       config:
         master_key: karakeep_meilisearch_master_key
 
+miniflux_env:
+  user:
+    password: "123456"
+  container:
+    server:
+      config:
+        admin:
+          username: admin
+          password: admin123
+    postgres:
+      config:
+        db:
+          password: miniflux-db-password
+

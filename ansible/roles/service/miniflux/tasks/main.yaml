@@ -1,0 +1,33 @@
+---
+- ansible.builtin.import_role:
+    name: infrastructure/build_vars
+  vars:
+    service: miniflux
+
+- name: "Ensure {{ miniflux.user.name }} is created"
+  ansible.builtin.import_role:
+    name: infrastructure/user
+  vars:
+    user_name: "{{ miniflux.user.name }}"
+    user_password: "{{ miniflux.user.password }}"
+
+- name: Ensure miniflux storage directory location exists
+  ansible.builtin.import_role:
+    name: infrastructure/service-data-directory
+  vars:
+    data_storage: "{{ miniflux.data_storage }}"
+    user: "{{ miniflux.user.name }}"
+
+- name: Ensure miniflux is running
+  become: true
+  become_user: "{{ miniflux.user.name }}"
+  block:
+    - name: Ensure miniflux container network is created
+      containers.podman.podman_network:
+        name: "{{ miniflux.container.network }}"
+        driver: bridge
+        recreate: false
+        state: present
+
+    - import_tasks: miniflux-database.yaml
+    - import_tasks: miniflux-server.yaml

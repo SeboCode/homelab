@@ -22,4 +22,5 @@
         - "{{ pihole.container.server.config.port }}"
         - "{{ homeassistant.container.server.config.port }}"
         - "{{ karakeep.container.server.config.port }}"
+        - "{{ miniflux.container.server.config.port }}"
 

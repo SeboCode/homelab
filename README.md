@@ -121,6 +121,8 @@ The following services are available on Daisy:
 | | | Zigbee2MQTT Frontend | 20501 | :x: | `zigbee2mqtt(.dev).*` |
 | Karakeep | 20600 - 20699 | | | | |
 | | | Karakeep Server | 20600 | :x: | `karakeep(.dev).*` |
+| Miniflux | 20700 - 20799 | | | | |
+| | | Miniflux Server | 20700 | :x: | `miniflux(.dev).*` |
 
 ## Introduce new service
 
@@ -154,3 +156,7 @@ To introduce a new service, follow these steps:
    9. Set password hash algorithm to `argon2`, if memory is not a limiting factor. Otherwise, choose based on your
       system configuration.
    10. Set correct administrator credentials.
+4. Setup Miniflux using the web overview.
+   1. Create a non-admin user account for daily use.
+   2. Create an API key under `Settings > API Keys` for third-party integrations.
+   3. Configure ntfy integration under `Settings > Integrations` for push notifications.

@@ -28,6 +28,7 @@ pihole_global:
             192.168.1.4 pihole.daisy.mikemarti.ch
             192.168.1.4 homeassistant.daisy.mikemarti.ch
             192.168.1.4 karakeep.daisy.mikemarti.ch
+            192.168.1.4 miniflux.daisy.mikemarti.ch
       storage:
         config: "{{ pihole_global.data_storage.root }}/config"
         dnsmasq: "{{ pihole_global.data_storage.root }}/dnsmasq"
@@ -86,4 +87,27 @@ karakeep_global:
       tag: v1.13.3
       storage:
         data: "{{ karakeep_global.data_storage.root }}/meilisearch-data"
+
+miniflux_global:
+  user:
+    name: miniflux-user
+  data_storage:
+    filesystem: ext4
+    root: "/home/{{ miniflux_global.user.name }}/miniflux-storage"
+  container:
+    network: miniflux_network
+    server:
+      image: docker.io/miniflux/miniflux
+      tag: 2.2.17
+      config:
+        port: 20700
+    postgres:
+      image: docker.io/postgres
+      tag: 18.3
+      config:
+        db:
+          name: miniflux_database
+          username: miniflux_pg_user
+      storage:
+        data: "{{ miniflux_global.data_storage.root }}/db-data"
 

@@ -1,0 +1,34 @@
+---
+- name: Ensure traefik is configured for miniflux
+  ansible.builtin.import_role:
+    name: infrastructure/traefik-service
+  vars:
+    service_name: miniflux
+    service_port: "{{ miniflux.container.server.config.port }}"
+
+- name: Instantiate miniflux-server container
+  ansible.builtin.import_role:
+    name: infrastructure/container
+  vars:
+    container_name: miniflux_server
+    container_image: "{{ miniflux.container.server.image }}"
+    container_image_tag: "{{ miniflux.container.server.tag }}"
+    container_env:
+      DATABASE_URL: "user={{ miniflux.container.postgres.config.db.username }} password={{ miniflux.container.postgres.config.db.password }} host=database dbname={{ miniflux.container.postgres.config.db.name }} sslmode=disable"
+      RUN_MIGRATIONS: "true"
+      CREATE_ADMIN: "true"
+      ADMIN_USERNAME: "{{ miniflux.container.server.config.admin.username }}"
+      ADMIN_PASSWORD: "{{ miniflux.container.server.config.admin.password }}"
+    container_ports:
+      - "{{ miniflux.container.server.config.port }}:8080"
+    container_networks:
+      - "{{ miniflux.container.network }}"
+    container_network_aliases:
+      - miniflux-server
+    container_user: "{{ miniflux.user.name }}"
+
+- ansible.builtin.import_role:
+    name: infrastructure/http-healthcheck
+  vars:
+    service_name: miniflux
+    service_port: "{{ miniflux.container.server.config.port }}"
