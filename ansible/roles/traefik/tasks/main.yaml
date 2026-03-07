@@ -4,6 +4,9 @@
   vars:
     service: traefik
 
+- ansible.builtin.import_role:
+    name: traefik/http-firewall
+
 - name: "Ensure {{ traefik.user.name }} is created"
   ansible.builtin.import_role:
     name: infrastructure/user
