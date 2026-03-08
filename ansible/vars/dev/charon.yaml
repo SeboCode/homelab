@@ -83,6 +83,7 @@ mediastack_env:
     password: "123456"
   container:
     deluge:
+      enabled: false
       config:
         vpn_enabled: "no"
         vpn_prov: custom

@@ -151,6 +151,7 @@ mediastack_global:
       storage:
         config: "{{ mediastack_global.data_storage.root }}/prowlarr/config"
     deluge:
+      enabled: true
       image: docker.io/binhex/arch-delugevpn
       tag: 2.2.0-1-04
       config:
