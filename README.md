@@ -5,6 +5,21 @@ provision the services using Podman. The Ansible playbook is built such that it 
 for Charon and a Debian based Pi OS Lite for Daisy. For local development, the Ansible playbook is
 run on an Alpine/Debian Linux VM, provisioned using Vagrant.
 
+## Dependencies
+
+- [just](https://github.com/casey/just) - Used as the task runner for this project. All common operations are available as `just` recipes.
+
+## Project Layout
+
+The project structure is inspired by the [golang-standards/project-layout](https://github.com/golang-standards/project-layout) convention:
+
+| Directory      | Description                                                                            |
+| :------------- | :------------------------------------------------------------------------------------- |
+| `ansible/`     | Ansible playbooks, roles, inventory and variables for provisioning the homelab nodes.  |
+| `configs/`     | Configuration file templates used during manual setup steps (e.g. sshd configuration). |
+| `deployments/` | Local development environment definitions (Vagrant VMs).                               |
+| `scripts/`     | Build, deploy and utility scripts invoked by `just` recipes.                           |
+
 # Installation guide for Charon
 
 This is the installation guide describes how to set up ACME Let's Encrypt certificate configuration, how to prepare the
@@ -20,7 +35,7 @@ local and remote DNS entries and how to install the os and perform manual setup 
       3. Choose "sys" when prompted for the Disk Mode.
    3. Reboot and login as root.
 2. Prepare data
-   1. Create data usb drive with the documents found in the "manual-setup-data" folder.
+   1. Create data usb drive with the documents found in the `configs/` folder.
    2. Create new ssh key file for each device that needs to connect to the homelab machine via ssh using `ssh-keygen`.
    3. Add ssh configuration on the devices to more easily connect to the homelab machine.
    4. Copy public key of the newly created ssh keys to the data usb drive
@@ -76,14 +91,14 @@ updated.
 
 ## Automatic setup using Ansible and manual configurations
 
-1. Check that all secrets and variable values for all services are set correctly in the `ansible/vars/prod.yaml` file.
-   Take inspiration from the `ansible/vars/dev.yaml` file to get a list of all necessary variables that have to be set.
-   In addition to the ones found in the development variable file, the following secret variables have to be set:
+1. Check that all secrets and variable values for all services are set correctly in the `ansible/vars/prod/` files.
+   Take inspiration from the `ansible/vars/dev/` files to get a list of all necessary variables that have to be set.
+   In addition to the ones found in the development variable files, the following secret variables have to be set:
    | Variablename | Description |
    | :----------- | :---------- |
    | infomaniak_dns_api_token | Token used to edit the DNS entries of the NameServer for the ACME challenge performed by Traefik. |
-2. Check that the `ansible/inventory/prod.ini` file is configured correctly.
-3. Execute the bash script `prod.sh`.
+2. Check that the `ansible/inventory/charon.ini` file is configured correctly.
+3. Execute `just deploy-prod charon`.
 
 # Installation guide for Daisy
 
@@ -128,13 +143,13 @@ The following services are available on Daisy:
 
 To introduce a new service, follow these steps:
 
-1. Create a new role in the `services` directory with the name of the service.
+1. Create a new role in the `ansible/roles/service` directory with the name of the service.
    1. Implement new role in accordance with the other roles.
    2. Every service has its own user to increase security and have a clearer separation of the independent services.
 2. Add all relevant configuration for the new service to the `ansible/group_vars/all.yaml` file.
-   1. Secrets and other variables that are environment dependent have to be added to the `ansible/vars/<environment>.yaml` file.
-3. Add the service role to the `ansible/deploy.yaml` file.
-4. Add the port to the vagrant configuration to be forwarded to the host machine for accessing the service locally
+   1. Secrets and other variables that are environment dependent have to be added to the `ansible/vars/<environment>/<node>.yaml` file.
+3. Add the service role to the `ansible/<node>.yaml` playbook file.
+4. Add the port to the Vagrant configuration in `deployments/local/<node>/Vagrantfile` to be forwarded to the host machine for accessing the service locally
    without the need to go through Traefik (nice for debugging).
 5. Update router DNS entries to easily access the service in the home network.
 
