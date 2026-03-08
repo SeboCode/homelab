@@ -8,6 +8,8 @@ run on an Alpine/Debian Linux VM, provisioned using Vagrant.
 ## Dependencies
 
 - [just](https://github.com/casey/just) - Used as the task runner for this project. All common operations are available as `just` recipes.
+- [direnv](https://direnv.net/) (optional) - Can be used to automatically set up a project-local Python virtual environment and Ansible
+  installation via the `.envrc` file. If not used, a system-wide Ansible installation works as well.
 
 ## Project Layout
 
