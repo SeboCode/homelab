@@ -7,7 +7,7 @@
     group: "{{ immich.user.name }}"
     mode: 0755
 
-- name: Ensure treafik is configured for immich
+- name: Ensure traefik is configured for immich
   ansible.builtin.import_role:
     name: infrastructure/traefik-service
   vars:
