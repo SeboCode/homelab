@@ -41,7 +41,8 @@
         - "{{ mediastack.shared_storage.movies }}"
         - "{{ mediastack.shared_storage.tv }}"
 
-    - import_tasks: deluge.yaml
+    - include_tasks: deluge.yaml
+      when: mediastack.container.deluge.enabled
     - import_tasks: prowlarr.yaml
     - import_tasks: radarr.yaml
     - import_tasks: sonarr.yaml
