@@ -1,0 +1,44 @@
+---
+- name: Ensure jellyfin config location exists
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ mediastack.user.name }}"
+    group: "{{ mediastack.user.name }}"
+    mode: 0755
+  loop:
+    - "{{ mediastack.container.jellyfin.storage.config }}"
+    - "{{ mediastack.container.jellyfin.storage.cache }}"
+
+- name: Ensure traefik is configured for jellyfin
+  ansible.builtin.import_role:
+    name: infrastructure/traefik-service
+  vars:
+    service_name: jellyfin
+    service_port: "{{ mediastack.container.jellyfin.config.port }}"
+
+- name: Instantiate jellyfin container
+  ansible.builtin.import_role:
+    name: infrastructure/container
+  vars:
+    container_name: mediastack_jellyfin
+    container_image: "{{ mediastack.container.jellyfin.image }}"
+    container_image_tag: "{{ mediastack.container.jellyfin.tag }}"
+    container_volumes:
+      - "{{ mediastack.container.jellyfin.storage.config }}:/config:rw"
+      - "{{ mediastack.container.jellyfin.storage.cache }}:/cache:rw"
+      - "{{ mediastack.shared_storage.movies }}:/media/movies:ro"
+      - "{{ mediastack.shared_storage.tv }}:/media/tv:ro"
+    container_ports:
+      - "{{ mediastack.container.jellyfin.config.port }}:8096"
+    container_networks:
+      - "{{ mediastack.container.network }}"
+    container_network_aliases:
+      - jellyfin
+    container_user: "{{ mediastack.user.name }}"
+
+- ansible.builtin.import_role:
+    name: infrastructure/http-healthcheck
+  vars:
+    service_name: jellyfin
+    service_port: "{{ mediastack.container.jellyfin.config.port }}"

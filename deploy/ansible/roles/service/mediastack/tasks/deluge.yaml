@@ -1,0 +1,60 @@
+---
+- name: Ensure deluge config and data locations exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ mediastack.user.name }}"
+    group: "{{ mediastack.user.name }}"
+    mode: 0755
+  loop:
+    - "{{ mediastack.container.deluge.storage.config }}"
+    - "{{ mediastack.container.deluge.storage.data }}"
+
+- name: Ensure traefik is configured for deluge
+  ansible.builtin.import_role:
+    name: infrastructure/traefik-service
+  vars:
+    service_name: deluge
+    service_port: "{{ mediastack.container.deluge.config.port }}"
+
+- name: Instantiate deluge-vpn container
+  ansible.builtin.import_role:
+    name: infrastructure/container
+  vars:
+    container_name: mediastack_deluge
+    container_image: "{{ mediastack.container.deluge.image }}"
+    container_image_tag: "{{ mediastack.container.deluge.tag }}"
+    container_userns: "keep-id:uid=0,gid=0"
+    container_user_override: "0:0"
+    container_cap_add:
+      - NET_ADMIN
+    container_sysctl:
+      net.ipv4.conf.all.src_valid_mark: "1"
+    container_env:
+      VPN_ENABLED: "{{ mediastack.container.deluge.config.vpn_enabled }}"
+      VPN_PROV: "{{ mediastack.container.deluge.config.vpn_prov }}"
+      VPN_CLIENT: "{{ mediastack.container.deluge.config.vpn_client }}"
+      ENABLE_PRIVOXY: "no"
+      LAN_NETWORK: "{{ mediastack.container.deluge.config.lan_network }}"
+      NAME_SERVERS: "{{ mediastack.container.deluge.config.name_servers }}"
+      DELUGE_DAEMON_LOG_LEVEL: info
+      DELUGE_WEB_LOG_LEVEL: info
+      UMASK: "000"
+      TZ: Europe/Zurich
+    container_volumes:
+      - "{{ mediastack.container.deluge.storage.config }}:/config:rw"
+      - "{{ mediastack.container.deluge.storage.data }}:/data:rw"
+      - "{{ mediastack.shared_storage.downloads }}:/downloads:rw"
+    container_ports:
+      - "{{ mediastack.container.deluge.config.port }}:8112"
+    container_networks:
+      - "{{ mediastack.container.network }}"
+    container_network_aliases:
+      - deluge
+    container_user: "{{ mediastack.user.name }}"
+
+- ansible.builtin.import_role:
+    name: infrastructure/http-healthcheck
+  vars:
+    service_name: deluge
+    service_port: "{{ mediastack.container.deluge.config.port }}"

@@ -91,3 +91,15 @@ syncthing_env:
           username: admin # Syncthing uses this for protecting the webserver from being modified by unprivileged users. There is no user management in the application.
           password: admin
 
+mediastack_env:
+  user:
+    password: "123456"
+  container:
+    deluge:
+      config:
+        vpn_enabled: "no"
+        vpn_prov: custom
+        vpn_client: wireguard
+        lan_network: "192.168.1.0/24"
+        name_servers: "1.1.1.1,8.8.8.8"
+

@@ -1,0 +1,48 @@
+---
+- ansible.builtin.import_role:
+    name: infrastructure/build_vars
+  vars:
+    service: mediastack
+
+- name: "Ensure {{ mediastack.user.name }} is created"
+  ansible.builtin.import_role:
+    name: infrastructure/user
+  vars:
+    user_name: "{{ mediastack.user.name }}"
+    user_password: "{{ mediastack.user.password }}"
+
+- name: Ensure mediastack storage directory location exists
+  ansible.builtin.import_role:
+    name: infrastructure/service-data-directory
+  vars:
+    data_storage: "{{ mediastack.data_storage }}"
+    user: "{{ mediastack.user.name }}"
+
+- name: Ensure mediastack is running
+  become: true
+  become_user: "{{ mediastack.user.name }}"
+  block:
+    - name: Ensure mediastack container network is created
+      containers.podman.podman_network:
+        name: "{{ mediastack.container.network }}"
+        driver: bridge
+        recreate: false
+        state: present
+
+    - name: Ensure shared storage directories exist
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ mediastack.user.name }}"
+        group: "{{ mediastack.user.name }}"
+        mode: 0755
+      loop:
+        - "{{ mediastack.shared_storage.downloads }}"
+        - "{{ mediastack.shared_storage.movies }}"
+        - "{{ mediastack.shared_storage.tv }}"
+
+    - import_tasks: deluge.yaml
+    - import_tasks: prowlarr.yaml
+    - import_tasks: radarr.yaml
+    - import_tasks: sonarr.yaml
+    - import_tasks: jellyfin.yaml
