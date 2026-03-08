@@ -6,5 +6,5 @@ set -o pipefail
 
 dir=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
 
-ansible-playbook "$dir/../ansible/expose-local.yaml"
+ansible-playbook "$dir/../ansible/expose.yaml"
 
