@@ -24,6 +24,11 @@ pihole_global:
             192.168.1.3 filebrowser.charon.mikemarti.ch
             192.168.1.3 photoprism.charon.mikemarti.ch
             192.168.1.3 gitea.charon.mikemarti.ch
+            192.168.1.3 jellyfin.charon.mikemarti.ch
+            192.168.1.3 radarr.charon.mikemarti.ch
+            192.168.1.3 sonarr.charon.mikemarti.ch
+            192.168.1.3 prowlarr.charon.mikemarti.ch
+            192.168.1.3 deluge.charon.mikemarti.ch
             192.168.1.4 traefik.daisy.mikemarti.ch
             192.168.1.4 pihole.daisy.mikemarti.ch
             192.168.1.4 homeassistant.daisy.mikemarti.ch

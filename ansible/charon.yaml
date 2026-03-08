@@ -12,4 +12,5 @@
     - service/filebrowser
     - service/photoprism
     - service/gitea
+    - service/mediastack
 

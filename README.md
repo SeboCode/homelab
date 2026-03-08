@@ -107,6 +107,12 @@ The following services are available on Charon:
 | Gitea | 20300 - 20399 | | | | |
 | | | Gitea Server | 20300 | :x: | `gitea(.dev).*` |
 | | | Gitea Server SSH | 20322 | :x: | This is currently not working due to firewall and traefik configurations. Repositories can only be cloned via https. |
+| Mediastack | 20400 - 20499 | | | | |
+| | | Jellyfin | 20400 | :x: | `jellyfin(.dev).*` |
+| | | Radarr | 20410 | :x: | `radarr(.dev).*` |
+| | | Sonarr | 20420 | :x: | `sonarr(.dev).*` |
+| | | Prowlarr | 20430 | :x: | `prowlarr(.dev).*` |
+| | | Deluge Web UI | 20440 | :x: | `deluge(.dev).*` |
 
 The following services are available on Daisy:
 | Service | Reserved Portrange | Exposed Service | Port of exposed Service | Directly accessible | Url Accessibility |
@@ -160,3 +166,9 @@ To introduce a new service, follow these steps:
    1. Create a non-admin user account for daily use.
    2. Create an API key under `Settings > API Keys` for third-party integrations.
    3. Configure ntfy integration under `Settings > Integrations` for push notifications.
+5. Setup Mediastack.
+   1. Configure Deluge to prevent seeding: in the Web UI go to `Preferences > Bandwidth` and set "Maximum Upload Speed" to `1 KiB/s`. Then go to `Preferences > Queue`, enable "Stop seeding when share ratio reaches" and set it to `0.00`, and enable "Remove torrent when share ratio reached".
+   2. Configure Prowlarr indexers and link them to Radarr and Sonarr under `Settings > Apps`.
+   3. Configure Radarr: add root folder `/movies`, add Deluge as download client (`Settings > Download Clients`, host `deluge`, port `58846`).
+   4. Configure Sonarr: add root folder `/tv`, add Deluge as download client (`Settings > Download Clients`, host `deluge`, port `58846`).
+   5. Configure Jellyfin: add media libraries for Movies (`/media/movies`) and TV Shows (`/media/tv`).

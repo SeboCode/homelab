@@ -78,3 +78,15 @@ gitea_env:
         db:
           password: gitea-db-password
 
+mediastack_env:
+  user:
+    password: "123456"
+  container:
+    deluge:
+      config:
+        vpn_enabled: "no"
+        vpn_prov: custom
+        vpn_client: wireguard
+        lan_network: "192.168.1.0/24"
+        name_servers: "1.1.1.1,8.8.8.8"
+

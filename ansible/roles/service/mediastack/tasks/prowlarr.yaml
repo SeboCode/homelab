@@ -1,0 +1,42 @@
+---
+- name: Ensure prowlarr config location exists
+  ansible.builtin.file:
+    path: "{{ mediastack.container.prowlarr.storage.config }}"
+    state: directory
+    owner: "{{ mediastack.user.name }}"
+    group: "{{ mediastack.user.name }}"
+    mode: 0755
+
+- name: Ensure traefik is configured for prowlarr
+  ansible.builtin.import_role:
+    name: infrastructure/traefik-service
+  vars:
+    service_name: prowlarr
+    service_port: "{{ mediastack.container.prowlarr.config.port }}"
+
+- name: Instantiate prowlarr container
+  ansible.builtin.import_role:
+    name: infrastructure/container
+  vars:
+    container_name: mediastack_prowlarr
+    container_image: "{{ mediastack.container.prowlarr.image }}"
+    container_image_tag: "{{ mediastack.container.prowlarr.tag }}"
+    container_userns: "keep-id:uid=0,gid=0"
+    container_user_override: "0:0"
+    container_env:
+      TZ: Europe/Zurich
+    container_volumes:
+      - "{{ mediastack.container.prowlarr.storage.config }}:/config:rw"
+    container_ports:
+      - "{{ mediastack.container.prowlarr.config.port }}:9696"
+    container_networks:
+      - "{{ mediastack.container.network }}"
+    container_network_aliases:
+      - prowlarr
+    container_user: "{{ mediastack.user.name }}"
+
+- ansible.builtin.import_role:
+    name: infrastructure/http-healthcheck
+  vars:
+    service_name: prowlarr
+    service_port: "{{ mediastack.container.prowlarr.config.port }}"

@@ -1,0 +1,44 @@
+---
+- name: Ensure radarr config location exists
+  ansible.builtin.file:
+    path: "{{ mediastack.container.radarr.storage.config }}"
+    state: directory
+    owner: "{{ mediastack.user.name }}"
+    group: "{{ mediastack.user.name }}"
+    mode: 0755
+
+- name: Ensure traefik is configured for radarr
+  ansible.builtin.import_role:
+    name: infrastructure/traefik-service
+  vars:
+    service_name: radarr
+    service_port: "{{ mediastack.container.radarr.config.port }}"
+
+- name: Instantiate radarr container
+  ansible.builtin.import_role:
+    name: infrastructure/container
+  vars:
+    container_name: mediastack_radarr
+    container_image: "{{ mediastack.container.radarr.image }}"
+    container_image_tag: "{{ mediastack.container.radarr.tag }}"
+    container_userns: "keep-id:uid=0,gid=0"
+    container_user_override: "0:0"
+    container_env:
+      TZ: Europe/Zurich
+    container_volumes:
+      - "{{ mediastack.container.radarr.storage.config }}:/config:rw"
+      - "{{ mediastack.shared_storage.downloads }}:/downloads:rw"
+      - "{{ mediastack.shared_storage.movies }}:/movies:rw"
+    container_ports:
+      - "{{ mediastack.container.radarr.config.port }}:7878"
+    container_networks:
+      - "{{ mediastack.container.network }}"
+    container_network_aliases:
+      - radarr
+    container_user: "{{ mediastack.user.name }}"
+
+- ansible.builtin.import_role:
+    name: infrastructure/http-healthcheck
+  vars:
+    service_name: radarr
+    service_port: "{{ mediastack.container.radarr.config.port }}"

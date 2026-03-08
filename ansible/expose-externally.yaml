@@ -23,4 +23,9 @@
         - "{{ homeassistant.container.server.config.port }}"
         - "{{ karakeep.container.server.config.port }}"
         - "{{ miniflux.container.server.config.port }}"
+        - "{{ mediastack.container.jellyfin.config.port }}"
+        - "{{ mediastack.container.radarr.config.port }}"
+        - "{{ mediastack.container.sonarr.config.port }}"
+        - "{{ mediastack.container.prowlarr.config.port }}"
+        - "{{ mediastack.container.deluge.config.port }}"
 
