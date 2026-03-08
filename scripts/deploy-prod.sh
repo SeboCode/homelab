@@ -6,6 +6,8 @@ set -o pipefail
 
 node="${1:-}"
 
+dir=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
+
 case "$node" in
     charon|daisy)
         ;;
@@ -29,8 +31,8 @@ trap cleanup EXIT
 trap cleanup INT
 trap cleanup TERM
 
-ansible-playbook "ansible/$node.yaml" \
+ansible-playbook "$dir/../ansible/$node.yaml" \
     --ask-vault-pass \
-    --inventory="ansible/inventory/$node.ini" \
-    --extra-vars="@ansible/vars/prod/shared-secrets.yaml" \
-    --extra-vars="@ansible/vars/prod/$node.yaml"
+    --inventory="$dir/../ansible/inventory/$node.ini" \
+    --extra-vars="@$dir/../ansible/vars/prod/shared-secrets.yaml" \
+    --extra-vars="@$dir/../ansible/vars/prod/$node.yaml"

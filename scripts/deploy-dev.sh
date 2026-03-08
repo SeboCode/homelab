@@ -9,11 +9,13 @@ delete_vitual_device_volume() {
     sudo virsh vol-delete --pool default $volume || echo "Ignoring volume deletion error, as the volume simply must not exist before execution."
 }
 
-platformstack="${1:-}"
+node="${1:-}"
 
-case "$platformstack" in
+dir=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
+cd "$dir/../deployments/local/$node"
+
+case "$node" in
     charon)
-        cd "./platform-stack/$platformstack"
         vagrant destroy -f
         delete_vitual_device_volume charon_dev-vdb.qcow2
         delete_vitual_device_volume charon_dev-vdc.qcow2
@@ -23,7 +25,6 @@ case "$platformstack" in
         vagrant provision --provision-with ansible
         ;;
     daisy)
-        cd "./platform-stack/$platformstack"
         vagrant destroy -f
         vagrant up --no-provision
         vagrant provision --provision-with vm-setup
@@ -31,7 +32,7 @@ case "$platformstack" in
         vagrant provision --provision-with ansible
         ;;
     *)
-        echo "Error: Invalid or missing platform stack '${platformstack}'. Valid options: charon, daisy" >&2
+        echo "Error: Invalid or missing node '${node}'. Valid options: charon, daisy" >&2
         exit 1
         ;;
 esac
