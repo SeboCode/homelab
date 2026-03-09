@@ -1,0 +1,22 @@
+---
+- name: Look up UUID of data root drive
+  ansible.builtin.command:
+    cmd: "blkid -s UUID -o value {{ data_root_drive }}"
+  register: data_root_drive_uuid
+
+- name: Ensure data root mountpoint exists
+  ansible.builtin.file:
+    path: "{{ data_root }}"
+    state: directory
+    mode: 0755
+
+- name: Ensure data root drive is mounted via fstab
+  ansible.builtin.mount:
+    path: "{{ data_root }}"
+    src: "UUID={{ data_root_drive_uuid.stdout }}"
+    fstype: ext4
+    opts: defaults
+    dump: 0
+    passno: 2
+    state: mounted # writes to fstab and mounts
+

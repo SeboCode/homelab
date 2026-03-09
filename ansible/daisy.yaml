@@ -4,6 +4,7 @@
   roles:
     - mirror
     - base
+    - mount/daisy
     - firewall
     - traefik
     - service/pihole

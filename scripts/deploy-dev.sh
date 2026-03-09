@@ -26,6 +26,7 @@ case "$node" in
         ;;
     daisy)
         vagrant destroy -f
+        delete_vitual_device_volume daisy_dev-vdb.qcow2
         vagrant up --no-provision
         vagrant provision --provision-with vm-setup
         vagrant reload --no-provision

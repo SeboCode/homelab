@@ -17,6 +17,7 @@ Vagrant.configure("2") do |config|
     daisy.vm.provider "libvirt" do |lv|
       lv.memory = 8192
       lv.cpus = 4
+      lv.storage :file, :size => '500M', :device => 'vdb'
     end
 
     daisy.vm.provision "vm-setup", type: "shell", inline: <<-SHELL
