@@ -1,0 +1,19 @@
+---
+- name: Ensure sshd hardening configuration is present
+  ansible.builtin.blockinfile:
+    path: /etc/ssh/sshd_config.d/00-hardening.conf
+    marker: "# {mark} ANSIBLE MANAGED SSHD HARDENING"
+    block: |
+      AuthenticationMethods publickey
+      PasswordAuthentication no
+      KbdInteractiveAuthentication no
+      PermitRootLogin no
+      HostKey /etc/ssh/ssh_host_ed25519_key
+    create: true
+    mode: 0644
+  register: sshd_config
+
+- ansible.builtin.include_role:
+    name: "sshd/{{ platform }}"
+  when: sshd_config.changed
+

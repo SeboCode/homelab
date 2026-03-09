@@ -2,6 +2,7 @@
 - name: Configure charon node
   hosts: charon
   roles:
+    - sshd
     - mirror
     - base
     - zfs

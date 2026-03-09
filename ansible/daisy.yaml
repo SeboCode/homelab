@@ -2,6 +2,7 @@
 - name: Configure daisy node
   hosts: daisy
   roles:
+    - sshd
     - mirror
     - base
     - mount/daisy
