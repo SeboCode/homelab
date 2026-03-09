@@ -1,0 +1,12 @@
+---
+- name: Ensure intel microcode update is installed
+  ansible.builtin.package:
+    name: "{{ processor_microcode_package }}"
+    state: present
+
+# Useful when creating manual backups of zfs snapshot
+- name: Ensure pv is installed to monitor process data through a pipeline
+  ansible.builtin.package:
+    name: pv
+    state: present
+

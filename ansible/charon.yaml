@@ -4,6 +4,7 @@
   roles:
     - sshd
     - mirror
+    - base/charon
     - base
     - zfs
     - wakeonlan
