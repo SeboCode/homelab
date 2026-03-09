@@ -40,15 +40,15 @@ Vagrant.configure("2") do |config|
 
     daisy.vm.provision "ansible", type: "ansible" do |ansible|
       ansible.verbose = "v"
-      ansible.playbook = "../../ansible/daisy.yaml"
+      ansible.playbook = "../../../ansible/daisy.yaml"
       ansible.become = true # start ansible script with sudo and let the playbook handle privilege changes from there.
       ansible.groups = {
         "daisy" => [ "dev" ],
       }
       ansible.ask_vault_pass = true
       ansible.raw_arguments = [
-        "--extra-vars=@../../ansible/vars/dev/shared-secrets.yaml",
-        "--extra-vars=@../../ansible/vars/dev/daisy.yaml",
+        "--extra-vars=@../../../ansible/vars/dev/shared-secrets.yaml",
+        "--extra-vars=@../../../ansible/vars/dev/daisy.yaml",
         "--skip-tags=prod-only",
       ]
     end
