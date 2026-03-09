@@ -1,7 +1,8 @@
 Vagrant.configure("2") do |config|
   config.vm.define "dev" do |daisy|
-    daisy.vm.box = "generic/debian12"
-    daisy.vm.box_version = "4.3.12"
+    daisy.vm.synced_folder ".", "/vagrant", disabled: true
+    daisy.vm.box = "debian/trixie64"
+    daisy.vm.box_version = "13.20260121.1"
     daisy.vm.hostname = "daisy"
     daisy.vm.network :forwarded_port, guest: 22, host: 10122, id: "ssh"
     daisy.vm.network :forwarded_port, guest: 80, host: 80, id: "port-forwarded-to-traefik-http"
@@ -40,9 +41,9 @@ Vagrant.configure("2") do |config|
       sudo echo "deb-src https://debian.ethz.ch/debian stable main contrib non-free" >> /etc/apt/sources.list
       sudo apt update
       # TODO: This takes way to long, find better box that does not require so many updates.
-      # sudo DEBIAN_FRONTEND=noninteractive apt -y \
-      #   -o Dpkg::Options::="--force-confdef" \
-      #   -o Dpkg::Options::="--force-confold" upgrade
+      sudo DEBIAN_FRONTEND=noninteractive apt -y \
+        -o Dpkg::Options::="--force-confdef" \
+        -o Dpkg::Options::="--force-confold" upgrade
       echo "Install required packages..."
       sudo DEBIAN_FRONTEND=noninteractive apt -y \
         -o Dpkg::Options::="--force-confdef" \
