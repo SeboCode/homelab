@@ -1,12 +1,14 @@
 ---
 platform: debian
 
+data_root: /mnt/data
+
 pihole_global:
   user:
     name: pihole-user
   data_storage:
     filesystem: ext4
-    root: "/home/{{ pihole_global.user.name }}/pihole-storage"
+    root: "{{ data_root }}/pihole-storage"
   container:
     network: pihole_network
     server:
@@ -39,7 +41,7 @@ homeassistant_global:
     name: homeassistant-user
   data_storage:
     filesystem: ext4
-    root: "/home/{{ homeassistant_global.user.name }}/homeassistant-storage"
+    root: "{{ data_root }}/homeassistant-storage"
   container:
     network: homeassistant_network
     server:
@@ -69,7 +71,7 @@ karakeep_global:
     name: karakeep-user
   data_storage:
     filesystem: ext4
-    root: "/home/{{ karakeep_global.user.name }}/karakeep-storage"
+    root: "{{ data_root }}/karakeep-storage"
   container:
     network: karakeep_network
     server:
@@ -93,7 +95,7 @@ miniflux_global:
     name: miniflux-user
   data_storage:
     filesystem: ext4
-    root: "/home/{{ miniflux_global.user.name }}/miniflux-storage"
+    root: "{{ data_root }}/miniflux-storage"
   container:
     network: miniflux_network
     server:
