@@ -1,0 +1,36 @@
+---
+- name: Ensure zfs is installed
+  ansible.builtin.package:
+    name: zfsutils-linux
+    state: present
+
+- name: Ensure zfs module is loaded
+  community.general.modprobe:
+    name: zfs
+    state: present
+
+- ansible.builtin.import_role:
+    name: infrastructure/build_vars
+  vars:
+    service: zfs
+
+- name: Ensure toplevel zpool for service data is created
+  community.general.zpool:
+    name: "{{ zfs.service_data_pool_name }}"
+    state: present
+    filesystem_properties:
+      compression: lz4
+    vdevs:
+      - disks: "{{ zfs.devices }}"
+        type: mirror
+
+- name: Ensure zfs services are enabled on boot
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+  loop:
+    - zfs-import-cache
+    - zfs-load-key
+    - zfs-mount
+
