@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+if [ ! -b /dev/vdb1 ]; then
+  echo "Partitioning /dev/vdb..."
+  echo 'type=83' | sudo sfdisk /dev/vdb
+  echo "Formatting /dev/vdb1 as ext4..."
+  sudo mkfs.ext4 /dev/vdb1
+else
+  echo "/dev/vdb1 already exists, skipping disk setup."
+fi
+

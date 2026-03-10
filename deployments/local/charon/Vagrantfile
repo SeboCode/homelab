@@ -21,19 +21,9 @@ Vagrant.configure("2") do |config|
       lv.storage :file, :size => '500M', :device => 'vdc'
     end
 
-    charon.vm.provision "vm-setup", type: "shell", inline: <<-SHELL
-      echo "Set correct alpine mirror list..."
-      sudo truncate -s 0 /etc/apk/repositories
-      sudo echo "https://alpine.ethz.ch/alpine/v3.19/main" >> /etc/apk/repositories
-      sudo echo "https://alpine.ethz.ch/alpine/v3.19/community" >> /etc/apk/repositories
-      echo "Upgrade all installed packages including the kernel..."
-      sudo apk update
-      sudo apk upgrade
-      echo "Install required packages..."
-      sudo apk add --no-cache \
-        python3
-      echo "Reboot needed to load potentially new kernel. Run 'vagrant reload' to reboot the VM..."
-    SHELL
+    charon.vm.provision "source-setup", type: "shell", path: '../scripts/alpine/source-setup'
+    charon.vm.provision "update-setup", type: "shell", path: '../scripts/alpine/update-setup'
+    charon.vm.provision "python-setup", type: "shell", path: '../scripts/alpine/python-setup'
     charon.vm.provision :reload # reboot needed to load potentially new kernel.
     charon.vm.provision "ansible", type: "ansible" do |ansible|
       ansible.verbose = "v"

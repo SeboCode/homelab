@@ -21,37 +21,11 @@ Vagrant.configure("2") do |config|
       lv.storage :file, :size => '500M', :device => 'vdb'
     end
 
-    daisy.vm.provision "vm-setup", type: "shell", inline: <<-SHELL
-      echo "Add sbin to path variable, as it contains necessary applications and is available in the standard pi-os"
-      echo 'export PATH="$PATH:/sbin:/usr/sbin"' >> /etc/profile.d/sbin-path.sh
-      chmod +x /etc/profile.d/sbin-path.sh
-
-      if [ ! -b /dev/vdb1 ]; then
-        echo "Partitioning /dev/vdb..."
-        echo 'type=83' | sudo sfdisk /dev/vdb
-        echo "Formatting /dev/vdb1 as ext4..."
-        sudo mkfs.ext4 /dev/vdb1
-      else
-        echo "/dev/vdb1 already exists, skipping disk setup."
-      fi
-
-      echo "Upgrade all installed packages including the kernel..."
-      sudo truncate -s 0 /etc/apt/sources.list
-      sudo echo "deb https://debian.ethz.ch/debian stable main contrib non-free" >> /etc/apt/sources.list
-      sudo echo "deb-src https://debian.ethz.ch/debian stable main contrib non-free" >> /etc/apt/sources.list
-      sudo apt update
-      # TODO: This takes way to long, find better box that does not require so many updates.
-      sudo DEBIAN_FRONTEND=noninteractive apt -y \
-        -o Dpkg::Options::="--force-confdef" \
-        -o Dpkg::Options::="--force-confold" upgrade
-      echo "Install required packages..."
-      sudo DEBIAN_FRONTEND=noninteractive apt -y \
-        -o Dpkg::Options::="--force-confdef" \
-        -o Dpkg::Options::="--force-confold" install \
-        python3
-
-      echo "Reboot needed to load potentially new kernel. Run 'vagrant reload' to reboot the VM..."
-    SHELL
+    daisy.vm.provision "path-setup", type: "shell", path: '../scripts/debian/path-setup'
+    daisy.vm.provision "disk-setup", type: "shell", path: 'scripts/disk-setup'
+    daisy.vm.provision "source-setup", type: "shell", path: '../scripts/debian/source-setup'
+    daisy.vm.provision "update-setup", type: "shell", path: '../scripts/debian/update-setup'
+    daisy.vm.provision "python-setup", type: "shell", path: '../scripts/debian/python-setup'
     daisy.vm.provision :reload # reboot needed to load potentially new kernel.
     daisy.vm.provision "ansible", type: "ansible" do |ansible|
       ansible.verbose = "v"

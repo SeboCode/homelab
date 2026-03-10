@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+echo "Set correct alpine mirror list"
+sudo truncate -s 0 /etc/apk/repositories
+sudo echo "https://alpine.ethz.ch/alpine/v3.19/main" >> /etc/apk/repositories
+sudo echo "https://alpine.ethz.ch/alpine/v3.19/community" >> /etc/apk/repositories
+

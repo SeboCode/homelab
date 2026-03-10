@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+echo "Upgrade all installed packages including the kernel"
+sudo apk update
+sudo apk upgrade
+

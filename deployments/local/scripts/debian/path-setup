@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+echo "Add sbin to path variable, as it contains necessary applications and is available in the standard pi-os"
+echo 'export PATH="$PATH:/sbin:/usr/sbin"' >> /etc/profile.d/sbin-path.sh
+chmod +x /etc/profile.d/sbin-path.sh
+
