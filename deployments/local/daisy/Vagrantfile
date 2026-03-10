@@ -52,7 +52,7 @@ Vagrant.configure("2") do |config|
 
       echo "Reboot needed to load potentially new kernel. Run 'vagrant reload' to reboot the VM..."
     SHELL
-
+    daisy.vm.provision :reload # reboot needed to load potentially new kernel.
     daisy.vm.provision "ansible", type: "ansible" do |ansible|
       ansible.verbose = "v"
       ansible.playbook = "../../../ansible/daisy.yaml"

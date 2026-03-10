@@ -19,18 +19,12 @@ case "$node" in
         vagrant destroy -f
         delete_vitual_device_volume charon_dev-vdb.qcow2
         delete_vitual_device_volume charon_dev-vdc.qcow2
-        vagrant up --no-provision
-        vagrant provision --provision-with vm-setup
-        vagrant reload --no-provision
-        vagrant provision --provision-with ansible
+        vagrant up
         ;;
     daisy)
         vagrant destroy -f
         delete_vitual_device_volume daisy_dev-vdb.qcow2
-        vagrant up --no-provision
-        vagrant provision --provision-with vm-setup
-        vagrant reload --no-provision
-        vagrant provision --provision-with ansible
+        vagrant up
         ;;
     *)
         echo "Error: Invalid or missing node '${node}'. Valid options: charon, daisy" >&2
