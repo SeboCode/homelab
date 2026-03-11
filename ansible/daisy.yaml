@@ -5,6 +5,7 @@
     - sshd
     - mirror
     - base
+    - tailscale
     - mount/daisy
     - firewall
     - traefik

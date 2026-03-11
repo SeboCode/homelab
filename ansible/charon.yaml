@@ -6,6 +6,7 @@
     - mirror
     - base/charon
     - base
+    - tailscale
     - zfs
     - wakeonlan
     - firewall
