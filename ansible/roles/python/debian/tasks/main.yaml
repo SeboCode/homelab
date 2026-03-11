@@ -1,0 +1,11 @@
+---
+- name: Ensure Python is installed
+  ansible.builtin.raw: apt install -y python3
+  become: true
+  become_method: "{{ superuser_method }}"
+
+- name: Ensure python3-debian is installed, as it is needed for deb822_repository modules to work
+  ansible.builtin.package:
+    name: python3-debian
+    state: present
+

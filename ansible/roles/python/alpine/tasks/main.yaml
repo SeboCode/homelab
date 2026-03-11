@@ -1,0 +1,5 @@
+---
+- name: Ensure Python is installed
+  ansible.builtin.raw: apk add python3
+  become: true
+  become_method: "{{ superuser_method }}"

@@ -2,6 +2,7 @@
 - name: Configure daisy node
   hosts: daisy
   roles:
+    - python
     - sshd
     - mirror
     - base

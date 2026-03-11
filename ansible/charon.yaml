@@ -2,6 +2,7 @@
 - name: Configure charon node
   hosts: charon
   roles:
+    - python
     - sshd
     - mirror
     - base/charon

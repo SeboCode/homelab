@@ -56,8 +56,6 @@ local and remote DNS entries and how to install the os and perform manual setup 
 5. Elevate Ansible user privileges
    1. Install doas (Alpine Linux sudo equivalent) `apk add doas`.
    2. Give new user superuser privileges `echo "permit persist keepenv <username>" >> /etc/doas.conf`.
-6. Prepare system to be Ansible target
-   1. Install Python on the system `apk add python3`.
 
 ## (Optional) Setup Tailscale
 

@@ -23,7 +23,6 @@ Vagrant.configure("2") do |config|
 
     charon.vm.provision "source-setup", type: "shell", path: '../scripts/alpine/source-setup'
     charon.vm.provision "update-setup", type: "shell", path: '../scripts/alpine/update-setup'
-    charon.vm.provision "python-setup", type: "shell", path: '../scripts/alpine/python-setup'
     charon.vm.provision :reload # reboot needed to load potentially new kernel.
     charon.vm.provision "ansible", type: "ansible" do |ansible|
       ansible.verbose = "v"

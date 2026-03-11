@@ -25,7 +25,6 @@ Vagrant.configure("2") do |config|
     daisy.vm.provision "disk-setup", type: "shell", path: 'scripts/disk-setup'
     daisy.vm.provision "source-setup", type: "shell", path: '../scripts/debian/source-setup'
     daisy.vm.provision "update-setup", type: "shell", path: '../scripts/debian/update-setup'
-    daisy.vm.provision "python-setup", type: "shell", path: '../scripts/debian/python-setup'
     daisy.vm.provision :reload # reboot needed to load potentially new kernel.
     daisy.vm.provision "ansible", type: "ansible" do |ansible|
       ansible.verbose = "v"
