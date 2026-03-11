@@ -60,12 +60,10 @@ local and remote DNS entries and how to install the os and perform manual setup 
 ## (Optional) Setup Tailscale
 
 To access the services from anywhere in the world, without the need to expose the node into the internet, a VPN
-solution, such as Tailscale, can be used. Tailscale is installed automatically by the Ansible playbook.
+solution, such as Tailscale, can be used. Tailscale is installed and its daemon started by the Ansible playbook.
 
-1.  Add Tailscale to autostart list `doas rc-update add tailscale`.
-2.  Start Tailscale service `doas rc-service tailscale start`. See the status using `rc-service tailscale status`.
-3.  Connect to Tailnet `doas tailscale up`.
-4.  Disable key expiry in the Tailscale admin panel for the node, to avoid need for reauthentication of the node
+1.  Connect to Tailnet `doas tailscale up`.
+2.  Disable key expiry in the Tailscale admin panel for the node, to avoid need for reauthentication of the node
     after token is expired. If this step is not performed, the service might no longer be accessible at some point,
     until it is reauthenticated using `doas tailscale up`.
 

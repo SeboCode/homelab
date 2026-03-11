@@ -4,3 +4,9 @@
     name: tailscale
     state: present
 
+- name: Ensure tailscale service is enabled and started
+  ansible.builtin.service:
+    name: tailscale
+    enabled: true
+    state: started
+

@@ -15,3 +15,9 @@
     state: present
     update_cache: true # Updates the cache, such that the packages of the newly added repo are available for installation.
 
+- name: Ensure tailscaled service is enabled and started
+  ansible.builtin.service:
+    name: tailscaled
+    enabled: true
+    state: started
+
