@@ -89,8 +89,8 @@ updated.
 
 ## Automatic setup using Ansible and manual configurations
 
-1. Check that all secrets and variable values for all services are set correctly in the `ansible/vars/prod/` files.
-   Take inspiration from the `ansible/vars/dev/` files to get a list of all necessary variables that have to be set.
+1. Check that all secrets and variable values for all services are set correctly in the `ansible/host_vars/prod/` files.
+   Take inspiration from the `ansible/host_vars/dev/` files to get a list of all necessary variables that have to be set.
    In addition to the ones found in the development variable files, the following secret variables have to be set:
    | Variablename | Description |
    | :----------- | :---------- |
@@ -147,7 +147,7 @@ To introduce a new service, follow these steps:
    1. Implement new role in accordance with the other roles.
    2. Every service has its own user to increase security and have a clearer separation of the independent services.
 2. Add all relevant configuration for the new service to the `ansible/group_vars/all.yaml` file.
-   1. Secrets and other variables that are environment dependent have to be added to the `ansible/vars/<environment>/<node>.yaml` file.
+   1. Secrets and other variables that are environment dependent have to be added to the `ansible/host_vars/<environment>/<node>.yaml` file.
 3. Add the service role to the `ansible/<node>.yaml` playbook file.
 4. Add the port to the Vagrant configuration in `deployments/local/<node>/Vagrantfile` to be forwarded to the host machine for accessing the service locally
    without the need to go through Traefik (nice for debugging).
