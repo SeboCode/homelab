@@ -1,0 +1,59 @@
+---
+- name: Ensure mealie data location exists
+  ansible.builtin.file:
+    path: "{{ mealie.container.server.storage.data }}"
+    state: directory
+    owner: "{{ mealie.user.name }}"
+    group: "{{ mealie.user.name }}"
+    mode: 0755
+
+- name: Ensure traefik is configured for mealie
+  ansible.builtin.import_role:
+    name: infrastructure/traefik-service
+  vars:
+    service_name: mealie
+    service_port: "{{ mealie.container.server.config.port }}"
+
+- name: Get uid of mealie user
+  ansible.builtin.command: "id -u {{ mealie.user.name }}"
+  register: mealie_user_uid
+
+- name: Get gid of mealie user
+  ansible.builtin.command: "id -g {{ mealie.user.name }}"
+  register: mealie_user_gid
+
+- name: Instantiate mealie-server container
+  ansible.builtin.import_role:
+    name: infrastructure/container
+  vars:
+    container_name: mealie_server
+    container_image: "{{ mealie.container.server.image }}"
+    container_image_tag: "{{ mealie.container.server.tag }}"
+    container_env:
+      ALLOW_SIGNUP: "{{ mealie.container.server.config.allow_signup }}"
+      PUID: "{{ mealie_user_uid.stdout }}"
+      PGID: "{{ mealie_user_gid.stdout }}"
+      TZ: "Europe/Zurich"
+      BASE_URL: "https://mealie.{{ domain }}"
+      DB_ENGINE: "postgres"
+      POSTGRES_SERVER: "database"
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: "{{ mealie.container.postgres.config.db.name }}"
+      POSTGRES_USER: "{{ mealie.container.postgres.config.db.username }}"
+      POSTGRES_PASSWORD: "{{ mealie.container.postgres.config.db.password }}"
+    container_volumes:
+      - "{{ mealie.container.server.storage.data }}:/app/data"
+    container_ports:
+      - "{{ mealie.container.server.config.port }}:9000"
+    container_networks:
+      - "{{ mealie.container.network }}"
+    container_network_aliases:
+      - mealie-server
+    container_user: "{{ mealie.user.name }}"
+
+- ansible.builtin.import_role:
+    name: infrastructure/http-healthcheck
+  vars:
+    service_name: mealie
+    service_port: "{{ mealie.container.server.config.port }}"
+

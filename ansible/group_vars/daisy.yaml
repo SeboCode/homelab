@@ -31,6 +31,7 @@ pihole_global:
             192.168.1.4 homeassistant.daisy.mikemarti.ch
             192.168.1.4 karakeep.daisy.mikemarti.ch
             192.168.1.4 miniflux.daisy.mikemarti.ch
+            192.168.1.4 mealie.daisy.mikemarti.ch
       storage:
         config: "{{ pihole_global.data_storage.root }}/config"
         dnsmasq: "{{ pihole_global.data_storage.root }}/dnsmasq"
@@ -112,4 +113,29 @@ miniflux_global:
           username: miniflux_pg_user
       storage:
         data: "{{ miniflux_global.data_storage.root }}/db-data"
+
+mealie_global:
+  user:
+    name: mealie-user
+  data_storage:
+    filesystem: ext4
+    root: "{{ data_root }}/mealie-storage"
+  container:
+    network: mealie_network
+    server:
+      image: ghcr.io/mealie-recipes/mealie
+      tag: v3.12.0
+      config:
+        port: 20900
+      storage:
+        data: "{{ mealie_global.data_storage.root }}/data"
+    postgres:
+      image: docker.io/postgres
+      tag: 17.9
+      config:
+        db:
+          name: mealie_database
+          username: mealie_pg_user
+      storage:
+        data: "{{ mealie_global.data_storage.root }}/db-data"
 

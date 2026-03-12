@@ -1,0 +1,28 @@
+---
+- name: Ensure mealie postgres data location exists
+  ansible.builtin.file:
+    path: "{{ mealie.container.postgres.storage.data }}"
+    state: directory
+    owner: "{{ mealie.user.name }}"
+    group: "{{ mealie.user.name }}"
+    mode: 0755
+
+- name: Instantiate mealie-postgres container
+  ansible.builtin.import_role:
+    name: infrastructure/container
+  vars:
+    container_name: mealie_postgres
+    container_image: "{{ mealie.container.postgres.image }}"
+    container_image_tag: "{{ mealie.container.postgres.tag }}"
+    container_env:
+      POSTGRES_DB: "{{ mealie.container.postgres.config.db.name }}"
+      POSTGRES_USER: "{{ mealie.container.postgres.config.db.username }}"
+      POSTGRES_PASSWORD: "{{ mealie.container.postgres.config.db.password }}"
+    container_volumes:
+      - "{{ mealie.container.postgres.storage.data }}:/var/lib/postgresql/data"
+    container_networks:
+      - "{{ mealie.container.network }}"
+    container_network_aliases:
+      - database
+    container_user: "{{ mealie.user.name }}"
+

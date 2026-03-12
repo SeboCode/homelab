@@ -75,3 +75,15 @@ miniflux_env:
         db:
           password: miniflux-db-password
 
+mealie_env:
+  user:
+    password: "123456"
+  container:
+    server:
+      config:
+        allow_signup: "true"
+    postgres:
+      config:
+        db:
+          password: mealie-db-password
+

@@ -1,0 +1,34 @@
+---
+- ansible.builtin.import_role:
+    name: infrastructure/build_vars
+  vars:
+    service: mealie
+
+- name: "Ensure {{ mealie.user.name }} is created"
+  ansible.builtin.import_role:
+    name: infrastructure/user
+  vars:
+    user_name: "{{ mealie.user.name }}"
+    user_password: "{{ mealie.user.password }}"
+
+- name: Ensure mealie storage directory location exists
+  ansible.builtin.import_role:
+    name: infrastructure/service-data-directory
+  vars:
+    data_storage: "{{ mealie.data_storage }}"
+    user: "{{ mealie.user.name }}"
+
+- name: Ensure mealie is running
+  become: true
+  become_user: "{{ mealie.user.name }}"
+  block:
+    - name: Ensure mealie container network is created
+      containers.podman.podman_network:
+        name: "{{ mealie.container.network }}"
+        driver: bridge
+        recreate: false
+        state: present
+
+    - import_tasks: mealie-database.yaml
+    - import_tasks: mealie-server.yaml
+
