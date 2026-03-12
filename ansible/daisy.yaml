@@ -10,10 +10,10 @@
     - mount/daisy
     - firewall
     - traefik
-    #   - service/pihole
-    #   - service/homeassistant
-    #   - service/karakeep
-    #   - service/miniflux
+    - service/pihole
+    - service/homeassistant
+    - service/karakeep
+    - service/miniflux
     - service/mealie
     # - dhcp # TODO once isp fixes the closed dns port issue
 
