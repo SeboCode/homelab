@@ -1,0 +1,24 @@
+{
+  "description": "Allow access to syncthing sync protocol",
+
+  "service": {
+    "syncthing-sync": [
+      { "proto": "tcp", "port": {{ syncthing.container.server.config.sync_port }} }
+    ]
+  },
+
+  "filter": [
+    {
+      "in": "internet",
+      "out": "_fw",
+      "service": "syncthing-sync",
+      "action": "accept"
+    },
+    {
+      "in": "vpn",
+      "out": "_fw",
+      "service": "syncthing-sync",
+      "action": "accept"
+    }
+  ]
+}

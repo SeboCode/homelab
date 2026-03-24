@@ -1,0 +1,51 @@
+---
+- name: Ensure syncthing data location exists
+  ansible.builtin.file:
+    path: "{{ syncthing.container.server.storage.data }}"
+    state: directory
+    owner: "{{ syncthing.user.name }}"
+    group: "{{ syncthing.user.name }}"
+    mode: 0755
+
+- name: Ensure traefik is configured for syncthing
+  ansible.builtin.import_role:
+    name: infrastructure/traefik-service
+  vars:
+    service_name: syncthing
+    service_port: "{{ syncthing.container.server.config.port }}"
+
+- name: Get uid of syncthing user
+  ansible.builtin.command: "id -u {{ syncthing.user.name }}"
+  register: syncthing_user_uid
+
+- name: Get gid of syncthing user
+  ansible.builtin.command: "id -g {{ syncthing.user.name }}"
+  register: syncthing_user_gid
+
+- name: Instantiate syncthing-server container
+  ansible.builtin.import_role:
+    name: infrastructure/container
+  vars:
+    container_name: syncthing_server
+    container_image: "{{ syncthing.container.server.image }}"
+    container_image_tag: "{{ syncthing.container.server.tag }}"
+    container_env:
+      PUID: "{{ syncthing_user_uid.stdout }}"
+      PGID: "{{ syncthing_user_gid.stdout }}"
+    container_volumes:
+      - "{{ syncthing.container.server.storage.data }}:/var/syncthing"
+    container_ports:
+      - "{{ syncthing.container.server.config.port }}:8384"
+      - "{{ syncthing.container.server.config.sync_port }}:22000"
+    container_networks:
+      - "{{ syncthing.container.network }}"
+    container_network_aliases:
+      - syncthing-server
+    container_user: "{{ syncthing.user.name }}"
+
+- ansible.builtin.import_role:
+    name: infrastructure/http-healthcheck
+  vars:
+    service_name: syncthing
+    service_port: "{{ syncthing.container.server.config.port }}"
+

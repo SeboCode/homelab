@@ -109,3 +109,20 @@ gitea_global:
       storage:
         data: "{{ gitea_global.data_storage.root }}/postgres"
 
+syncthing_global:
+  user:
+    name: syncthing-user
+  data_storage:
+    filesystem: zfs
+    root: "/{{ zfs.service_data_pool_name }}/syncthing-storage"
+  container:
+    network: syncthing_network
+    server:
+      image: docker.io/syncthing/syncthing
+      tag: 2.0.15
+      config:
+        port: 21000
+        sync_port: 21001
+      storage:
+        data: "{{ syncthing_global.data_storage.root }}/data"
+

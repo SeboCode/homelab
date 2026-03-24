@@ -78,3 +78,9 @@ gitea_env:
         db:
           password: gitea-db-password
 
+syncthing_env:
+  user:
+    password: "123456"
+  data_storage:
+    zfs_encryption_key: "12345678901234567890123456789012"
+

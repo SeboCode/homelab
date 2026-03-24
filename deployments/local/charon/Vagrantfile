@@ -13,6 +13,8 @@ Vagrant.configure("2") do |config|
     charon.vm.network :forwarded_port, guest: 20200, host: 20200, id: "photoprism"
     charon.vm.network :forwarded_port, guest: 20300, host: 20300, id: "gitea"
     charon.vm.network :forwarded_port, guest: 20322, host: 20322, id: "gitea-ssh"
+    charon.vm.network :forwarded_port, guest: 21000, host: 21000, id: "syncthing"
+    charon.vm.network :forwarded_port, guest: 21001, host: 21001, id: "syncthing-sync"
 
     charon.vm.provider "libvirt" do |lv|
       lv.memory = 8192

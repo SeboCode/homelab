@@ -120,6 +120,9 @@ The following services are available on Charon:
 | Gitea | 20300 - 20399 | | | | |
 | | | Gitea Server | 20300 | :x: | `gitea(.dev).*` |
 | | | Gitea Server SSH | 20322 | :x: | This is currently not working due to firewall and traefik configurations. Repositories can only be cloned via https. |
+| Syncthing | 21000 - 21099 | | | | |
+| | | Syncthing Web UI | 21000 | :x: | `syncthing(.dev).*` |
+| | | Syncthing Sync Protocol | 21001 | :heavy_check_mark: | |
 
 The following services are available on Daisy:
 | Service | Reserved Portrange | Exposed Service | Port of exposed Service | Directly accessible | Url Accessibility |

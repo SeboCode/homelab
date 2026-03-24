@@ -1,0 +1,35 @@
+---
+- ansible.builtin.import_role:
+    name: infrastructure/build_vars
+  vars:
+    service: syncthing
+
+- ansible.builtin.import_role:
+    name: service/syncthing/sync-firewall
+
+- name: "Ensure {{ syncthing.user.name }} is created"
+  ansible.builtin.import_role:
+    name: infrastructure/user
+  vars:
+    user_name: "{{ syncthing.user.name }}"
+    user_password: "{{ syncthing.user.password }}"
+
+- name: Ensure syncthing storage directory location exists
+  ansible.builtin.import_role:
+    name: infrastructure/service-data-directory
+  vars:
+    data_storage: "{{ syncthing.data_storage }}"
+    user: "{{ syncthing.user.name }}"
+
+- name: Ensure syncthing is running
+  become: true
+  become_user: "{{ syncthing.user.name }}"
+  block:
+    - name: Ensure syncthing container network is created
+      containers.podman.podman_network:
+        name: "{{ syncthing.container.network }}"
+        driver: bridge
+        recreate: false
+        state: present
+
+    - import_tasks: syncthing-server.yaml

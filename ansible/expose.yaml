@@ -24,4 +24,5 @@
         - "{{ karakeep.container.server.config.port }}"
         - "{{ miniflux.container.server.config.port }}"
         - "{{ mealie.container.server.config.port }}"
+        - "{{ syncthing.container.server.config.port }}"
 

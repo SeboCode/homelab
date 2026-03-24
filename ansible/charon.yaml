@@ -16,4 +16,5 @@
     - service/filebrowser
     - service/photoprism
     - service/gitea
+    - service/syncthing
 
