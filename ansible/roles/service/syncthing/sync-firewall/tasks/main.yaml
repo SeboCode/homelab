@@ -1,3 +1,16 @@
 ---
-- ansible.builtin.include_role:
-    name: "service/syncthing/sync-firewall/{{ platform }}"
+- name: Ensure incoming syncthing sync connection is allowed
+  community.general.ufw:
+    rule: allow
+    port: "{{ syncthing.container.server.config.sync_port }}"
+    proto: "{{ item }}"
+  loop:
+    - tcp
+    - udp
+
+- name: Ensure ufw rules are reloaded after updating syncthing specific rules
+  community.general.ufw:
+    state: reloaded
+  async: 3
+  poll: 0
+

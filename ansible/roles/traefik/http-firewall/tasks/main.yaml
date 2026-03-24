@@ -1,4 +1,29 @@
 ---
-- ansible.builtin.include_role:
-    name: "traefik/http-firewall/{{ platform }}"
+- name: Ensure NAT rules are present in ufw manual configuration
+  ansible.builtin.blockinfile:
+    path: /etc/ufw/before.rules
+    marker: "# {mark} ANSIBLE NAT RULES FOR HTTP/HTTPS"
+    block: |
+      -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports {{ traefik.container.server.config.web_port }}
+      -A PREROUTING -i eth0 -p tcp --dport 443 -j REDIRECT --to-ports {{ traefik.container.server.config.websecure_port }}
+      -A PREROUTING -i tailscale0 -p tcp --dport 80 -j REDIRECT --to-ports {{ traefik.container.server.config.web_port }}
+      -A PREROUTING -i tailscale0 -p tcp --dport 443 -j REDIRECT --to-ports {{ traefik.container.server.config.websecure_port }}
+      -A OUTPUT -o lo -p tcp --dport 80 -j REDIRECT --to-ports {{ traefik.container.server.config.web_port }}
+      -A OUTPUT -o lo -p tcp --dport 443 -j REDIRECT --to-ports {{ traefik.container.server.config.websecure_port }}
+    insertafter: "# NAT_RULE_MARKER"
+    create: false
 
+- name: Ensure incomming traefik connection is allowed
+  community.general.ufw:
+    rule: allow
+    port: "{{ item }}"
+    proto: tcp
+  loop:
+    - "{{ traefik.container.server.config.web_port }}"
+    - "{{ traefik.container.server.config.websecure_port }}"
+
+- name: Ensure ufw rules are reloaded after updating http/https specific rules
+  community.general.ufw:
+    state: reloaded
+  async: 3
+  poll: 0
