@@ -1,8 +1,13 @@
 ---
+- name: Bootstrap python
+  hosts: charon
+  gather_facts: false
+  roles:
+    - python
+
 - name: Configure charon node
   hosts: charon
   roles:
-    - python
     - sshd
     - mirror
     - base/charon
