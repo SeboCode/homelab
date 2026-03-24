@@ -83,4 +83,11 @@ syncthing_env:
     password: "123456"
   data_storage:
     zfs_encryption_key: "12345678901234567890123456789012"
+  container:
+    server:
+      config:
+        api_key: "12345678901234567890123456789012"
+        admin:
+          username: admin # Syncthing uses this for protecting the webserver from being modified by unprivileged users. There is no user management in the application.
+          password: admin
 

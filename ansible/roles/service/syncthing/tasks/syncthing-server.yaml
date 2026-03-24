@@ -32,6 +32,7 @@
     container_env:
       PUID: "{{ syncthing_user_uid.stdout }}"
       PGID: "{{ syncthing_user_gid.stdout }}"
+      STGUIAPIKEY: "{{ syncthing.container.server.config.api_key }}" # Needs to be pinned and set for username and password configuration using the syncthing cli
     container_volumes:
       - "{{ syncthing.container.server.storage.data }}:/var/syncthing"
     container_ports:
@@ -42,6 +43,16 @@
     container_network_aliases:
       - syncthing-server
     container_user: "{{ syncthing.user.name }}"
+
+- name: Configure syncthing gui authentication
+  containers.podman.podman_container_exec:
+    name: syncthing_server
+    command: "syncthing cli config gui {{ item.key }} set {{ item.value }}"
+  loop:
+    - key: user
+      value: "{{ syncthing.container.server.config.admin.username }}"
+    - key: password
+      value: "{{ syncthing.container.server.config.admin.password }}"
 
 - ansible.builtin.import_role:
     name: infrastructure/http-healthcheck
