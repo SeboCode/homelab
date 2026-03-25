@@ -1,12 +1,17 @@
 ---
 - name: Enable firewall to forward dev port
   hosts: localhost
+  vars_files:
+    - group_vars/charon.yaml
+    - group_vars/daisy.yaml
   tasks:
     - name: Enable http service on public interface
       ansible.posix.firewalld:
         service: http
         zone: public
         state: enabled
+      become: true
+      become_method: sudo
 
     - name: Enable dev port on public interface
       ansible.posix.firewalld:
@@ -14,15 +19,18 @@
         zone: public
         state: enabled
       loop:
-        - "{{ immich.container.server.config.port }}"
-        - "{{ filebrowser.container.server.config.port }}"
-        - "{{ photoprism.container.server.config.port }}"
-        - "{{ gitea.container.server.config.port }}"
-        - "{{ traefik.container.server.config.port }}"
-        - "{{ pihole.container.server.config.port }}"
-        - "{{ homeassistant.container.server.config.port }}"
-        - "{{ karakeep.container.server.config.port }}"
-        - "{{ miniflux.container.server.config.port }}"
-        - "{{ mealie.container.server.config.port }}"
-        - "{{ syncthing.container.server.config.port }}"
+        - "{{ immich_global.container.server.config.port }}"
+        - "{{ filebrowser_global.container.server.config.port }}"
+        - "{{ photoprism_global.container.server.config.port }}"
+        - "{{ gitea_global.container.server.config.port }}"
+        - "{{ pihole_global.container.server.config.webserver.port }}"
+        - "{{ homeassistant_global.container.server.config.port }}"
+        - "{{ homeassistant_global.container.zigbee2mqtt.config.port }}"
+        - "{{ karakeep_global.container.server.config.port }}"
+        - "{{ miniflux_global.container.server.config.port }}"
+        - "{{ mealie_global.container.server.config.port }}"
+        - "{{ syncthing_global.container.server.config.port }}"
+        - "{{ syncthing_global.container.server.config.sync_port }}"
+      become: true
+      become_method: sudo
 
