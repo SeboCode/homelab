@@ -32,7 +32,7 @@
     container_env:
       PUID: "{{ syncthing_user_uid.stdout }}"
       PGID: "{{ syncthing_user_gid.stdout }}"
-      STGUIAPIKEY: "{{ syncthing.container.server.config.api_key }}" # Needs to be pinned and set for username and password configuration using the syncthing cli
+      STGUIAPIKEY: "{{ syncthing.container.server.config.api_key }}" # Needs to be pinned and set for syncthing cli configuration
     container_volumes:
       - "{{ syncthing.container.server.storage.data }}:/var/syncthing"
     container_ports:
@@ -44,15 +44,32 @@
       - syncthing-server
     container_user: "{{ syncthing.user.name }}"
 
-- name: Configure syncthing gui authentication
+- name: Configure syncthing
   containers.podman.podman_container_exec:
     name: syncthing_server
-    command: "syncthing cli config gui {{ item.key }} set {{ item.value }}"
+    command: "syncthing cli config {{ item.group }} {{ item.key }} set {{ item.value }}"
   loop:
-    - key: user
+    - group: gui
+      key: user
       value: "{{ syncthing.container.server.config.admin.username }}"
-    - key: password
+    - group: gui
+      key: password
       value: "{{ syncthing.container.server.config.admin.password }}"
+    - group: options
+      key: global-ann-enabled # Disable using the public discovery network for syncthing, as the vpn approach solves this and avoids relying on public syncthing infrastructure
+      value: "false"
+    - group: options
+      key: relays-enabled # Disable using the public discovery network for syncthing, as the vpn approach solves this and avoids relying on public syncthing infrastructure
+      value: "false"
+    - group: options
+      key: natenabled # Disable UPnP and NAT-PMP port mapping as it does not work and is not necessary anyway
+      value: "false"
+    - group: options
+      key: local-ann-enabled # Local automatic discovery does not work and is not necessary anyway
+      value: "false"
+    - group: options
+      key: crenabled # Disable sending crash reports
+      value: "false"
 
 - ansible.builtin.import_role:
     name: infrastructure/http-healthcheck
