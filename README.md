@@ -178,3 +178,10 @@ To introduce a new service, follow these steps:
    1. Create a non-admin user account for daily use.
    2. Create an API key under `Settings > API Keys` for third-party integrations.
    3. Configure ntfy integration under `Settings > Integrations` for push notifications.
+5. Install and configure Syncthing Fork on Android devices.
+   1. Install `Syncthing-Fork` from F-Droid.
+   2. Disable the following options under `Settings > Syncthing Options`:
+      1. Disable `Enable NAT Traversal`.
+      2. Disable `Local Discovery`.
+      3. Disable `Global Discovery`.
+      4. Disable `Enable Relaying`.
