@@ -8,16 +8,16 @@ echo "Configure package sources"
 sudo truncate -s 0 /etc/apt/sources.list
 source /etc/os-release # loads $VERSION_CODENAME environment variable
 cat > /etc/apt/sources.list.d/debian.sources << EOF
-    Types: deb
-    URIs: http://deb.debian.org/debian/
-    Suites: $VERSION_CODENAME $VERSION_CODENAME-updates
-    Components: main contrib non-free non-free-firmware
-    Signed-By: /usr/share/keyrings/debian-archive-keyring.pgp
-    
-    Types: deb
-    URIs: http://deb.debian.org/debian-security/
-    Suites: $VERSION_CODENAME-security
-    Components: main contrib non-free non-free-firmware
-    Signed-By: /usr/share/keyrings/debian-archive-keyring.pgp
+Types: deb
+URIs: http://deb.debian.org/debian/
+Suites: $VERSION_CODENAME $VERSION_CODENAME-updates
+Components: main contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.pgp
+
+Types: deb
+URIs: http://deb.debian.org/debian-security/
+Suites: $VERSION_CODENAME-security
+Components: main contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.pgp
 EOF
 
