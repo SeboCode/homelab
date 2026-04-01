@@ -1,6 +1,6 @@
 ---
 - ansible.builtin.import_role:
-    name: infrastructure/build_vars
+    name: infrastructure/build-vars
   vars:
     service: karakeep
 
