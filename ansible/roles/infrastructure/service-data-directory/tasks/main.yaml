@@ -1,4 +1,3 @@
 ---
-- ansible.builtin.include_role:
-    name: "infrastructure/service-data-directory/{{ data_storage.filesystem }}"
+- ansible.builtin.include_tasks: "{{ data_storage.filesystem }}.yaml"
 

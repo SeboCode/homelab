@@ -13,7 +13,6 @@
     mode: 0644
   register: sshd_config
 
-- ansible.builtin.include_role:
-    name: "sshd/{{ platform }}"
+- ansible.builtin.include_tasks: "{{ platform }}.yaml"
   when: sshd_config.changed
 
