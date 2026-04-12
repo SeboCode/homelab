@@ -1,8 +1,14 @@
 ---
 - name: Ensure zfs is installed
   ansible.builtin.package:
-    name: zfsutils-linux
+    name:
+      - zfsutils-linux
+      - zfs-dkms
+      - "linux-headers-{{ ansible_facts['kernel'] }}"
     state: present
+
+- name: Ensure zfs kernel module is built
+  ansible.builtin.command: dkms autoinstall
 
 - name: Ensure zfs module is loaded
   community.general.modprobe:
@@ -23,6 +29,11 @@
     vdevs:
       - disks: "{{ zfs.devices }}"
         type: mirror
+
+- name: Ensure zfs-load-key is unmasked
+  ansible.builtin.systemd:
+    name: zfs-load-key
+    masked: false
 
 - name: Ensure zfs services are enabled on boot
   ansible.builtin.service:

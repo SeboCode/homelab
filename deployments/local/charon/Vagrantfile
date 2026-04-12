@@ -1,7 +1,8 @@
 Vagrant.configure("2") do |config|
   config.vm.define "dev" do |charon|
-    charon.vm.box = "generic/alpine319"
-    charon.vm.box_version = "4.3.12"
+    charon.vm.synced_folder ".", "/vagrant", disabled: true
+    charon.vm.box = "debian/trixie64"
+    charon.vm.box_version = "13.20260121.1"
     charon.vm.hostname = "charon"
     charon.vm.network :forwarded_port, guest: 22, host: 10022, id: "ssh"
     charon.vm.network :forwarded_port, guest: 80, host: 80, id: "port-forwarded-to-traefik-http"
@@ -23,8 +24,9 @@ Vagrant.configure("2") do |config|
       lv.storage :file, :size => '500M', :device => 'vdc'
     end
 
-    charon.vm.provision "source-setup", type: "shell", path: '../scripts/alpine/source-setup'
-    charon.vm.provision "update-setup", type: "shell", path: '../scripts/alpine/update-setup'
+    charon.vm.provision "path-setup", type: "shell", path: '../scripts/debian/path-setup'
+    charon.vm.provision "source-setup", type: "shell", path: '../scripts/debian/source-setup'
+    charon.vm.provision "update-setup", type: "shell", path: '../scripts/debian/update-setup'
     charon.vm.provision :reload # reboot needed to load potentially new kernel.
     charon.vm.provision "ansible", type: "ansible" do |ansible|
       ansible.verbose = "v"

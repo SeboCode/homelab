@@ -1,7 +1,7 @@
 ---
 domain: dev.daisy.mikemarti.ch
 superuser_method: sudo
-charon_superuser_method: doas
+charon_superuser_method: sudo
 data_root_drive: /dev/vdb1
 
 traefik_env:

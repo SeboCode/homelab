@@ -1,6 +1,6 @@
 ---
-platform: alpine
-processor_microcode_package: intel-ucode
+platform: debian
+processor_microcode_package: intel-microcode
 
 zfs_global:
   service_data_pool_name: service-data
