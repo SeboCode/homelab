@@ -102,3 +102,4 @@ kimai_env:
         db:
           password: kimai-db-password
           root_password: kimai-root-password
+

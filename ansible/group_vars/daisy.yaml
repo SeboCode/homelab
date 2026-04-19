@@ -164,3 +164,4 @@ kimai_global:
           username: kimai_db_user
       storage:
         data: "{{ kimai_global.data_storage.root }}/db-data"
+

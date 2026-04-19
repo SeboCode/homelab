@@ -22,7 +22,7 @@
     container_image: "{{ kimai.container.server.image }}"
     container_image_tag: "{{ kimai.container.server.tag }}"
     container_env:
-      DATABASE_URL: "mysql://{{ kimai.container.mysql.config.db.username }}:{{ kimai.container.mysql.config.db.password }}@database/{{ kimai.container.mysql.config.db.name }}?charset=utf8mb4&serverVersion=8.4"
+      DATABASE_URL: "mysql://{{ kimai.container.mysql.config.db.username }}:{{ kimai.container.mysql.config.db.password }}@database:3306/{{ kimai.container.mysql.config.db.name }}?charset=utf8mb4&serverVersion={{ kimai.container.mysql.tag }}"
       APP_SECRET: "{{ kimai.container.server.config.app_secret }}"
       TRUSTED_PROXIES: "127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
       ADMINMAIL: "{{ kimai.container.server.config.admin.email }}"
