@@ -1,0 +1,44 @@
+---
+- name: Ensure kimai data location exists
+  ansible.builtin.file:
+    path: "{{ kimai.container.server.storage.data }}"
+    state: directory
+    owner: "{{ kimai.user.name }}"
+    group: "{{ kimai.user.name }}"
+    mode: 0755
+
+- name: Ensure traefik is configured for kimai
+  ansible.builtin.import_role:
+    name: infrastructure/traefik-service
+  vars:
+    service_name: kimai
+    service_port: "{{ kimai.container.server.config.port }}"
+
+- name: Instantiate kimai-server container
+  ansible.builtin.import_role:
+    name: infrastructure/container
+  vars:
+    container_name: kimai_server
+    container_image: "{{ kimai.container.server.image }}"
+    container_image_tag: "{{ kimai.container.server.tag }}"
+    container_env:
+      DATABASE_URL: "mysql://{{ kimai.container.mysql.config.db.username }}:{{ kimai.container.mysql.config.db.password }}@database/{{ kimai.container.mysql.config.db.name }}?charset=utf8mb4&serverVersion=8.4"
+      APP_SECRET: "{{ kimai.container.server.config.app_secret }}"
+      TRUSTED_PROXIES: "127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+      ADMINMAIL: "{{ kimai.container.server.config.admin.email }}"
+      ADMINPASS: "{{ kimai.container.server.config.admin.password }}"
+    container_volumes:
+      - "{{ kimai.container.server.storage.data }}:/opt/kimai/var/data"
+    container_ports:
+      - "{{ kimai.container.server.config.port }}:8001"
+    container_networks:
+      - "{{ kimai.container.network }}"
+    container_network_aliases:
+      - kimai-server
+    container_user: "{{ kimai.user.name }}"
+
+- ansible.builtin.import_role:
+    name: infrastructure/http-healthcheck
+  vars:
+    service_name: kimai
+    service_port: "{{ kimai.container.server.config.port }}"

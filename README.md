@@ -141,6 +141,8 @@ The following services are available on Daisy:
 | | | Miniflux Server | 20700 | :x: | `miniflux(.dev).*` |
 | Mealie | 20900 - 20999 | | | | |
 | | | Mealie Server | 20900 | :x: | `mealie(.dev).*` |
+| Kimai | 21000 - 21099 | | | | |
+| | | Kimai Server | 21000 | :x: | `kimai(.dev).*` |
 
 ## Introduce new service
 

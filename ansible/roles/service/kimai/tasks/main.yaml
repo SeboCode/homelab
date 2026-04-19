@@ -1,0 +1,33 @@
+---
+- ansible.builtin.import_role:
+    name: infrastructure/build-vars
+  vars:
+    service: kimai
+
+- name: "Ensure {{ kimai.user.name }} is created"
+  ansible.builtin.import_role:
+    name: infrastructure/user
+  vars:
+    user_name: "{{ kimai.user.name }}"
+    user_password: "{{ kimai.user.password }}"
+
+- name: Ensure kimai storage directory location exists
+  ansible.builtin.import_role:
+    name: infrastructure/service-data-directory
+  vars:
+    data_storage: "{{ kimai.data_storage }}"
+    user: "{{ kimai.user.name }}"
+
+- name: Ensure kimai is running
+  become: true
+  become_user: "{{ kimai.user.name }}"
+  block:
+    - name: Ensure kimai container network is created
+      containers.podman.podman_network:
+        name: "{{ kimai.container.network }}"
+        driver: bridge
+        recreate: false
+        state: present
+
+    - import_tasks: kimai-database.yaml
+    - import_tasks: kimai-server.yaml

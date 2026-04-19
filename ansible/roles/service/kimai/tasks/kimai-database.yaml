@@ -1,0 +1,28 @@
+---
+- name: Ensure kimai mysql data location exists
+  ansible.builtin.file:
+    path: "{{ kimai.container.mysql.storage.data }}"
+    state: directory
+    owner: "{{ kimai.user.name }}"
+    group: "{{ kimai.user.name }}"
+    mode: 0755
+
+- name: Instantiate kimai-mysql container
+  ansible.builtin.import_role:
+    name: infrastructure/container
+  vars:
+    container_name: kimai_mysql
+    container_image: "{{ kimai.container.mysql.image }}"
+    container_image_tag: "{{ kimai.container.mysql.tag }}"
+    container_env:
+      MYSQL_DATABASE: "{{ kimai.container.mysql.config.db.name }}"
+      MYSQL_USER: "{{ kimai.container.mysql.config.db.username }}"
+      MYSQL_PASSWORD: "{{ kimai.container.mysql.config.db.password }}"
+      MYSQL_ROOT_PASSWORD: "{{ kimai.container.mysql.config.db.root_password }}"
+    container_volumes:
+      - "{{ kimai.container.mysql.storage.data }}:/var/lib/mysql"
+    container_networks:
+      - "{{ kimai.container.network }}"
+    container_network_aliases:
+      - database
+    container_user: "{{ kimai.user.name }}"

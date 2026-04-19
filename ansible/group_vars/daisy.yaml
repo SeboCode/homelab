@@ -32,6 +32,7 @@ pihole_global:
             192.168.1.4 karakeep.daisy.mikemarti.ch
             192.168.1.4 miniflux.daisy.mikemarti.ch
             192.168.1.4 mealie.daisy.mikemarti.ch
+            192.168.1.4 kimai.daisy.mikemarti.ch
       storage:
         config: "{{ pihole_global.data_storage.root }}/config"
         dnsmasq: "{{ pihole_global.data_storage.root }}/dnsmasq"
@@ -139,3 +140,27 @@ mealie_global:
       storage:
         data: "{{ mealie_global.data_storage.root }}/db-data"
 
+kimai_global:
+  user:
+    name: kimai-user
+  data_storage:
+    filesystem: ext4
+    root: "{{ data_root }}/kimai-storage"
+  container:
+    network: kimai_network
+    server:
+      image: docker.io/kimai/kimai2
+      tag: apache-2.55.0
+      config:
+        port: 21000
+      storage:
+        data: "{{ kimai_global.data_storage.root }}/data"
+    mysql:
+      image: docker.io/mysql
+      tag: 9.6.0
+      config:
+        db:
+          name: kimai_database
+          username: kimai_db_user
+      storage:
+        data: "{{ kimai_global.data_storage.root }}/db-data"

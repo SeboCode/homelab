@@ -15,6 +15,7 @@ Vagrant.configure("2") do |config|
     daisy.vm.network :forwarded_port, guest: 20600, host: 20600, id: "karakeep"
     daisy.vm.network :forwarded_port, guest: 20700, host: 20700, id: "miniflux"
     daisy.vm.network :forwarded_port, guest: 20900, host: 20900, id: "mealie"
+    daisy.vm.network :forwarded_port, guest: 21000, host: 21000, id: "kimai"
 
     daisy.vm.provider "libvirt" do |lv|
       lv.memory = 8192

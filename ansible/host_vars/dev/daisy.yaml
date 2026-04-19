@@ -87,3 +87,18 @@ mealie_env:
         db:
           password: mealie-db-password
 
+kimai_env:
+  user:
+    password: "123456"
+  container:
+    server:
+      config:
+        app_secret: change_this_to_something_unique
+        admin:
+          email: admin@example.com
+          password: admin123
+    mysql:
+      config:
+        db:
+          password: kimai-db-password
+          root_password: kimai-root-password

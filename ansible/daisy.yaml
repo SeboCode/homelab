@@ -20,5 +20,6 @@
     - service/karakeep
     - service/miniflux
     - service/mealie
+    - service/kimai
     # - dhcp # TODO once isp fixes the closed dns port issue
 
