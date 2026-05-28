@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 set -o errexit
-set -o nounset
 set -o pipefail
+set -o nounset
 
 dir=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
 require_command="${dir}/require-command.sh"
-ansible-playbook=$(${require_command} ansible-playbook)
+k3d=$(${require_command} k3d)
 
-${ansible-playbook} --ask-become-pass "$dir/../ansible/expose.yaml"
+${k3d} cluster delete --config "${dir}/../deploy/local/k3d/cluster.yaml"
 
