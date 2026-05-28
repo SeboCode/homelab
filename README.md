@@ -16,12 +16,12 @@ run on an Alpine/Debian Linux VM, provisioned using Vagrant.
 
 The project structure is inspired by the [golang-standards/project-layout](https://github.com/golang-standards/project-layout) convention:
 
-| Directory      | Description                                                                            |
-| :------------- | :------------------------------------------------------------------------------------- |
-| `ansible/`     | Ansible playbooks, roles, inventory and variables for provisioning the homelab nodes.  |
-| `configs/`     | Configuration file templates used during manual setup steps (e.g. sshd configuration). |
-| `deployments/` | Local development environment definitions (Vagrant VMs).                               |
-| `scripts/`     | Build, deploy and utility scripts invoked by `just` recipes.                           |
+| Directory  | Description                                                                                            |
+| :--------- | :----------------------------------------------------------------------------------------------------- |
+| `ansible/` | Ansible playbooks, roles, inventory and variables for provisioning the homelab nodes.                  |
+| `configs/` | Configuration file templates used during manual setup steps (e.g. sshd configuration).                 |
+| `deploy/`  | Development configurations including infrastructure for local testing (Vagrant VMs and k3d manifests). |
+| `scripts/` | Build, deploy and utility scripts invoked by `just` recipes.                                           |
 
 # Installation guide for Charon
 

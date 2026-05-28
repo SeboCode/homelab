@@ -10,7 +10,7 @@ dir=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
 
 case "$node" in
     charon|daisy)
-        cd "$dir/../deployments/local/$node"
+        cd "$dir/../deploy/local/vagrant/$node"
         vagrant ssh
         ;;
     *)

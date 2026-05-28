@@ -12,7 +12,7 @@ delete_vitual_device_volume() {
 node="${1:-}"
 
 dir=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
-cd "$dir/../deployments/local/$node"
+cd "$dir/../deploy/local/vagrant/$node"
 
 case "$node" in
     charon)
