@@ -2,9 +2,13 @@
 default:
     @just --list
 
-# Install Python and Ansible requirements
-init:
-    ./scripts/init.sh
+# Bootstrap all dependencies with mise
+bootstrap:
+    ./scripts/bootstrap.sh
+
+# Lock a dependency file ( mise | python | ruby )
+lock lock_target:
+    ./scripts/lock.sh {{ lock_target }}
 
 # Deploy to production node (charon | daisy)
 deploy-prod node:

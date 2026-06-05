@@ -1,0 +1,130 @@
+[tools]
+"core:python" = "3.14.5"
+"core:ruby" = "3.4.9"
+"github:jqlang/jq" = "jq-1.8.1"
+"github:sigstore/cosign" = "v3.0.6"
+"github:k3d-io/k3d" = "v5.8.3"
+"github:astral-sh/uv" = "0.11.18"
+"aqua:kubernetes/kubernetes/kubectl" = "v1.36.1"
+
+[settings]
+locked = true
+lockfile = true
+experimental = true # mise postinstall hook is experimental for now
+always_keep_download = true # mise removes the tarballs after install by default, but they are needed for attestation verification
+github.slsa = true # explicitly enable slsa for github endpoints
+github.github_attestations = true # explicitly enable attestation checking for github endpoints
+
+[env]
+MISE_DOWNLOADS_DIR = "{{ env.MISE_DATA_DIR }}/downloads"
+MISE_TASK_OUTPUTS = "{{ config_root }}/.direnv/mise-task-outputs"
+KUBECONFIG = "{{ config_root }}/.direnv/kubeconfig"
+BUNDLE_PATH = "{{ config_root }}/.direnv/ruby/bundle"
+VAGRANT_HOME = "{{ config_root }}/.direnv/vagrant"
+ANSIBLE_ROLES_PATH = "{{ config_root }}/.direnv/ansible-galaxy/roles"
+ANSIBLE_COLLECTIONS_PATH = "{{ config_root }}/.direnv/ansible-galaxy/collections"
+
+_.python.venv = { path = "{{ config_root }}/.direnv/venv", create = true }
+
+[tasks.verify-python]
+description = "Manually verify python attestation"
+run = """
+    set -euo pipefail
+
+    {{ config_root }}/scripts/mise-verify-github-attestation.sh \
+        "${MISE_DOWNLOADS_DIR}/python/$(mise current core:python)" \
+        "astral-sh/python-build-standalone"
+    touch "${MISE_TASK_OUTPUTS}/python-verified"
+"""
+sources = ["{{ exec(command='mise where core:python') }}"]
+outputs = ["{{ env.MISE_TASK_OUTPUTS }}/python-verified"]
+
+[tasks.verify-ruby]
+description = "Manually verify ruby attestation"
+run = """
+    set -euo pipefail
+
+    {{ config_root }}/scripts/mise-verify-github-attestation.sh \
+        "${MISE_DOWNLOADS_DIR}/ruby/$(mise current core:ruby)" \
+        "jdx/ruby"
+    touch "${MISE_TASK_OUTPUTS}/ruby-verified"
+"""
+sources = ["{{ exec(command='mise where core:ruby') }}"]
+outputs = ["{{ env.MISE_TASK_OUTPUTS }}/ruby-verified"]
+
+[tasks.verify-kubectl]
+description = "Manually verify kubectl signature"
+run = """
+    set -euo pipefail
+
+    version="$(mise current aqua:kubernetes/kubernetes/kubectl)"
+    base="https://dl.k8s.io/${version}/bin/linux/amd64"
+    {{ config_root }}/scripts/mise-verify-cosign.sh \
+        "$(mise where aqua:kubernetes/kubernetes/kubectl)/kubectl" \
+        "${base}/kubectl.sig" \
+        "${base}/kubectl.cert" \
+        "krel-staging@k8s-releng-prod.iam.gserviceaccount.com" \
+        "https://accounts.google.com"
+    touch "${MISE_TASK_OUTPUTS}/kubectl-verified"
+"""
+sources = ["{{ exec(command='mise where aqua:kubernetes/kubernetes/kubectl') }}"]
+outputs = ["{{ env.MISE_TASK_OUTPUTS }}/kubectl-verified"]
+
+[tasks.python-dep-install]
+description = "Install python dependencies"
+depends = ["verify-python"]
+run = """
+    set -euo pipefail
+
+    uv pip install -r {{ config_root }}/dependencies/python/pylock.toml
+    touch "${MISE_TASK_OUTPUTS}/python-dep-installed"
+"""
+sources = ["{{ config_root }}/dependencies/python/pylock.toml"]
+outputs = ["{{ env.MISE_TASK_OUTPUTS }}/python-dep-installed"]
+
+[tasks.ruby-dep-install]
+description = "Install ruby dependencies"
+depends = ["verify-ruby"]
+run = """
+    set -euo pipefail
+
+    export BUNDLE_DEPLOYMENT "true" # this disables the auto generation/updating of the lockfile when installing, which would defeat its purpose
+    bundle install --gemfile {{ config_root }}/dependencies/ruby/Gemfile
+    touch "${MISE_TASK_OUTPUTS}/ruby-dep-installed"
+"""
+sources = ["{{ config_root }}/dependencies/ruby/Gemfile.lock"]
+outputs = ["{{ env.MISE_TASK_OUTPUTS }}/ruby-dep-installed"]
+
+[tasks.ansible-galaxy-dep-install]
+description = "Install ansible-galaxy dependencies"
+depends = ["python-dep-install"]
+run = """
+    set -euo pipefail
+
+    ansible-galaxy install -r {{ config_root }}/dependencies/ansible/requirements.yaml
+    ansible-galaxy collection install -r {{ config_root }}/dependencies/ansible/requirements.yaml
+    touch "${MISE_TASK_OUTPUTS}/ansible-galaxy-dep-installed"
+"""
+sources = ["{{ config_root }}/dependencies/ansible/requirements.yml"]
+outputs = ["{{ env.MISE_TASK_OUTPUTS }}/ansible-galaxy-dep-installed"]
+
+
+[tasks.bootstrap]
+description = "Full bootstrap"
+depends = [
+    "verify-python",
+    "verify-ruby",
+    "verify-kubectl",
+    "python-dep-install",
+    "ruby-dep-install",
+    "ansible-galaxy-dep-install",
+]
+
+[hooks]
+postinstall = """
+    set -euo pipefail
+
+    mkdir -p "$MISE_TASK_OUTPUTS"
+    mise run bootstrap
+"""
+
