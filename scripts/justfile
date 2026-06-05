@@ -1,0 +1,19 @@
+# Bootstrap all dependencies with mise
+bootstrap:
+    ./bootstrap.sh
+
+# Lock a dependency file - target: mise | python | ruby
+lock target:
+    ./lock.sh {{ target }}
+
+# Deploy a fresh dev node and provision it - node: charon | daisy
+deploy:
+    ./deploy-dev.sh
+
+# Expose dev service to the local network
+expose:
+    ./expose-dev.sh
+
+mod cluster
+mod provision
+mod ssh
