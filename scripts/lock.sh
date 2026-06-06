@@ -11,7 +11,7 @@ require_command="${dir}/require-command.sh"
 
 case "$lock_target" in
     mise)
-        cd "${dir}/../"
+        cd "${dir}/../dependencies/mise/"
         mise=$(${require_command} mise)
         MISE_LOCKED=0 ${mise} lock 
         ;;
