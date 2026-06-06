@@ -16,22 +16,14 @@ github.slsa = true # explicitly enable slsa for github endpoints
 github.github_attestations = true # explicitly enable attestation checking for github endpoints
 
 [env]
-MISE_DOWNLOADS_DIR = "{{ env.MISE_DATA_DIR }}/downloads"
-MISE_TASK_OUTPUTS = "{{ config_root }}/.direnv/mise-task-outputs"
-KUBECONFIG = "{{ config_root }}/.direnv/kubeconfig"
-BUNDLE_PATH = "{{ config_root }}/.direnv/ruby/bundle"
-VAGRANT_HOME = "{{ config_root }}/.direnv/vagrant"
-ANSIBLE_ROLES_PATH = "{{ config_root }}/.direnv/ansible-galaxy/roles"
-ANSIBLE_COLLECTIONS_PATH = "{{ config_root }}/.direnv/ansible-galaxy/collections"
-
-_.python.venv = { path = "{{ config_root }}/.direnv/venv", create = true }
+_.python.venv = { path = "{{ config_root }}/../../.direnv/venv", create = true }
 
 [tasks.verify-python]
 description = "Manually verify python attestation"
 run = """
     set -euo pipefail
 
-    {{ config_root }}/scripts/mise-verify-github-attestation.sh \
+    {{ config_root }}/../../scripts/mise-verify-github-attestation.sh \
         "${MISE_DOWNLOADS_DIR}/python/$(mise current core:python)" \
         "astral-sh/python-build-standalone"
     touch "${MISE_TASK_OUTPUTS}/python-verified"
@@ -44,7 +36,7 @@ description = "Manually verify ruby attestation"
 run = """
     set -euo pipefail
 
-    {{ config_root }}/scripts/mise-verify-github-attestation.sh \
+    {{ config_root }}/../../scripts/mise-verify-github-attestation.sh \
         "${MISE_DOWNLOADS_DIR}/ruby/$(mise current core:ruby)" \
         "jdx/ruby"
     touch "${MISE_TASK_OUTPUTS}/ruby-verified"
@@ -59,7 +51,7 @@ run = """
 
     version="$(mise current aqua:kubernetes/kubernetes/kubectl)"
     base="https://dl.k8s.io/${version}/bin/linux/amd64"
-    {{ config_root }}/scripts/mise-verify-cosign.sh \
+    {{ config_root }}/../../scripts/mise-verify-cosign.sh \
         "$(mise where aqua:kubernetes/kubernetes/kubectl)/kubectl" \
         "${base}/kubectl.sig" \
         "${base}/kubectl.cert" \
@@ -76,10 +68,10 @@ depends = ["verify-python"]
 run = """
     set -euo pipefail
 
-    uv pip install -r {{ config_root }}/dependencies/python/pylock.toml
+    uv pip install -r {{ config_root }}/../../dependencies/python/pylock.toml
     touch "${MISE_TASK_OUTPUTS}/python-dep-installed"
 """
-sources = ["{{ config_root }}/dependencies/python/pylock.toml"]
+sources = ["{{ config_root }}/../../dependencies/python/pylock.toml"]
 outputs = ["{{ env.MISE_TASK_OUTPUTS }}/python-dep-installed"]
 
 [tasks.ruby-dep-install]
@@ -89,10 +81,10 @@ run = """
     set -euo pipefail
 
     export BUNDLE_DEPLOYMENT "true" # this disables the auto generation/updating of the lockfile when installing, which would defeat its purpose
-    bundle install --gemfile {{ config_root }}/dependencies/ruby/Gemfile
+    bundle install --gemfile {{ config_root }}/../../dependencies/ruby/Gemfile
     touch "${MISE_TASK_OUTPUTS}/ruby-dep-installed"
 """
-sources = ["{{ config_root }}/dependencies/ruby/Gemfile.lock"]
+sources = ["{{ config_root }}/../../dependencies/ruby/Gemfile.lock"]
 outputs = ["{{ env.MISE_TASK_OUTPUTS }}/ruby-dep-installed"]
 
 [tasks.ansible-galaxy-dep-install]
@@ -101,11 +93,11 @@ depends = ["python-dep-install"]
 run = """
     set -euo pipefail
 
-    ansible-galaxy install -r {{ config_root }}/dependencies/ansible/requirements.yaml
-    ansible-galaxy collection install -r {{ config_root }}/dependencies/ansible/requirements.yaml
+    ansible-galaxy install -r {{ config_root }}/../../dependencies/ansible/requirements.yaml
+    ansible-galaxy collection install -r {{ config_root }}/../../dependencies/ansible/requirements.yaml
     touch "${MISE_TASK_OUTPUTS}/ansible-galaxy-dep-installed"
 """
-sources = ["{{ config_root }}/dependencies/ansible/requirements.yml"]
+sources = ["{{ config_root }}/../../dependencies/ansible/requirements.yml"]
 outputs = ["{{ env.MISE_TASK_OUTPUTS }}/ansible-galaxy-dep-installed"]
 
 
