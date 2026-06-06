@@ -15,7 +15,7 @@ dir=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
 require_command="${dir}/require-command.sh"
 vagrant=$(${require_command} vagrant)
 virsh=$(${require_command} virsh)
-cd "$dir/../deploy/local/vagrant/$node"
+cd "$dir/../deploy/vagrant/$node"
 
 case "$node" in
     charon)

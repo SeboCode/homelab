@@ -12,7 +12,7 @@ vagrant=$(${require_command} vagrant)
 
 case "$node" in
     charon|daisy)
-        cd "$dir/../deploy/local/vagrant/$node"
+        cd "$dir/../deploy/vagrant/$node"
         ${vagrant} ssh
         ;;
     *)

@@ -13,5 +13,5 @@ cluster_info=$(${k3d} cluster list | ${grep} homelab-local-cluster 2>/dev/null |
 if [[ ! -z "${cluster_info}" ]]; then
     "${dir}/delete-cluster.sh"
 fi
-${k3d} cluster create --config "${dir}/../deploy/local/k3d/cluster.yaml"
+${k3d} cluster create --config "${dir}/../deploy/k3d/cluster.yaml"
 
