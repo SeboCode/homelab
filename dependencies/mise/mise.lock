@@ -156,6 +156,52 @@ url_api = "https://api.github.com/repos/k3d-io/k3d/releases/assets/229450076"
 url = "https://github.com/k3d-io/k3d/releases/download/v5.8.3/k3d-windows-amd64.exe"
 url_api = "https://api.github.com/repos/k3d-io/k3d/releases/assets/229450011"
 
+[[tools."github:mikefarah/yq"]]
+version = "4.53.2"
+backend = "github:mikefarah/yq"
+
+[tools."github:mikefarah/yq"."platforms.linux-arm64"]
+checksum = "sha256:c8180249ff9ff0577f4976c4481d0d0962d170d24ab390d325ef0be608df5706"
+url = "https://github.com/mikefarah/yq/releases/download/v4.53.2/yq_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/mikefarah/yq/releases/assets/398368435"
+provenance = "github-attestations"
+
+[tools."github:mikefarah/yq"."platforms.linux-arm64-musl"]
+checksum = "sha256:c8180249ff9ff0577f4976c4481d0d0962d170d24ab390d325ef0be608df5706"
+url = "https://github.com/mikefarah/yq/releases/download/v4.53.2/yq_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/mikefarah/yq/releases/assets/398368435"
+provenance = "github-attestations"
+
+[tools."github:mikefarah/yq"."platforms.linux-x64"]
+checksum = "sha256:44c3c6df6c58ef1460d98425954ca5e832926e0e8a1d75c5c8fd261691351510"
+url = "https://github.com/mikefarah/yq/releases/download/v4.53.2/yq_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/mikefarah/yq/releases/assets/398368443"
+provenance = "github-attestations"
+
+[tools."github:mikefarah/yq"."platforms.linux-x64-musl"]
+checksum = "sha256:44c3c6df6c58ef1460d98425954ca5e832926e0e8a1d75c5c8fd261691351510"
+url = "https://github.com/mikefarah/yq/releases/download/v4.53.2/yq_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/mikefarah/yq/releases/assets/398368443"
+provenance = "github-attestations"
+
+[tools."github:mikefarah/yq"."platforms.macos-arm64"]
+checksum = "sha256:f135c0c60edd5ded11bc418d12711c259795b17501112e843e93e7a3959a3d41"
+url = "https://github.com/mikefarah/yq/releases/download/v4.53.2/yq_darwin_arm64.tar.gz"
+url_api = "https://api.github.com/repos/mikefarah/yq/releases/assets/398368451"
+provenance = "github-attestations"
+
+[tools."github:mikefarah/yq"."platforms.macos-x64"]
+checksum = "sha256:48bc2dbb33f456efaf639e1e573b8e5a654701c2e92ef231e691c3971d5d4a5e"
+url = "https://github.com/mikefarah/yq/releases/download/v4.53.2/yq_darwin_amd64.tar.gz"
+url_api = "https://api.github.com/repos/mikefarah/yq/releases/assets/398368452"
+provenance = "github-attestations"
+
+[tools."github:mikefarah/yq"."platforms.windows-x64"]
+checksum = "sha256:63e24aac0a75b760a491002b4bbeb7078f5ec1a0c868ec60fa0f525abecd6037"
+url = "https://github.com/mikefarah/yq/releases/download/v4.53.2/yq_windows_amd64.zip"
+url_api = "https://api.github.com/repos/mikefarah/yq/releases/assets/398368401"
+provenance = "github-attestations"
+
 [[tools."github:sigstore/cosign"]]
 version = "3.0.6"
 backend = "github:sigstore/cosign"
