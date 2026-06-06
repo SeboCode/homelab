@@ -7,10 +7,10 @@ run on an Alpine/Debian Linux VM, provisioned using Vagrant.
 
 ## Dependencies
 
+- [mise](https://mise.jdx.dev/) - Used as a dependency management tool for utility application and third party dependency installation.
+- [direnv](https://direnv.net/) - Provides local environment variables for mise to install applications and dependencies
+  locally in this project instead of poluting the global system namespace.
 - [just](https://github.com/casey/just) - Used as the task runner for this project. All common operations are available as `just` recipes.
-- [direnv](https://direnv.net/) (optional) - Can be used to automatically set up a project-local Python virtual environment, Ansible
-  installation and install required Vagrant plugins as well as keeping Vagrant boxes project contained via the `.envrc` file. If not used,
-  a system-wide Ansible installation and Vagrant configuration works as well.
 
 ## Project Layout
 
@@ -21,7 +21,7 @@ The project structure is inspired by the [golang-standards/project-layout](https
 | `ansible/` | Ansible playbooks, roles, inventory and variables for provisioning the homelab nodes.                  |
 | `configs/` | Configuration file templates used during manual setup steps (e.g. sshd configuration).                 |
 | `deploy/`  | Development configurations including infrastructure for local testing (Vagrant VMs and k3d manifests). |
-| `scripts/` | Build, deploy and utility scripts invoked by `just` recipes.                                           |
+| `scripts/` | Build, deploy and utility scripts invoked by `just` recipes as well as `just` sub-recipes.             |
 
 # Installation guide for Charon
 
