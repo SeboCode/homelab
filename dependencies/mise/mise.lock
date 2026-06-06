@@ -195,6 +195,45 @@ checksum = "sha256:9b85a88ebff2d9dd30ff4984a6f61f2cedc232dd87d81fa7f2ff3c0ed96c2
 url = "https://github.com/sigstore/cosign/releases/download/v3.0.6/cosign-windows-amd64.exe"
 url_api = "https://api.github.com/repos/sigstore/cosign/releases/assets/390332008"
 
+[[tools."github:tilt-dev/tilt"]]
+version = "0.37.3"
+backend = "github:tilt-dev/tilt"
+
+[tools."github:tilt-dev/tilt"."platforms.linux-arm64"]
+checksum = "sha256:826f48198f368ef5edb684e9ae4c87ff76eca84c904f72b2376b29b93bffc019"
+url = "https://github.com/tilt-dev/tilt/releases/download/v0.37.3/tilt.0.37.3.linux.arm64.tar.gz"
+url_api = "https://api.github.com/repos/tilt-dev/tilt/releases/assets/409071130"
+
+[tools."github:tilt-dev/tilt"."platforms.linux-arm64-musl"]
+checksum = "sha256:826f48198f368ef5edb684e9ae4c87ff76eca84c904f72b2376b29b93bffc019"
+url = "https://github.com/tilt-dev/tilt/releases/download/v0.37.3/tilt.0.37.3.linux.arm64.tar.gz"
+url_api = "https://api.github.com/repos/tilt-dev/tilt/releases/assets/409071130"
+
+[tools."github:tilt-dev/tilt"."platforms.linux-x64"]
+checksum = "sha256:e90bc6cf70882bc7579d8174a27cab2de0284612ec7339e4b32f669cd5de4e5c"
+url = "https://github.com/tilt-dev/tilt/releases/download/v0.37.3/tilt.0.37.3.linux.x86_64.tar.gz"
+url_api = "https://api.github.com/repos/tilt-dev/tilt/releases/assets/409071128"
+
+[tools."github:tilt-dev/tilt"."platforms.linux-x64-musl"]
+checksum = "sha256:e90bc6cf70882bc7579d8174a27cab2de0284612ec7339e4b32f669cd5de4e5c"
+url = "https://github.com/tilt-dev/tilt/releases/download/v0.37.3/tilt.0.37.3.linux.x86_64.tar.gz"
+url_api = "https://api.github.com/repos/tilt-dev/tilt/releases/assets/409071128"
+
+[tools."github:tilt-dev/tilt"."platforms.macos-arm64"]
+checksum = "sha256:4d1f4e604aa5ca65a2df0d19c9e9b351cf9703be886f52fa5f3afd317d968ffd"
+url = "https://github.com/tilt-dev/tilt/releases/download/v0.37.3/tilt.0.37.3.mac.arm64.tar.gz"
+url_api = "https://api.github.com/repos/tilt-dev/tilt/releases/assets/409071155"
+
+[tools."github:tilt-dev/tilt"."platforms.macos-x64"]
+checksum = "sha256:c8e2b58fb7efdec9ae7e3fc4249b4f662dc6520eabe8efcac84b80856f20d31b"
+url = "https://github.com/tilt-dev/tilt/releases/download/v0.37.3/tilt.0.37.3.mac.x86_64.tar.gz"
+url_api = "https://api.github.com/repos/tilt-dev/tilt/releases/assets/409071150"
+
+[tools."github:tilt-dev/tilt"."platforms.windows-x64"]
+checksum = "sha256:9e6cf1696618397a43fc4c80627d42a1ef65937a863ac1a57aa8cf78e077409e"
+url = "https://github.com/tilt-dev/tilt/releases/download/v0.37.3/tilt.0.37.3.windows.x86_64.zip"
+url_api = "https://api.github.com/repos/tilt-dev/tilt/releases/assets/409071129"
+
 [[tools.python]]
 version = "3.14.5"
 backend = "core:python"
