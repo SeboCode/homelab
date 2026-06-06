@@ -8,5 +8,5 @@ dir=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
 require_command="${dir}/require-command.sh"
 ansible-playbook=$(${require_command} ansible-playbook)
 
-${ansible-playbook} --ask-become-pass "$dir/../ansible/expose.yaml"
+${ansible-playbook} --ask-become-pass "$dir/../deploy/ansible/expose.yaml"
 
