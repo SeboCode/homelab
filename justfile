@@ -11,8 +11,8 @@ lock target:
     ./scripts/lock.sh {{ target }}
 
 # Deploy a fresh dev node and provision it - node: charon | daisy
-deploy:
-    ./scripts/deploy-dev.sh
+deploy node:
+    ./scripts/deploy-dev.sh {{ node }}
 
 # Expose dev service to the local network
 expose:
