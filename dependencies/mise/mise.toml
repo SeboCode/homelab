@@ -2,7 +2,7 @@
 "core:python" = "3.14.5"
 "core:ruby" = "3.4.9"
 "github:jqlang/jq" = "jq-1.8.1"
-"github:mikefarah/yq" = "v4.53.2"
+"github:mikefarah/yq" = { version = "v4.53.2", rename_exe = "yq" }
 "github:sigstore/cosign" = "v3.0.6"
 "github:k3d-io/k3d" = "v5.8.3"
 "github:astral-sh/uv" = "0.11.18"
@@ -101,7 +101,6 @@ run = """
 """
 sources = ["{{ config_root }}/../../dependencies/ansible/requirements.yml"]
 outputs = ["{{ env.MISE_TASK_OUTPUTS }}/ansible-galaxy-dep-installed"]
-
 
 [tasks.bootstrap]
 description = "Full bootstrap"
