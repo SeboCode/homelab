@@ -1,5 +1,8 @@
 source "https://rubygems.org"
 gem "vagrant", "2.4.9"
-gem "vagrant-libvirt", "0.12.2"
-gem "vagrant-mutate", "1.2.0"
-gem "vagrant-reload", "0.0.1"
+
+group :plugins do
+  gem "vagrant-libvirt", "0.12.2"
+  gem "vagrant-mutate", "1.2.0"
+  gem "vagrant-reload", "0.0.1"
+end
