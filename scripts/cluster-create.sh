@@ -13,7 +13,7 @@ yq=$(${require_command} yq)
 cluster_name=$(yq ".metadata.name" "${dir}/../deploy/k3d/cluster.yaml")
 cluster_info=$(${k3d} cluster list | ${grep} "${cluster_name}" 2>/dev/null || true)
 if [[ ! -z "${cluster_info}" ]]; then
-    "${dir}/delete-cluster.sh"
+    "${dir}/cluster-delete.sh"
 fi
 ${k3d} cluster create --config "${dir}/../deploy/k3d/cluster.yaml"
 
