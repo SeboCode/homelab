@@ -10,3 +10,7 @@ create:
 delete:
     ./cluster-delete.sh
 
+# Execute tilt provisioning command on k3d development cluster
+provision tilt-command:
+    ./cluster-provision.sh {{ tilt-command }}
+

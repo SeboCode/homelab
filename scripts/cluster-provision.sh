@@ -4,15 +4,16 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-parameter="$1"
+tilt_command="$1"
 
 dir=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
 require_command="${dir}/require-command.sh"
 tilt=$(${require_command} tilt)
+yq=$(${require_command} yq)
 
-cluster_name="k3d-$(yq ".metadata.name" "${dir}/../deploy/k3d/cluster.yaml")"
+cluster_name="k3d-$(${yq} ".metadata.name" "${dir}/../deploy/k3d/cluster.yaml")"
 http_port=15000
-case "${parameter}" in
+case "${tilt_command}" in
     "up")
         ${tilt} up -f "${dir}/../deploy/tilt/Tiltfile.bzl" --stream --context "${cluster_name}" --port ${http_port}
         ;;
@@ -23,7 +24,7 @@ case "${parameter}" in
         ${tilt} ci -f "${dir}/../deploy/tilt/Tiltfile.bzl" --context "${cluster_name}" --port ${http_port}
         ;;
     *)
-        echo "Unknown parameter for tilt specified. Terminating..."
+        echo "Unknown command for tilt specified. Terminating..."
         ;;
 esac
 
