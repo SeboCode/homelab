@@ -19,6 +19,16 @@ github.slsa = true # explicitly enable slsa for github endpoints
 github.github_attestations = true # explicitly enable attestation checking for github endpoints
 
 [env]
+MISE_DOWNLOADS_DIR = "{{ env.MISE_DATA_DIR }}/downloads"
+MISE_TASK_OUTPUTS = "{{ config_root }}/../../.direnv/mise-task-outputs"
+BUNDLE_PATH = "{{ config_root }}/../../.direnv/ruby/bundle"
+BUNDLE_GEMFILE = "{{ config_root }}/../../dependencies/ruby/Gemfile"
+BUNDLE_BIN = "{{ config_root }}/../../.direnv/ruby/bin"
+VAGRANT_HOME = "{{ config_root }}/../../.direnv/vagrant.d"
+ANSIBLE_ROLES_PATH = "{{ config_root }}/../../.direnv/ansible-galaxy/roles"
+ANSIBLE_COLLECTIONS_PATH = "{{ config_root }}/../../.direnv/ansible-galaxy/collections"
+KUBECONFIG = "{{ config_root }}/../../.direnv/kubeconfig"
+_.path = [ "{{ env.BUNDLE_BIN }}" ]
 _.python.venv = { path = "{{ config_root }}/../../.direnv/venv", create = true }
 
 [tasks.verify-python]
