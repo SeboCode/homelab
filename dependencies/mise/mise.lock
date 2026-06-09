@@ -32,6 +32,52 @@ url = "https://dl.k8s.io/v1.36.1/bin/darwin/amd64/kubectl"
 checksum = "sha256:538f4229eee91a17b34724da7daade7687393d6988e33b723c6c306572c13900"
 url = "https://dl.k8s.io/v1.36.1/bin/windows/amd64/kubectl.exe"
 
+[[tools."github:FiloSottile/age"]]
+version = "1.3.1"
+backend = "github:FiloSottile/age"
+
+[tools."github:FiloSottile/age"."platforms.linux-arm64"]
+checksum = "sha256:c6878a324421b69e3e20b00ba17c04bc5c6dab0030cfe55bf8f68fa8d9e9093a"
+url = "https://github.com/FiloSottile/age/releases/download/v1.3.1/age-v1.3.1-linux-arm64.tar.gz"
+url_api = "https://api.github.com/repos/FiloSottile/age/releases/assets/333752668"
+provenance = "github-attestations"
+
+[tools."github:FiloSottile/age"."platforms.linux-arm64-musl"]
+checksum = "sha256:c6878a324421b69e3e20b00ba17c04bc5c6dab0030cfe55bf8f68fa8d9e9093a"
+url = "https://github.com/FiloSottile/age/releases/download/v1.3.1/age-v1.3.1-linux-arm64.tar.gz"
+url_api = "https://api.github.com/repos/FiloSottile/age/releases/assets/333752668"
+provenance = "github-attestations"
+
+[tools."github:FiloSottile/age"."platforms.linux-x64"]
+checksum = "sha256:bdc69c09cbdd6cf8b1f333d372a1f58247b3a33146406333e30c0f26e8f51377"
+url = "https://github.com/FiloSottile/age/releases/download/v1.3.1/age-v1.3.1-linux-amd64.tar.gz"
+url_api = "https://api.github.com/repos/FiloSottile/age/releases/assets/333752671"
+provenance = "github-attestations"
+
+[tools."github:FiloSottile/age"."platforms.linux-x64-musl"]
+checksum = "sha256:bdc69c09cbdd6cf8b1f333d372a1f58247b3a33146406333e30c0f26e8f51377"
+url = "https://github.com/FiloSottile/age/releases/download/v1.3.1/age-v1.3.1-linux-amd64.tar.gz"
+url_api = "https://api.github.com/repos/FiloSottile/age/releases/assets/333752671"
+provenance = "github-attestations"
+
+[tools."github:FiloSottile/age"."platforms.macos-arm64"]
+checksum = "sha256:01120ea2cbf0463d4c6bd767f99f3271bbed1cdc8a9aa718a76ba1fe4f01998b"
+url = "https://github.com/FiloSottile/age/releases/download/v1.3.1/age-v1.3.1-darwin-arm64.tar.gz"
+url_api = "https://api.github.com/repos/FiloSottile/age/releases/assets/333752669"
+provenance = "github-attestations"
+
+[tools."github:FiloSottile/age"."platforms.macos-x64"]
+checksum = "sha256:2b233301ad21ab7b1eabd9ae1198a164005fa4928fcdd745d47c39f8593209d7"
+url = "https://github.com/FiloSottile/age/releases/download/v1.3.1/age-v1.3.1-darwin-amd64.tar.gz"
+url_api = "https://api.github.com/repos/FiloSottile/age/releases/assets/343881260"
+provenance = "github-attestations"
+
+[tools."github:FiloSottile/age"."platforms.windows-x64"]
+checksum = "sha256:c56e8ce22f7e80cb85ad946cc82d198767b056366201d3e1a2b93d865be38154"
+url = "https://github.com/FiloSottile/age/releases/download/v1.3.1/age-v1.3.1-windows-amd64.zip"
+url_api = "https://api.github.com/repos/FiloSottile/age/releases/assets/333752673"
+provenance = "github-attestations"
+
 [[tools."github:astral-sh/uv"]]
 version = "0.11.18"
 backend = "github:astral-sh/uv"
@@ -77,6 +123,66 @@ checksum = "sha256:bf8e0021336b7c77bd80a078b612125f385b08f541437edaea8c8ca9e574d
 url = "https://github.com/astral-sh/uv/releases/download/0.11.18/uv-x86_64-pc-windows-msvc.zip"
 url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/435541781"
 provenance = "github-attestations"
+
+[[tools."github:getsops/sops"]]
+version = "3.13.1"
+backend = "github:getsops/sops"
+
+[tools."github:getsops/sops"."platforms.linux-arm64"]
+checksum = "sha256:19576fb1734dbf8fb77eda0cf0f3a2218f99bf4d33b814318e5e10d6babb9820"
+url = "https://github.com/getsops/sops/releases/download/v3.13.1/sops-v3.13.1.linux.arm64"
+url_api = "https://api.github.com/repos/getsops/sops/releases/assets/421868621"
+
+[tools."github:getsops/sops"."platforms.linux-arm64".provenance.slsa]
+url = "https://github.com/getsops/sops/releases/download/v3.13.1/sops-v3.13.1.intoto.jsonl"
+
+[tools."github:getsops/sops"."platforms.linux-arm64-musl"]
+checksum = "sha256:19576fb1734dbf8fb77eda0cf0f3a2218f99bf4d33b814318e5e10d6babb9820"
+url = "https://github.com/getsops/sops/releases/download/v3.13.1/sops-v3.13.1.linux.arm64"
+url_api = "https://api.github.com/repos/getsops/sops/releases/assets/421868621"
+
+[tools."github:getsops/sops"."platforms.linux-arm64-musl".provenance.slsa]
+url = "https://github.com/getsops/sops/releases/download/v3.13.1/sops-v3.13.1.intoto.jsonl"
+
+[tools."github:getsops/sops"."platforms.linux-x64"]
+checksum = "sha256:620a9d7e3352ababeca6908cea24a6e8b14ce89a448ddbd3f94f1ef3398f470a"
+url = "https://github.com/getsops/sops/releases/download/v3.13.1/sops-v3.13.1.linux.amd64"
+url_api = "https://api.github.com/repos/getsops/sops/releases/assets/421868619"
+
+[tools."github:getsops/sops"."platforms.linux-x64".provenance.slsa]
+url = "https://github.com/getsops/sops/releases/download/v3.13.1/sops-v3.13.1.intoto.jsonl"
+
+[tools."github:getsops/sops"."platforms.linux-x64-musl"]
+checksum = "sha256:620a9d7e3352ababeca6908cea24a6e8b14ce89a448ddbd3f94f1ef3398f470a"
+url = "https://github.com/getsops/sops/releases/download/v3.13.1/sops-v3.13.1.linux.amd64"
+url_api = "https://api.github.com/repos/getsops/sops/releases/assets/421868619"
+
+[tools."github:getsops/sops"."platforms.linux-x64-musl".provenance.slsa]
+url = "https://github.com/getsops/sops/releases/download/v3.13.1/sops-v3.13.1.intoto.jsonl"
+
+[tools."github:getsops/sops"."platforms.macos-arm64"]
+checksum = "sha256:a2c0dd37eb031068af6ef213b78cfa67b7f1afd76c2e5cc404257f42bbc8367d"
+url = "https://github.com/getsops/sops/releases/download/v3.13.1/sops-v3.13.1.darwin.arm64"
+url_api = "https://api.github.com/repos/getsops/sops/releases/assets/421868635"
+
+[tools."github:getsops/sops"."platforms.macos-arm64".provenance.slsa]
+url = "https://github.com/getsops/sops/releases/download/v3.13.1/sops-v3.13.1.intoto.jsonl"
+
+[tools."github:getsops/sops"."platforms.macos-x64"]
+checksum = "sha256:dad79d1b1dea767ca38ffaa50e10330a3e807dd13c853ef9c880567acef4f1ef"
+url = "https://github.com/getsops/sops/releases/download/v3.13.1/sops-v3.13.1.darwin.amd64"
+url_api = "https://api.github.com/repos/getsops/sops/releases/assets/421868620"
+
+[tools."github:getsops/sops"."platforms.macos-x64".provenance.slsa]
+url = "https://github.com/getsops/sops/releases/download/v3.13.1/sops-v3.13.1.intoto.jsonl"
+
+[tools."github:getsops/sops"."platforms.windows-x64"]
+checksum = "sha256:4654e53fff6d0a1842facd3a0ed5a66a8ab6164004b0ad4ca2d5e2b1c5473b65"
+url = "https://github.com/getsops/sops/releases/download/v3.13.1/sops-v3.13.1.amd64.exe"
+url_api = "https://api.github.com/repos/getsops/sops/releases/assets/421868622"
+
+[tools."github:getsops/sops"."platforms.windows-x64".provenance.slsa]
+url = "https://github.com/getsops/sops/releases/download/v3.13.1/sops-v3.13.1.intoto.jsonl"
 
 [[tools."github:jqlang/jq"]]
 version = "jq-1.8.1"
