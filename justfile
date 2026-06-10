@@ -20,5 +20,6 @@ expose:
 
 mod cluster "./scripts/cluster.just"
 mod provision "./scripts/provision.just"
+mod encrypted "./scripts/encrypted.just"
 mod ssh "./scripts/ssh.just"
 
