@@ -37,6 +37,6 @@ trap cleanup TERM
 
 ${ansible-playbook} "$dir/../deploy/ansible/$node.yaml" \
     --ask-vault-pass \
-    --inventory="$dir/../deploy/ansible/inventory/$node.ini" \
-    --extra-vars="@$dir/../deploy/ansible/host_vars/prod/shared-secrets.yaml" \
-    --extra-vars="@$dir/../deploy/ansible/host_vars/prod/$node.yaml"
+    --inventory="$dir/../deploy/ansible/inventory/$node.enc.ini" \
+    --extra-vars="@$dir/../deploy/ansible/host_vars/prod/shared-secrets.enc.yaml" \
+    --extra-vars="@$dir/../deploy/ansible/host_vars/prod/$node.enc.yaml"

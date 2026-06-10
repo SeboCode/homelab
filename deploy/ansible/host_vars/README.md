@@ -7,5 +7,5 @@ that can be avoided this way is minimal, the complexity introduced into the setu
 The current structure is as follows:
 | Filename | Description |
 | :------- | :---------- |
-| <env>/shared-secrets.yaml | Secrets used during the setup of <env> environment for all nodes (e.g. DNS write token for the provided domain). |
-| <env>/<node>.yaml | <env> variables (including secrets) for node <node>. |
+| <env>/shared-secrets.enc.yaml | Secrets used during the setup of <env> environment for all nodes (e.g. DNS write token for the provided domain). |
+| <env>/<node>(.enc).yaml | <env> variables (including secrets) for node <node>. |
