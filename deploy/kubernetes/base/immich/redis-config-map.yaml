@@ -1,0 +1,13 @@
+---
+# redis.conf enabling AOF — this is what actually makes the queue survive restarts.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-config-map
+  namespace: immich
+data:
+  redis.conf: |
+    appendonly yes
+    appendfsync everysec
+    dir /data
+

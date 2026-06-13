@@ -1,0 +1,13 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: machine-learning
+  namespace: immich
+spec:
+  selector:
+    app: machine-learning
+  ports:
+    - port: 3003
+      targetPort: 3003
+
