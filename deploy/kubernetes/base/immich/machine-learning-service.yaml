@@ -2,7 +2,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: machine-learning
+  # The default immich server configuration expects the ml container to be available at
+  # http://immich-machine-learning:3003. As such, a deviation from the default service
+  # name is neccessary to avoid explicitly configuring it in the admin ui.
+  name: immich-machine-learning
   namespace: immich
 spec:
   selector:

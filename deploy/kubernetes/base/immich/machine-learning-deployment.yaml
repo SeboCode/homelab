@@ -17,11 +17,6 @@ spec:
       containers:
         - name: machine-learning
           image: ghcr.io/immich-app/immich-machine-learning:v2.4.1
-          envFrom:
-            - configMapRef:
-                name: config-map
-            - secretRef:
-                name: secret
           ports:
             - containerPort: 3003
           volumeMounts:

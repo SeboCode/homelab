@@ -5,8 +5,6 @@ metadata:
   name: config-map
   namespace: immich
 data:
-  DB_HOSTNAME: database
-  REDIS_HOSTNAME: redis
-  DB_STORAGE_TYPE: HDD
-  IMMICH_MACHINE_LEARNING_URL: http://machine-learning:3003
+  dbDatabaseName: immich_database
+  dbUsername: immich_pg_user
 

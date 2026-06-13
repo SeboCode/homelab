@@ -19,21 +19,21 @@ spec:
         - name: postgres
           image: ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0@sha256:bcf63357191b76a916ae5eb93464d65c07511da41e3bf7a8416db519b40b1c23
           env:
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: config-map
+                  key: dbDatabaseName
             - name: POSTGRES_USER
               valueFrom:
-                secretKeyRef:
-                  name: secret
-                  key: POSTGRES_USER
+                configMapKeyRef:
+                  name: config-map
+                  key: dbUsername
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: secret
-                  key: POSTGRES_PASSWORD
-            - name: POSTGRES_DB
-              valueFrom:
-                secretKeyRef:
-                  name: secret
-                  key: POSTGRES_DB
+                  key: dbPassword
             - name: POSTGRES_INITDB_ARGS
               value: "--data-checksums"
             - name: DB_STORAGE_TYPE
