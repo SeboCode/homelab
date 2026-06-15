@@ -4,15 +4,19 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - config-map.yaml
+  - server-netpol.yaml
   - server-deployment.yaml
   - server-service.yaml
   - server-pvc.yaml
+  - redis-netpol.yaml
   - redis-config-map.yaml
   - redis-stateful-set.yaml
   - redis-service.yaml
+  - machine-learning-netpol.yaml
   - machine-learning-deployment.yaml
   - machine-learning-service.yaml
   - machine-learning-pvc.yaml
+  - database-netpol.yaml
   - database-stateful-set.yaml
   - database-service.yaml
 

@@ -1,0 +1,26 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: server-netpol-ingress
+  namespace: immich
+spec:
+  podSelector:
+    matchLabels:
+      app: server
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              # TODO
+              kubernetes.io/metadata.name: traefik
+          podSelector:
+            matchLabels:
+              # TODO
+              app.kubernetes.io/name: traefik
+      ports:
+        - protocol: TCP
+          port: 2283
+

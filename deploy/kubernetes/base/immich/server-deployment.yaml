@@ -13,6 +13,9 @@ spec:
     metadata:
       labels:
         app: server
+        connectsToRedis: "true"
+        connectsToDatabase: "true"
+        connectsToMachineLearning: "true"
     spec:
       containers:
         - name: server

@@ -1,0 +1,41 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: machine-learning-netpol-egress
+  namespace: immich
+spec:
+  podSelector:
+    matchLabels:
+      connectsToMachineLearning: "true"
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: machine-learning
+      ports:
+        - protocol: TCP
+          port: 3003
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: machine-learning-netpol-ingress
+  namespace: immich
+spec:
+  podSelector:
+    matchLabels:
+      app: machine-learning
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              connectsToMachineLearning: "true"
+      ports:
+        - protocol: TCP
+          port: 3003
+
