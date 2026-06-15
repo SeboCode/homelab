@@ -3,7 +3,6 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: machine-learning-netpol-egress
-  namespace: immich
 spec:
   podSelector:
     matchLabels:
@@ -23,7 +22,6 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: machine-learning-netpol-ingress
-  namespace: immich
 spec:
   podSelector:
     matchLabels:

@@ -3,7 +3,6 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: redis
-  namespace: immich
 spec:
   serviceName: redis-headless
   replicas: 1

@@ -6,7 +6,6 @@ metadata:
   # http://immich-machine-learning:3003. As such, a deviation from the default service
   # name is neccessary to avoid explicitly configuring it in the admin ui.
   name: immich-machine-learning
-  namespace: immich
 spec:
   selector:
     app: machine-learning
