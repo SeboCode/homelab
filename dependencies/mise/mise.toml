@@ -16,7 +16,10 @@
     bin = "sops",
 }
 "github:FiloSottile/age" = "v1.3.1"
+"github:helmfile/helmfile" = "v1.5.4"
+"github:databus23/helm-diff" = "v3.15.9"
 "aqua:kubernetes/kubernetes/kubectl" = "v1.36.1"
+"aqua:helm/helm" = "v4.2.1"
 
 [settings]
 locked = true
@@ -36,6 +39,7 @@ VAGRANT_HOME = "{{ config_root }}/../../.direnv/vagrant.d"
 ANSIBLE_ROLES_PATH = "{{ config_root }}/../../.direnv/ansible-galaxy/roles"
 ANSIBLE_COLLECTIONS_PATH = "{{ config_root }}/../../.direnv/ansible-galaxy/collections"
 KUBECONFIG = "{{ config_root }}/../../.direnv/kubeconfig"
+HELM_PLUGINS = "{{ config_root }}/../../.direnv/helm/plugin"
 _.path = [ "{{ env.BUNDLE_BIN }}" ]
 _.python.venv = { path = "{{ config_root }}/../../.direnv/venv", create = true }
 
@@ -83,6 +87,29 @@ run = """
 sources = ["{{ exec(command='mise where aqua:kubernetes/kubernetes/kubectl') }}"]
 outputs = ["{{ env.MISE_TASK_OUTPUTS }}/kubectl-verified"]
 
+[tasks.verify-helm]
+description = "Manually verify helm signature"
+run = """
+    set -euo pipefail
+
+    version="$(mise current aqua:helm/helm)"
+    hash_file_url="https://get.helm.sh/helm-${version}-linux-amd64.tar.gz.sha256"
+    gpg_key_url="https://keybase.io/r6by/pgp_keys.asc"
+    tarball_dir="${MISE_DOWNLOADS_DIR}/aqua-helm-helm/$(mise current aqua:helm/helm)"
+    signature_url_base="https://github.com/helm/helm/releases/download/${version}"
+    {{ config_root }}/../../scripts/mise-verify-hash.sh \
+        "sha256sum" \
+        "${tarball_dir}" \
+        "${hash_file_url}"
+    {{ config_root }}/../../scripts/mise-verify-gpg.sh \
+        "${tarball_dir}" \
+        "${gpg_key_url}" \
+        "${signature_url_base}"
+    touch "${MISE_TASK_OUTPUTS}/helm-verified"
+"""
+sources = ["{{ exec(command='mise where aqua:helm/helm') }}"]
+outputs = ["{{ env.MISE_TASK_OUTPUTS }}/helm-verified"]
+
 [tasks.python-dep-install]
 description = "Install python dependencies"
 depends = ["verify-python"]
@@ -121,15 +148,30 @@ run = """
 sources = ["{{ config_root }}/../../dependencies/ansible/requirements.yml"]
 outputs = ["{{ env.MISE_TASK_OUTPUTS }}/ansible-galaxy-dep-installed"]
 
+[tasks.helm-plugin-symlink]
+description = "Symlink installed helm plugins to the helm plugins directory"
+depends = ["verify-helm"]
+run = """
+    set -euo pipefail
+
+    mkdir -p "$HELM_PLUGINS"
+    ln -sfn "$(mise where github:databus23/helm-diff)" "$HELM_PLUGINS/helm-diff"
+    touch "${MISE_TASK_OUTPUTS}/helm-plugin-symlinked"
+"""
+sources = ["{{ config_root }}/mise.toml"] # Plugins are installed via mise but need to be symlinked for helm to find them.
+outputs = ["{{ env.MISE_TASK_OUTPUTS }}/helm-plugin-symlinked"]
+
 [tasks.bootstrap]
 description = "Full bootstrap"
 depends = [
     "verify-python",
     "verify-ruby",
     "verify-kubectl",
+    "verify-helm",
     "python-dep-install",
     "ruby-dep-install",
     "ansible-galaxy-dep-install",
+    "helm-plugin-symlink",
 ]
 
 [hooks]
