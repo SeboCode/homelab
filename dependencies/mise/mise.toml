@@ -40,6 +40,13 @@ ANSIBLE_ROLES_PATH = "{{ config_root }}/../../.direnv/ansible-galaxy/roles"
 ANSIBLE_COLLECTIONS_PATH = "{{ config_root }}/../../.direnv/ansible-galaxy/collections"
 KUBECONFIG = "{{ config_root }}/../../.direnv/kubeconfig"
 HELM_PLUGINS = "{{ config_root }}/../../.direnv/helm/plugin"
+HELM_CACHE_HOME="{{ config_root }}/../../.direnv/helm/cache"
+HELM_CONFIG_HOME="{{ config_root }}/../../.direnv/helm/config"
+HELM_CONTENT_CACHE="{{ env.HELM_CACHE_HOME }}/content"
+HELM_DATA_HOME="{{ config_root }}/../../.direnv/helm/data"
+HELM_REGISTRY_CONFIG="{{ env.HELM_CONFIG_HOME }}/registry/config.json"
+HELM_REPOSITORY_CACHE="{{ env.HELM_CACHE_HOME }}/repository"
+HELM_REPOSITORY_CONFIG="{{ env.HELM_CONFIG_HOME }}/repositories.yaml"
 _.path = [ "{{ env.BUNDLE_BIN }}" ]
 _.python.venv = { path = "{{ config_root }}/../../.direnv/venv", create = true }
 
