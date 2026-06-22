@@ -12,5 +12,5 @@ def require_tool(tool):
 require_tool("kubectl")
 require_tool("kustomize")
 
-k8s_yaml(kustomize("../kubernetes/overlays/dev/"))
+k8s_yaml(kustomize("../kubernetes/apps/overlays/dev/"))
 
