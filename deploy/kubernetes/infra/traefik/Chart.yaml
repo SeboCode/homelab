@@ -1,0 +1,6 @@
+---
+apiVersion: v2
+name: traefik-wrapper
+version: 41.0.0 # Same as digest pinned oci chart; keep in sync!
+type: application
+
