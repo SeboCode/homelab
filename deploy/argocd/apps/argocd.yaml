@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: https://github.com/SeboCode/homelab.git
     targetRevision: master
-    path: deploy/argocd/bootstrap
+    path: deploy/argocd/bootstrap/argocd
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
