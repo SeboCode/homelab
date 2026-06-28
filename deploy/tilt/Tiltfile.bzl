@@ -13,7 +13,7 @@ require_tool("kubectl")
 require_tool("kustomize")
 require_tool("helm")
 
-k8s_yaml(helm("../kubernetes/infra/cert-manager/"))
-k8s_yaml(helm("../kubernetes/infra/traefik/"))
-k8s_yaml(kustomize("../kubernetes/apps/overlays/dev/"))
+k8s_yaml(helm("../kubernetes/apps/cert-manager/"))
+k8s_yaml(helm("../kubernetes/apps/traefik/"))
+k8s_yaml(kustomize("../kubernetes/apps/immich/overlays/dev/"))
 
