@@ -16,8 +16,6 @@
     bin = "sops",
 }
 "github:FiloSottile/age" = "v1.3.1"
-"github:helmfile/helmfile" = "v1.5.4"
-"github:databus23/helm-diff" = "v3.15.9"
 "aqua:kubernetes/kubernetes/kubectl" = "v1.36.1"
 "aqua:helm/helm" = "v4.2.1"
 
@@ -162,7 +160,8 @@ run = """
     set -euo pipefail
 
     mkdir -p "$HELM_PLUGINS"
-    ln -sfn "$(mise where github:databus23/helm-diff)" "$HELM_PLUGINS/helm-diff"
+    # Preform symlinking of plugins
+    # ln -sfn "$(mise where github:databus23/helm-diff)" "$HELM_PLUGINS/helm-diff"
     touch "${MISE_TASK_OUTPUTS}/helm-plugin-symlinked"
 """
 sources = ["{{ config_root }}/mise.toml"] # Plugins are installed via mise but need to be symlinked for helm to find them.

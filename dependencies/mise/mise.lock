@@ -156,45 +156,6 @@ url = "https://github.com/astral-sh/uv/releases/download/0.11.18/uv-x86_64-pc-wi
 url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/435541781"
 provenance = "github-attestations"
 
-[[tools."github:databus23/helm-diff"]]
-version = "3.15.9"
-backend = "github:databus23/helm-diff"
-
-[tools."github:databus23/helm-diff"."platforms.linux-arm64"]
-checksum = "sha256:928f863eca0e4f253876b33c888276916dc684531cb8aae7fb54cc35963c9921"
-url = "https://github.com/databus23/helm-diff/releases/download/v3.15.9/helm-diff-linux-arm64.tgz"
-url_api = "https://api.github.com/repos/databus23/helm-diff/releases/assets/448185863"
-
-[tools."github:databus23/helm-diff"."platforms.linux-arm64-musl"]
-checksum = "sha256:928f863eca0e4f253876b33c888276916dc684531cb8aae7fb54cc35963c9921"
-url = "https://github.com/databus23/helm-diff/releases/download/v3.15.9/helm-diff-linux-arm64.tgz"
-url_api = "https://api.github.com/repos/databus23/helm-diff/releases/assets/448185863"
-
-[tools."github:databus23/helm-diff"."platforms.linux-x64"]
-checksum = "sha256:53ed78c2f949cd49cec042633a47260ab0ba5cb399345921c010b88515db5b6d"
-url = "https://github.com/databus23/helm-diff/releases/download/v3.15.9/helm-diff-linux-amd64.tgz"
-url_api = "https://api.github.com/repos/databus23/helm-diff/releases/assets/448185838"
-
-[tools."github:databus23/helm-diff"."platforms.linux-x64-musl"]
-checksum = "sha256:53ed78c2f949cd49cec042633a47260ab0ba5cb399345921c010b88515db5b6d"
-url = "https://github.com/databus23/helm-diff/releases/download/v3.15.9/helm-diff-linux-amd64.tgz"
-url_api = "https://api.github.com/repos/databus23/helm-diff/releases/assets/448185838"
-
-[tools."github:databus23/helm-diff"."platforms.macos-arm64"]
-checksum = "sha256:76aafc5ab76410c3245d2e2d8f27d23b02d2235b9530af5ef1a7614f880d67b5"
-url = "https://github.com/databus23/helm-diff/releases/download/v3.15.9/helm-diff-macos-arm64.tgz"
-url_api = "https://api.github.com/repos/databus23/helm-diff/releases/assets/448185796"
-
-[tools."github:databus23/helm-diff"."platforms.macos-x64"]
-checksum = "sha256:f6347e009cbcf9f38eeb2d45a91a3baf70311e900ea087a86b76b2a62650b84e"
-url = "https://github.com/databus23/helm-diff/releases/download/v3.15.9/helm-diff-macos-amd64.tgz"
-url_api = "https://api.github.com/repos/databus23/helm-diff/releases/assets/448185827"
-
-[tools."github:databus23/helm-diff"."platforms.windows-x64"]
-checksum = "sha256:6e0bf2865350f63ea9ec2c9664f13eb52a35344467b0efde743ded1df649f2df"
-url = "https://github.com/databus23/helm-diff/releases/download/v3.15.9/helm-diff-windows-amd64.tgz"
-url_api = "https://api.github.com/repos/databus23/helm-diff/releases/assets/448185831"
-
 [[tools."github:getsops/sops"]]
 version = "3.13.1"
 backend = "github:getsops/sops"
@@ -254,45 +215,6 @@ url_api = "https://api.github.com/repos/getsops/sops/releases/assets/421868622"
 
 [tools."github:getsops/sops"."platforms.windows-x64".provenance.slsa]
 url = "https://github.com/getsops/sops/releases/download/v3.13.1/sops-v3.13.1.intoto.jsonl"
-
-[[tools."github:helmfile/helmfile"]]
-version = "1.5.4"
-backend = "github:helmfile/helmfile"
-
-[tools."github:helmfile/helmfile"."platforms.linux-arm64"]
-checksum = "sha256:085c045600541046ebf2bb4cd127660cf2c9a17331d3bd0f0d0d7872f9817c01"
-url = "https://github.com/helmfile/helmfile/releases/download/v1.5.4/helmfile_1.5.4_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/448700038"
-
-[tools."github:helmfile/helmfile"."platforms.linux-arm64-musl"]
-checksum = "sha256:085c045600541046ebf2bb4cd127660cf2c9a17331d3bd0f0d0d7872f9817c01"
-url = "https://github.com/helmfile/helmfile/releases/download/v1.5.4/helmfile_1.5.4_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/448700038"
-
-[tools."github:helmfile/helmfile"."platforms.linux-x64"]
-checksum = "sha256:3ecc325536a79253b39c65630cbf7fd8329134648263fe50b494b58fe597f37f"
-url = "https://github.com/helmfile/helmfile/releases/download/v1.5.4/helmfile_1.5.4_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/448700044"
-
-[tools."github:helmfile/helmfile"."platforms.linux-x64-musl"]
-checksum = "sha256:3ecc325536a79253b39c65630cbf7fd8329134648263fe50b494b58fe597f37f"
-url = "https://github.com/helmfile/helmfile/releases/download/v1.5.4/helmfile_1.5.4_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/448700044"
-
-[tools."github:helmfile/helmfile"."platforms.macos-arm64"]
-checksum = "sha256:22a5941e986feb7a11cfb61b650a4884e52752a3bf2532ecb9cab36dfe86b2aa"
-url = "https://github.com/helmfile/helmfile/releases/download/v1.5.4/helmfile_1.5.4_darwin_arm64.tar.gz"
-url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/448700053"
-
-[tools."github:helmfile/helmfile"."platforms.macos-x64"]
-checksum = "sha256:269ddb953ff773c946f94665d0c959a34e8ee34c2d1bc07893e1b967944d176c"
-url = "https://github.com/helmfile/helmfile/releases/download/v1.5.4/helmfile_1.5.4_darwin_amd64.tar.gz"
-url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/448700051"
-
-[tools."github:helmfile/helmfile"."platforms.windows-x64"]
-checksum = "sha256:ee2dcbd8f4659eae8a6858113891fb279848e016402ddbfedf9c07af113d4b47"
-url = "https://github.com/helmfile/helmfile/releases/download/v1.5.4/helmfile_1.5.4_windows_amd64.tar.gz"
-url_api = "https://api.github.com/repos/helmfile/helmfile/releases/assets/448700007"
 
 [[tools."github:jqlang/jq"]]
 version = "jq-1.8.1"
