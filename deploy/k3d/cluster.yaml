@@ -7,4 +7,11 @@ metadata:
 servers: 1
 agents: 1
 image: rancher/k3s:v1.36.1-k3s1 # This pins the k3s image and kubernetes version used in local development
+ports:
+  - port: 80:80
+    nodeFilters:
+      - loadbalancer
+  - port: 443:443
+    nodeFilters:
+      - loadbalancer
 
