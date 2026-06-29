@@ -1,4 +1,7 @@
 ---
+namespace: &ns traefik
+traefik:
+  namespaceOverride: *ns
 ports:
   web:
     redirectTo:
