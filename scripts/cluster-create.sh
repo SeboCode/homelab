@@ -15,5 +15,7 @@ cluster_info=$(${k3d} cluster list | ${grep} "${cluster_name}" 2>/dev/null || tr
 if [[ ! -z "${cluster_info}" ]]; then
     "${dir}/cluster-delete.sh"
 fi
-${k3d} cluster create --config "${dir}/../deploy/k3d/cluster.yaml"
+${k3d} cluster create \
+    --config "${dir}/../deploy/k3d/cluster.yaml" \
+    --volume "${dir}/../deploy/k3s/config.yaml:/etc/rancher/k3s/config.yaml@server:*"
 
