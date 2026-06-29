@@ -1,2 +1,6 @@
 ---
+ports:
+  web:
+    redirectTo:
+      port: websecure
 
