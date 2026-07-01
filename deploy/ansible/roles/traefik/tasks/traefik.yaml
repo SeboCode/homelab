@@ -42,7 +42,7 @@
     container_image: "{{ traefik.container.server.image }}"
     container_image_tag: "{{ traefik.container.server.tag }}"
     container_env:
-      INFOMANIAK_ACCESS_TOKEN: "{{ infomaniak_dns_api_token }}"
+      DO_AUTH_TOKEN: "{{ digitalocean_dns_api_token }}"
     container_volumes:
       - "{{ traefik.container.server.storage.config }}/acme.json:/etc/traefik/acme.json:rw"
       - "{{ traefik.container.server.storage.config }}/traefik.yaml:/etc/traefik/traefik.yaml:ro" # This is a default location which traefik searches for a static configuration file.

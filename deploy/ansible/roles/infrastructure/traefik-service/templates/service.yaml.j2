@@ -6,7 +6,7 @@ http:
       rule: "Host(`{{ service_name }}.{{ domain }}`)"
       service: {{ service_name }}-service
       tls:
-        certresolver: infomaniak
+        certresolver: digitalocean
   services:
     {{ service_name }}-service:
       loadBalancer:

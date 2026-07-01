@@ -6,7 +6,7 @@ http:
       rule: "Host(`traefik.{{ domain }}`)"
       service: api@internal
       tls:
-        certresolver: infomaniak
+        certresolver: digitalocean
       middlewares:
         - auth
   middlewares:
