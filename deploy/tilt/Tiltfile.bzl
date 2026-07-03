@@ -13,7 +13,16 @@ require_tool("kubectl")
 require_tool("kustomize")
 require_tool("helm")
 
-#k8s_yaml(helm("../kubernetes/apps/cert-manager/"))
+k8s_yaml(
+    helm(
+        "../kubernetes/apps/cert-manager/",
+        values = [
+            "../kubernetes/apps/cert-manager/values.yaml",
+            "../kubernetes/apps/cert-manager/values.dev.yaml",
+            "../kubernetes/apps/cert-manager/values.dev.enc.yaml",
+        ],
+    )
+)
 k8s_yaml(
     helm(
         "../kubernetes/apps/traefik/",

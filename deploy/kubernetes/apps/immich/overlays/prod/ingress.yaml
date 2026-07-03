@@ -3,9 +3,17 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ingress
+  annotations:
+    cert-manager.io/cluster-issuer: infomaniak-dns-letsencrypt-issuer
+    cert-manager.io/private-key-algorithm: ECDSA
+    cert-manager.io/private-key-size: "256"
 spec:
+  tls:
+    - hosts:
+        - immich.homelab.mikemarti.ch
+      secretName: tls-secret
   rules:
-    - host: immich.charon.mikemarti.ch
+    - host: immich.homelab.mikemarti.ch
       http:
         paths:
           - path: /

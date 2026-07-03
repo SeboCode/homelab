@@ -1,9 +1,8 @@
 ---
-namespace: &ns traefik
+namespace: &ns traefik # Only used in the custom namespace template manifest
 traefik:
   namespaceOverride: *ns
-ports:
-  web:
-    redirectTo:
-      port: websecure
+  additionalArguments:
+    - "--entryPoints.web.http.redirections.entryPoint.to=websecure"
+    - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
 
