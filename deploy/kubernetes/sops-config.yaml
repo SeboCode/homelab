@@ -1,12 +1,16 @@
 ---
 keys:
+  - &dev_key age1cek8pae0a8mvptlwcfnhahkaqlyu7u8stg48uncexvf24trg9pgqs5pehk
   - &prod_key age1wxuxlngq2cf4jsxfw5v2cwd0p8jxwqkjxvy0vhsmg9wuktey0vcs7q79zx
 
 creation_rules:
-  - path_regex: apps/*/overlays/prod/secret\.enc\.yaml$
+  - path_regex: apps/.*/values\.dev\.enc\.yaml$
+    encrypted_regex: .*
+    age: *dev_key
+  - path_regex: apps/.*/overlays/prod/secret\.enc\.yaml$
     encrypted_regex: ^(data|stringData)$
     age: *prod_key
-  - path_regex: apps/*/values\..*\.enc\.yaml$
-    encrypted_regex: *
+  - path_regex: apps/.*/values\.prod\.enc\.yaml$
+    encrypted_regex: .*
     age: *prod_key
 

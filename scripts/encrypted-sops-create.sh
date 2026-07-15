@@ -14,5 +14,5 @@ age=$(${require_command} age)
 
 sops_key=$(${age} -d "${dir}/../deploy/kubernetes/sops-${env}-secret-key.enc.age")
 SOPS_AGE_KEY="${sops_key}" \
-    ${sops} --config "${dir}/../deploy/kubernetes/sops-config.yaml" edit "${file}"
+    ${sops} --config "${dir}/../deploy/kubernetes/sops-config.yaml" "${file}"
 

@@ -2,7 +2,11 @@
 default:
     @just --list encrypted sops --list-submodules
 
-# Edit a sops encrypted file (list possible targets using `just encrypted sops list`)
-edit env app:
-    ./encrypted-sops-edit.sh {{ env }} {{ app }}
+# Create a sops encrypted file
+create env path:
+    ./encrypted-sops-create.sh {{ env }} {{ invocation_directory() }}/{{ path }}
+
+# Edit a sops encrypted file
+edit env path:
+    ./encrypted-sops-edit.sh {{ env }} {{ invocation_directory() }}/{{ path }}
 

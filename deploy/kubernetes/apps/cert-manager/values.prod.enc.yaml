@@ -1,0 +1,16 @@
+digitalocean_dns_api_token: ENC[AES256_GCM,data:rU1RC/Sdc4bmAP2WEOA6n43EMYtvzBrnHzfeVzf2DuLWoc4vwaj4KE7Zx3rYJD/C6EWIwiNQhsckVueAEojpM0fI5J/Poo4=,iv:Q1qZG5O5XNf3KOFtopeypwLyLYLBtzuzDxS8tJxYqa4=,tag:0bj4sfEYB+uWM1YRI8qeZQ==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSArNTE4VTlnUEVBU3dPdWIr
+            RGhUdzk4aS9vTXlMSHJYNVBjMVZJL3JweGpRCk9BV3o3cTI2dUVrYkcxOFErYzZQ
+            b21qYTBFYk0rajdIUTlLdDQ1U3BHNkUKLS0tIHVXaDVSRnhZZ0dSMWdCWmlZWXl4
+            MytrQkdRWHpyOGFmeElnQ0RJZ1Q2Q3MKIoNK948tsGkgoumaevFUBtobW0cEwwV8
+            TrNSeVx6Dq60K9k/jsE+8c3Sv/eE+/E3iqgVjMSoWEfIhFXN/QWgqg==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age1wxuxlngq2cf4jsxfw5v2cwd0p8jxwqkjxvy0vhsmg9wuktey0vcs7q79zx
+    encrypted_regex: .*
+    lastmodified: "2026-07-15T22:30:40Z"
+    mac: ENC[AES256_GCM,data:/Ee3sncA4yki8bBe58iF/GwQvByALlMyV2JvNNlDucluP93EQ+nW6pECt8zrsbhuy8f3eYu8YvhMhsaZQHzTX58H7kKhmc4g7FAfDo7+q+okOt7m9EwRU/OrS+/tUP4Pvd6TW7VkgVX/LLeHoGEA4KYJ2Bw0E44PggZZOO3IKJU=,iv:M6OAjt4tdDjm/XXWB3/sHbybjBqwv46/IwhReOzN5xU=,tag:VoHnBY5hBNo2OYKXCG7TSQ==,type:str]
+    version: 3.13.1
