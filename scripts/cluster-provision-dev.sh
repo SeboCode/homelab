@@ -10,12 +10,14 @@ dir=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
 require_command="${dir}/require-command.sh"
 tilt=$(${require_command} tilt)
 yq=$(${require_command} yq)
+age=$(${require_command} age)
 
+sops_key=$(${age} -d "${dir}/../deploy/kubernetes/sops-dev-secret-key.enc.age")
 cluster_name="k3d-$(${yq} ".metadata.name" "${dir}/../deploy/k3d/cluster.yaml")"
 http_port=15000
 case "${tilt_command}" in
     "up")
-        ${tilt} up -f "${dir}/../deploy/tilt/Tiltfile.bzl" --stream --context "${cluster_name}" --port ${http_port}
+        SOPS_AGE_KEY="${sops_key}" ${tilt} up -f "${dir}/../deploy/tilt/Tiltfile.bzl" --stream --context "${cluster_name}" --port ${http_port}
         ;;
     "down")
         ${tilt} down -f "${dir}/../deploy/tilt/Tiltfile.bzl" --delete-namespaces --delete-volumes
