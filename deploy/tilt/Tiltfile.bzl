@@ -70,5 +70,12 @@ k8s_yaml(
     )
 )
 
+k8s_yaml(
+    helm(
+        "../kubernetes/apps/sops-secrets-operator/",
+        values = ["../kubernetes/apps/sops-secrets-operator/values.yaml"],
+    )
+)
+
 k8s_yaml(kustomize("../kubernetes/apps/immich/overlays/dev/"))
 
