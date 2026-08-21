@@ -10,9 +10,9 @@ dir=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
 require_command="${dir}/require-command.sh"
 vagrant=$(${require_command} vagrant)
 
-case "$node" in
+case "${node}" in
     charon|daisy)
-        cd "$dir/../deploy/vagrant/$node"
+        cd "${dir}/../deploy/vagrant/${node}"
         ${vagrant} ssh
         ;;
     *)

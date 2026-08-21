@@ -10,7 +10,7 @@ dir=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
 require_command="${dir}/require-command.sh"
 ssh=$(${require_command} ssh)
 
-case "$node" in
+case "${node}" in
     charon|daisy)
         ${ssh} homelab-${node}
         ;;
