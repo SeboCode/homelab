@@ -2,4 +2,8 @@
 namespace: &ns sops-secrets-operator # Only used in the custom namespace template manifest
 sops-secrets-operator:
   namespaceOverride: *ns
+  secretsAsEnvVars:
+    - name: SOPS_AGE_KEY
+      secretName: sops-age-key
+      secretKey: key
 
