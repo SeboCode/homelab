@@ -13,11 +13,9 @@ spec:
     - from:
         - namespaceSelector:
             matchLabels:
-              # TODO
               kubernetes.io/metadata.name: traefik
           podSelector:
             matchLabels:
-              # TODO
               app.kubernetes.io/name: traefik
       ports:
         - protocol: TCP
