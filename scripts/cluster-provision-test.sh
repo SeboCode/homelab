@@ -19,7 +19,7 @@ sops_key=$(${age} -d "${dir}/../deploy/kubernetes/sops-prod-secret-key.enc.age")
 
 # Bootstrap age key secret and namespace for sops-secrets-operator
 ${kubectl} --kubeconfig "${config_file}" --context "${cluster_context}" apply -f "${dir}/../deploy/kubernetes/apps/sops-secrets-operator/manual/namespace.yaml" 
-SOPS_AGE_KEY="${sops_key}" sops -d "${dir}/../deploy/kubernetes/apps/sops-secrets-operator/manual/age-key-secret.dev.enc.yaml" | \
+SOPS_AGE_KEY="${sops_key}" sops -d "${dir}/../deploy/kubernetes/apps/sops-secrets-operator/manual/age-key-secret.prod.enc.yaml" | \
     ${kubectl} --kubeconfig "${config_file}" --context "${cluster_context}" apply -f -
 
 ${kustomize} build "${dir}/../deploy/argocd/bootstrap/argocd" | ${kubectl} --kubeconfig "${config_file}" --context "${cluster_context}" apply --server-side -f -
