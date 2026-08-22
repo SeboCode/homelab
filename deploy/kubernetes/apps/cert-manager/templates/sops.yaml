@@ -1,4 +1,0 @@
-{{- range $path, $_ := printf "sops/*.%s.enc.yaml" .Values.environment | .Files.Glob }}
----
-{{ $.Files.Get $path }}
-{{- end }}
