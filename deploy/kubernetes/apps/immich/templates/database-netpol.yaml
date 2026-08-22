@@ -2,38 +2,40 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: redis-netpol-egress
+  name: database-netpol-egress
+  namespace: {{ .Values.namespace }}
 spec:
   podSelector:
     matchLabels:
-      connectsToRedis: "true"
+      connectsToDatabase: "true"
   policyTypes:
     - Egress
   egress:
     - to:
         - podSelector:
             matchLabels:
-              app: redis
+              app: database
       ports:
         - protocol: TCP
-          port: 6379
+          port: 5432
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: redis-netpol-ingress
+  name: database-netpol-ingress
+  namespace: {{ .Values.namespace }}
 spec:
   podSelector:
     matchLabels:
-      app: redis
+      app: database
   policyTypes:
     - Ingress
   ingress:
     - from:
         - podSelector:
             matchLabels:
-              connectsToRedis: "true"
+              connectsToDatabase: "true"
       ports:
         - protocol: TCP
-          port: 6379
+          port: 5432
 

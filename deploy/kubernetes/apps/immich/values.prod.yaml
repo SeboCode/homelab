@@ -1,0 +1,4 @@
+---
+environment: prod
+server:
+  host: "immich.homelab.mikemarti.ch"

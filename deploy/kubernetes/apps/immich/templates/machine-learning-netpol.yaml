@@ -2,38 +2,40 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: database-netpol-egress
+  name: machine-learning-netpol-egress
+  namespace: {{ .Values.namespace }}
 spec:
   podSelector:
     matchLabels:
-      connectsToDatabase: "true"
+      connectsToMachineLearning: "true"
   policyTypes:
     - Egress
   egress:
     - to:
         - podSelector:
             matchLabels:
-              app: database
+              app: machine-learning
       ports:
         - protocol: TCP
-          port: 5432
+          port: 3003
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: database-netpol-ingress
+  name: machine-learning-netpol-ingress
+  namespace: {{ .Values.namespace }}
 spec:
   podSelector:
     matchLabels:
-      app: database
+      app: machine-learning
   policyTypes:
     - Ingress
   ingress:
     - from:
         - podSelector:
             matchLabels:
-              connectsToDatabase: "true"
+              connectsToMachineLearning: "true"
       ports:
         - protocol: TCP
-          port: 5432
+          port: 3003
 

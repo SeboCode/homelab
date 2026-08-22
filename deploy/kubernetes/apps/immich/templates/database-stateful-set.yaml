@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: database
+  namespace: {{ .Values.namespace }}
 spec:
   serviceName: database-headless
   replicas: 1

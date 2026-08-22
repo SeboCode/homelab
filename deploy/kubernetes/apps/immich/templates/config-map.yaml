@@ -3,6 +3,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: config-map
+  namespace: {{ .Values.namespace }}
 data:
   dbDatabaseName: immich_database
   dbUsername: immich_pg_user

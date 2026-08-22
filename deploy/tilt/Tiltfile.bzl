@@ -89,5 +89,13 @@ k8s_yaml(
 # --------
 # services
 # --------
-k8s_yaml(kustomize("../kubernetes/apps/immich/overlays/dev/"))
+k8s_yaml(
+    helm(
+        "../kubernetes/apps/immich/overlays/dev/",
+        values=[
+            "../kubernetes/apps/immich/values.yaml",
+            "../kubernetes/apps/immich/values.dev.yaml",
+        ],
+    )
+)
 

@@ -1,0 +1,5 @@
+---
+environment: dev
+server:
+  host: "immich.dev.homelab.mikemarti.ch"
+
