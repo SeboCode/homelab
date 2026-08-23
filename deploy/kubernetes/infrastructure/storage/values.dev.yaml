@@ -1,0 +1,6 @@
+---
+services:
+  immich:
+    node: k3d-homelab-dev-cluster-server-0
+    path: /tmp/service-data/immich-storage
+

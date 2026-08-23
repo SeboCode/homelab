@@ -1,0 +1,12 @@
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: {{ .Values.storageClass.name }}
+# No dynamic provisioner: every PV using this class is defined statically and
+# points at a specific host path pinned to a specific node via nodeAffinity.
+provisioner: kubernetes.io/no-provisioner
+# Defer binding until a pod actually references the PVC so the scheduler can
+# see the PV's nodeAffinity and place the pod on the correct node.
+volumeBindingMode: WaitForFirstConsumer
+

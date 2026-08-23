@@ -1,0 +1,8 @@
+---
+storageClass:
+  name: local-host-path
+
+services:
+  immich:
+    capacity: 200Gi
+

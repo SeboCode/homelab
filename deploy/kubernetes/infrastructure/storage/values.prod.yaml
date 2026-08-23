@@ -1,0 +1,6 @@
+---
+services:
+  immich:
+    node: charon
+    path: /service-data/immich-storage
+

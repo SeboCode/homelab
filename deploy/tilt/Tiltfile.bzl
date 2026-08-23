@@ -86,6 +86,19 @@ k8s_yaml(
     )
 )
 
+# -------
+# storage
+# -------
+k8s_yaml(
+    helm(
+        "../kubernetes/infrastructure/storage/",
+        values=[
+            "../kubernetes/infrastructure/storage/values.yaml",
+            "../kubernetes/infrastructure/storage/values.dev.yaml",
+        ],
+    )
+)
+
 # --------
 # services
 # --------

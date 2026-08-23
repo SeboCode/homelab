@@ -1,0 +1,35 @@
+{{- range $name, $svc := .Values.services }}
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ $name }}-storage
+spec:
+  capacity:
+    storage: {{ $svc.capacity }}
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: {{ $.Values.storageClass.name }}
+  # Pre-reserve this PV so no unrelated PVC with matching storageClass /
+  # accessModes / capacity can accidentally bind to it. Convention: the
+  # consuming chart runs in namespace {{ $name }} and names its PVC {{ $name }}-storage.
+  claimRef:
+    namespace: {{ $name }}
+    name: {{ $name }}-storage
+  # hostPath (rather than local) so DirectoryOrCreate can bootstrap the path in
+  # dev where nothing has pre-created it. In prod the directory already exists
+  # (ansible service-data-directory role), and DirectoryOrCreate is a no-op.
+  hostPath:
+    path: {{ $svc.path }}
+    type: DirectoryOrCreate
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - {{ $svc.node }}
+{{- end }}
+
