@@ -20,10 +20,11 @@ spec:
           ports:
             - containerPort: 3003
           volumeMounts:
-            - name: model-cache
+            - name: storage
               mountPath: /cache
+              subPath: machine-learning-cache
       volumes:
-        - name: model-cache
+        - name: storage
           persistentVolumeClaim:
-            claimName: machine-learning-model-cache
+            claimName: immich-storage
 

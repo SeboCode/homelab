@@ -22,20 +22,16 @@ spec:
           ports:
             - containerPort: 6379
           volumeMounts:
-            - name: data
+            - name: storage
               mountPath: /data
+              subPath: redis
             - name: config
               mountPath: /etc/redis
       volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: immich-storage
         - name: config
           configMap:
             name: redis-config-map
-  volumeClaimTemplates:
-    - metadata:
-        name: data
-      spec:
-        accessModes: ["ReadWriteOnce"]
-        resources:
-          requests:
-            storage: 1Gi
 

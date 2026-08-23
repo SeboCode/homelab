@@ -47,10 +47,11 @@ spec:
           ports:
             - containerPort: 2283
           volumeMounts:
-            - name: upload
+            - name: storage
               mountPath: /usr/src/app/upload
+              subPath: library
       volumes:
-        - name: upload
+        - name: storage
           persistentVolumeClaim:
-            claimName: upload
+            claimName: immich-storage
 

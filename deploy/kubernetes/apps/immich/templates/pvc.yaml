@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  # Name and namespace must match the claimRef pre-populated on the immich-storage
+  # PV in the storage infrastructure chart (deploy/kubernetes/infrastructure/storage).
+  name: immich-storage
+  namespace: {{ .Values.namespace }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-host-path
+  # Must match (or be smaller than) the PV's capacity so binding succeeds.
+  resources:
+    requests:
+      storage: 200Gi
