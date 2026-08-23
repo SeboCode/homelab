@@ -1,8 +1,10 @@
+{{- define "common.netpol.defaultDenyAll" -}}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: default-deny-all
+  namespace: {{ .Values.namespace }}
 spec:
   podSelector: {}
   policyTypes:
@@ -13,6 +15,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: allow-dns
+  namespace: {{ .Values.namespace }}
 spec:
   podSelector: {}
   policyTypes:
@@ -27,4 +30,4 @@ spec:
           port: 53
         - protocol: TCP
           port: 53
-
+{{- end -}}
