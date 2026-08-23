@@ -1,3 +1,5 @@
 ---
 namespace: immich
+storage:
+  capacity: 200Gi
 
