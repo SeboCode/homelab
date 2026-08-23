@@ -91,7 +91,7 @@ k8s_yaml(
 # --------
 k8s_yaml(
     helm(
-        "../kubernetes/apps/immich/overlays/dev/",
+        "../kubernetes/apps/immich/",
         values=[
             "../kubernetes/apps/immich/values.yaml",
             "../kubernetes/apps/immich/values.dev.yaml",
