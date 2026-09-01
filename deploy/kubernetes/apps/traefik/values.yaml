@@ -5,4 +5,6 @@ traefik:
   additionalArguments:
     - "--entryPoints.web.http.redirections.entryPoint.to=websecure"
     - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+  image:
+    tag: "v3.7.5"
 

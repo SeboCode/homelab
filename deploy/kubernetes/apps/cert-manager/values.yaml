@@ -7,3 +7,17 @@ cert-manager:
   extraArgs:
     - --dns01-recursive-nameservers-only
     - --dns01-recursive-nameservers=1.1.1.1:53,8.8.8.8:53
+  image:
+    tag: "v1.20.2"
+  webhook:
+    image:
+      tag: "v1.20.2"
+  cainjector:
+    image:
+      tag: "v1.20.2"
+  acmesolver:
+    image:
+      tag: "v1.20.2"
+  startupapicheck:
+    image:
+      tag: "v1.20.2"

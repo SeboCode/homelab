@@ -6,4 +6,8 @@ sops-secrets-operator:
     - name: SOPS_AGE_KEY
       secretName: sops-age-key
       secretKey: key
+  image:
+    tag: "0.21.2"
+  initImage:
+    tag: "26.04"
 
