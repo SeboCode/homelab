@@ -1,8 +1,9 @@
+{{- define "common.netpol.defaultIngress" -}}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress
+  name: {{ .appName }}
   namespace: {{ .Values.namespace }}
   annotations:
     cert-manager.io/cluster-issuer: digitalocean-dns-letsencrypt-issuer
@@ -11,17 +12,18 @@ metadata:
 spec:
   tls:
     - hosts:
-        - {{ .Values.server.host }}
+        - {{ .host }}
       secretName: tls-secret
   rules:
-    - host: {{ .Values.server.host }}
+    - host: {{ .host }}
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: server
+                name: {{ .appName }}
                 port:
-                  number: 2283
+                  number: {{ .port }}
+{{- end -}}
 
