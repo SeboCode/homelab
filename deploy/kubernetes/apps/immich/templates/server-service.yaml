@@ -8,6 +8,6 @@ spec:
   selector:
     app: server
   ports:
-    - port: 2283
+    - port: {{ .Values.server.port }}
       targetPort: 2283
 

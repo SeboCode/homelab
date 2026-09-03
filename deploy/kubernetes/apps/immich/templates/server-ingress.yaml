@@ -1,1 +1,1 @@
-{{ include "common.netpol.defaultIngress" (dict "Values" .Values "Release" .Release "appName" "server" "host" .Values.server.host "port" "2283") }}
+{{ include "common.netpol.defaultIngress" (dict "Values" .Values "Release" .Release "appName" "server" "host" .Values.server.host "port" .Values.server.port) }}

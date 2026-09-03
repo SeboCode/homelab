@@ -5,6 +5,7 @@ storage:
 server:
   image:
     tag: "v2.4.1"
+  port: 2283
 machineLearning:
   image:
     tag: "v2.4.1"

@@ -1,1 +1,1 @@
-{{ include "common.netpol.traefik" (dict "Values" .Values "Release" .Release "appName" "server" "port" "2283") }}
+{{ include "common.netpol.traefik" (dict "Values" .Values "Release" .Release "appName" "server" "port" .Values.server.port) }}
