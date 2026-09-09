@@ -20,15 +20,9 @@ spec:
           image: ghcr.io/immich-app/postgres:{{ .Values.database.image.tag }}{{ with .Values.database.image.digest }}@{{ . }}{{ end }}
           env:
             - name: POSTGRES_DB
-              valueFrom:
-                configMapKeyRef:
-                  name: config-map
-                  key: dbDatabaseName
+              value: {{ .Values.database.databaseName }}
             - name: POSTGRES_USER
-              valueFrom:
-                configMapKeyRef:
-                  name: config-map
-                  key: dbUsername
+              value: {{ .Values.database.databaseUsername }}
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
