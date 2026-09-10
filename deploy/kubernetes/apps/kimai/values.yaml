@@ -1,0 +1,14 @@
+---
+namespace: kimai
+storage:
+  capacity: 10Gi
+server:
+  image:
+    tag: "apache-2.55.0"
+  port: 8001
+database:
+  databaseName: kimai_database
+  databaseUsername: kimai_db_user
+  image:
+    tag: "9.6.0"
+

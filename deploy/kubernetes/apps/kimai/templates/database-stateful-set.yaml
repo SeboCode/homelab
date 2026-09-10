@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: database
+  namespace: {{ .Values.namespace }}
+spec:
+  serviceName: database-headless
+  replicas: 1
+  selector:
+    matchLabels:
+      app: database
+  template:
+    metadata:
+      labels:
+        app: database
+    spec:
+      containers:
+        - name: mysql
+          image: docker.io/mysql:{{ .Values.database.image.tag }}{{ with .Values.database.image.digest }}@{{ . }}{{ end }}
+          env:
+            - name: MYSQL_DATABASE
+              value: {{ .Values.database.databaseName }}
+            - name: MYSQL_USER
+              value: {{ .Values.database.databaseUsername }}
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: dbPassword
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: dbRootPassword
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: storage
+              mountPath: /var/lib/mysql
+              subPath: db-data
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: kimai-storage
+

@@ -1,0 +1,5 @@
+---
+environment: prod
+server:
+  host: "kimai.homelab.mikemarti.ch"
+

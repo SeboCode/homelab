@@ -1,0 +1,58 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      labels:
+        app: server
+        connectsToDatabase: "true"
+    spec:
+      containers:
+        - name: server
+          image: docker.io/kimai/kimai2:{{ .Values.server.image.tag }}{{ with .Values.server.image.digest }}@{{ . }}{{ end }}
+          env:
+            # Composed at pod start via k8s $(VAR) interpolation so the password
+            # stays in a secretKeyRef instead of being rendered into the manifest.
+            - name: DATABASE_URL
+              value: "mysql://{{ .Values.database.databaseUsername }}:$(DB_PASSWORD)@database:3306/{{ .Values.database.databaseName }}?charset=utf8mb4&serverVersion={{ .Values.database.image.tag }}"
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: dbPassword
+            - name: APP_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: appSecret
+            - name: TRUSTED_PROXIES
+              value: "127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+            - name: ADMINMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: adminEmail
+            - name: ADMINPASS
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: adminPassword
+          ports:
+            - containerPort: 8001
+          volumeMounts:
+            - name: storage
+              mountPath: /opt/kimai/var/data
+              subPath: data
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: kimai-storage
+

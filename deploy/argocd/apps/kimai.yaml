@@ -1,0 +1,25 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kimai
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/SeboCode/homelab.git
+    targetRevision: master
+    path: deploy/kubernetes/apps/kimai
+    helm:
+      valueFiles:
+        - values.yaml
+        # TODO: switch to prod
+        - values.dev.yaml
+  destination:
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

@@ -1,0 +1,9 @@
+apiVersion: v2
+name: kimai
+version: 1.0.0
+type: application
+dependencies:
+  - name: common
+    version: 1.0.0
+    repository: file://../../charts/common
+

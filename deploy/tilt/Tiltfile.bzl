@@ -112,3 +112,13 @@ k8s_yaml(
     )
 )
 
+k8s_yaml(
+    helm(
+        "../kubernetes/apps/kimai/",
+        values=[
+            "../kubernetes/apps/kimai/values.yaml",
+            "../kubernetes/apps/kimai/values.dev.yaml",
+        ],
+    )
+)
+

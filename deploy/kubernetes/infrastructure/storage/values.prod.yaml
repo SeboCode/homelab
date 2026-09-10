@@ -3,4 +3,7 @@ services:
   immich:
     node: charon
     path: /service-data/immich-storage
+  kimai:
+    node: daisy
+    path: /mnt/data/kimai-storage
 
