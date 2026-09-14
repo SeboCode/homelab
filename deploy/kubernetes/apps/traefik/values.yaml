@@ -5,6 +5,13 @@ traefik:
   additionalArguments:
     - "--entryPoints.web.http.redirections.entryPoint.to=websecure"
     - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+    # `api.insecure` is Traefik's (poorly-named) flag for "auto-expose the
+    # API/dashboard on the `traefik` entrypoint without a router in front",
+    # not "disable security". Port 8080 stays cluster-internal, and the
+    # Ingress is the only external path in.
+    - "--api.insecure=true"
   image:
     tag: "v3.7.5"
+dashboard:
+  port: 8080
 

@@ -82,7 +82,10 @@ k8s_resource(
 k8s_yaml(
     helm(
         "../kubernetes/apps/traefik/",
-        values=["../kubernetes/apps/traefik/values.yaml"],
+        values=[
+            "../kubernetes/apps/traefik/values.yaml",
+            "../kubernetes/apps/traefik/values.dev.yaml",
+        ],
     )
 )
 

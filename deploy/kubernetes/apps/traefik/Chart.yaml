@@ -3,4 +3,8 @@ apiVersion: v2
 name: traefik-wrapper
 version: 41.0.0 # Same as digest pinned oci chart; keep in sync!
 type: application
+dependencies:
+  - name: common
+    version: 1.0.0
+    repository: file://../../charts/common
 

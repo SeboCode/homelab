@@ -1,0 +1,4 @@
+---
+environment: dev
+dashboard:
+  host: "traefik.dev.homelab.mikemarti.ch"

@@ -1,0 +1,1 @@
+{{ include "common.netpol.defaultIngress" (dict "Values" .Values "Release" .Release "appName" "dashboard" "host" .Values.dashboard.host "port" .Values.dashboard.port "annotations" (dict "traefik.ingress.kubernetes.io/router.middlewares" (printf "%s-dashboard-auth@kubernetescrd" .Values.namespace))) }}

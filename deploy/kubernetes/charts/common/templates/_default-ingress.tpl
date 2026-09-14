@@ -9,6 +9,9 @@ metadata:
     cert-manager.io/cluster-issuer: digitalocean-dns-letsencrypt-issuer
     cert-manager.io/private-key-algorithm: ECDSA
     cert-manager.io/private-key-size: "256"
+    {{- range $k, $v := .annotations }}
+    {{ $k }}: {{ $v | quote }}
+    {{- end }}
 spec:
   tls:
     - hosts:
