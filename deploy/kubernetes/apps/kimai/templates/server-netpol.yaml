@@ -1,2 +1,8 @@
-{{ include "common.netpol.traefik" (dict "Values" .Values "Release" .Release "appName" "server" "port" .Values.server.port) }}
-
+{{-
+  $args := dict
+    "Values" .Values
+    "Release" .Release
+    "appName" "server"
+    "port" .Values.server.port
+-}}
+{{ include "common.netpol.traefik" $args }}
