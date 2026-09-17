@@ -177,6 +177,22 @@ is not.
 - Use the same tag and or digest when converting from Ansible to Kubernetes. Do not
   perform any kind of upgrade during the transformation.
 
+## Converting a service to Kubernetes
+
+Porting a service from its Ansible role to a Helm chart follows a fixed workflow — do
+not improvise it:
+
+1. `skills/convert-ansible-to-k8s` — the conversion itself, run in a **separate
+   context** (a subagent where the harness supports one, otherwise a fresh session).
+   If the verifier subagent finds a problem with the conversion, this subagent is once
+   again invoked.
+2. `skills/verify-k8s-conversion` — independent verification, run in a **separate
+   context** (a subagent where the harness supports one, otherwise a fresh session).
+
+Every conversion runs step 2 before being reported as done, and its blockers are fixed
+before the work is handed over. Verification is separated on purpose: the agent that
+wrote the chart is the worst possible reviewer of it.
+
 ## Enforcement
 
 Instructions in this file are requests a model can talk itself out of.
