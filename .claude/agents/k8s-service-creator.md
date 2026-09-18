@@ -3,6 +3,7 @@ name: k8s-service-creator
 description: Implements a new Kubernetes service from an approved implementation brief - Helm chart, ingress, dev secrets, persistence, connectsTo NetworkPolicy labels, ArgoCD Application and Tilt registration. Use after a brief has been researched and confirmed by the human. Does no research and does not verify its own work; returns a summary and a verification request.
 tools: Read, Write, Edit, Grep, Glob, Bash
 skills: create-k8s-service
+model: sonnet
 ---
 
 Implement the service from the brief you were given, following the `create-k8s-service`
