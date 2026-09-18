@@ -193,6 +193,32 @@ Every conversion runs step 2 before being reported as done, and its blockers are
 before the work is handed over. Verification is separated on purpose: the agent that
 wrote the chart is the worst possible reviewer of it.
 
+## Adding a new service
+
+New services are Kubernetes only — never create or extend an Ansible role for one. The
+workflow is fixed; do not improvise it, and do not collapse the steps into a single
+session:
+
+1. `skills/research-k8s-service` — researches the service and writes
+   `briefs/<service>.md`: image and pinned tag, ports, environment variables,
+   persistence, `connectsTo…` labels, repository conventions, and any open questions.
+2. **The human confirms the brief.** Implementation does not start until its status is
+   APPROVED and every open question is answered — the subdomain is the usual one. Change
+   requests go back to the researcher, never to the implementer.
+3. `skills/create-k8s-service` — implements the approved brief. It does no research and
+   has no web access; a missing or ambiguous decision is a halt, not a guess.
+4. `skills/verify-k8s-service` — independent verification in a **separate context** (a
+   subagent where the harness supports one, otherwise a fresh session).
+
+Findings are tagged `[impl]` or `[brief]`. Implementation defects are fixed in the chart;
+brief defects go back to the researcher and through the human gate again. Patching a
+brief defect in the chart leaves the brief and the repository permanently disagreeing.
+Fixing is bounded at two verification rounds, then escalated.
+
+The separation is the point: the agent that decided something is the worst reviewer of
+that decision, and an implementer that can look things up will quietly overrule the
+brief it was given.
+
 ## Enforcement
 
 Instructions in this file are requests a model can talk itself out of.
