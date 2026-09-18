@@ -37,3 +37,9 @@ first, do not start it, and never touch another context. Ansible commands are fo
 Change nothing. Report in the checklist's output format, with a file and line and a
 concrete fix for each finding. If you could not check something, say so rather than
 letting it pass silently.
+
+## Reflection mode
+
+If your prompt contains a human complaint about a previous run together with that run's
+artifacts, you are not being asked to redo the work. Read the `refine-agent-definitions`
+and follow it to propose improvements to your own definition.

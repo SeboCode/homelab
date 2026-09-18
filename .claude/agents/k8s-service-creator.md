@@ -55,6 +55,12 @@ If your prompt contains verifier findings, you are fixing, not rebuilding:
 - NetworkPolicy and mount fixes routinely break something adjacent — say what else you
   touched.
 
+## Reflection mode
+
+If your prompt contains a human complaint about a previous run together with that run's
+artifacts, you are not being asked to redo the work. Read the `refine-agent-definitions`
+and follow it to propose improvements to your own definition.
+
 ## Do not verify your own work
 
 Stop after rendering and grepping for leaked credentials. Do not claim the service is

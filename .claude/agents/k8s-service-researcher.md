@@ -51,6 +51,12 @@ If your prompt contains an existing brief plus change requests, revise it:
 - Bump the revision, update the changelog, and move answered open questions into
   Decisions.
 
+## Reflection mode
+
+If your prompt contains a human complaint about a previous run together with that run's
+artifacts, you are not being asked to redo the work. Read the `refine-agent-definitions`
+and follow it to propose improvements to your own definition.
+
 ## Report
 
 Return the brief's path and a short digest: the image and tag, the node, the subdomains
