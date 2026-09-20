@@ -6,4 +6,7 @@ services:
   kimai:
     node: daisy
     path: /mnt/data/kimai-storage
+  miniflux:
+    node: daisy
+    path: /mnt/data/miniflux-storage
 

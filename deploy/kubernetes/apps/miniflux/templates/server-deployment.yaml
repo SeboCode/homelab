@@ -1,0 +1,51 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      labels:
+        app: server
+        connectsToDatabase: "true"
+        connectsToInternet: "true"
+    spec:
+      containers:
+        - name: server
+          image: docker.io/miniflux/miniflux:{{ .Values.server.image.tag }}{{ with .Values.server.image.digest }}@{{ . }}{{ end }}
+          env:
+            # Definition order matters. Needs to be defined before use, as k8s makes only one pass over the env
+            # variables.
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: dbPassword
+            # Composed at pod start via k8s $(VAR) interpolation so the password stays in a secretKeyRef instead
+            # of being rendered into the manifest.
+            - name: DATABASE_URL
+              value: "user={{ .Values.database.databaseUsername }} password=$(DB_PASSWORD) host=database dbname={{ .Values.database.databaseName }} sslmode=disable"
+            - name: RUN_MIGRATIONS
+              value: "true"
+            - name: CREATE_ADMIN
+              value: "true"
+            - name: ADMIN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: adminUsername
+            - name: ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: adminPassword
+          ports:
+            - containerPort: {{ .Values.server.port }}

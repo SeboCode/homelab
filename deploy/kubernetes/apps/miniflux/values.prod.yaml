@@ -1,0 +1,4 @@
+---
+environment: prod
+server:
+  host: "miniflux.homelab.mikemarti.ch"

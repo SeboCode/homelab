@@ -125,3 +125,13 @@ k8s_yaml(
     )
 )
 
+k8s_yaml(
+    helm(
+        "../kubernetes/apps/miniflux/",
+        values=[
+            "../kubernetes/apps/miniflux/values.yaml",
+            "../kubernetes/apps/miniflux/values.dev.yaml",
+        ],
+    )
+)
+
