@@ -1,0 +1,84 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  # Syncthing 2.x keeps a SQLite database in the config directory; two pods must
+  # never open it at once.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      labels:
+        app: server
+        connectsToInternet: "true"
+    spec:
+      containers:
+        - name: server
+          image: docker.io/syncthing/syncthing:{{ .Values.server.image.tag }}{{ with .Values.server.image.digest }}@{{ . }}{{ end }}
+          env:
+            # Pinned so the config sidecar (and any future automation) can drive the
+            # REST API deterministically.
+            - name: STGUIAPIKEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: apiKey
+          ports:
+            - name: gui
+              containerPort: 8384
+            - name: sync-tcp
+              containerPort: {{ .Values.server.syncPort }}
+              hostPort: {{ .Values.server.syncHostPort }}
+              protocol: TCP
+            - name: sync-udp
+              containerPort: {{ .Values.server.syncPort }}
+              hostPort: {{ .Values.server.syncHostPort }}
+              protocol: UDP
+          volumeMounts:
+            - name: storage
+              mountPath: /var/syncthing
+              subPath: data
+        - name: config
+          image: docker.io/syncthing/syncthing:{{ .Values.server.image.tag }}{{ with .Values.server.image.digest }}@{{ . }}{{ end }}
+          # `syncthing cli` drives the REST API and needs a live daemon, so this cannot
+          # be an initContainer. It shares the pod's network namespace (reaches the API
+          # on 127.0.0.1:8384) and the config volume (--home finds the address and API
+          # key in config.xml), waits for the API, applies the settings idempotently,
+          # then idles so the pod (restartPolicy: Always) does not restart it forever.
+          command:
+            - sh
+            - -c
+            - |
+              set -eu
+              until syncthing cli --home /var/syncthing/config show system >/dev/null 2>&1; do
+                sleep 2
+              done
+              syncthing cli --home /var/syncthing/config config gui user set "$GUI_USERNAME"
+              syncthing cli --home /var/syncthing/config config gui password set "$GUI_PASSWORD"
+              for opt in global-ann-enabled relays-enabled natenabled local-ann-enabled crenabled; do
+                syncthing cli --home /var/syncthing/config config options "$opt" set false
+              done
+              exec sleep infinity
+          env:
+            - name: GUI_USERNAME
+              value: "{{ .Values.server.guiUsername }}"
+            - name: GUI_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: guiPassword
+          volumeMounts:
+            - name: storage
+              mountPath: /var/syncthing
+              subPath: data
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: syncthing-storage

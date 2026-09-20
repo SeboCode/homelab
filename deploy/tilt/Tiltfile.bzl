@@ -175,3 +175,13 @@ k8s_yaml(
     )
 )
 
+k8s_yaml(
+    helm(
+        "../kubernetes/apps/syncthing/",
+        values=[
+            "../kubernetes/apps/syncthing/values.yaml",
+            "../kubernetes/apps/syncthing/values.dev.yaml",
+        ],
+    )
+)
+

@@ -21,4 +21,7 @@ services:
   homeassistant:
     node: k3d-homelab-dev-cluster-server-0
     path: /tmp/service-data/homeassistant-storage
+  syncthing:
+    node: k3d-homelab-dev-cluster-server-0
+    path: /tmp/service-data/syncthing-storage
 
