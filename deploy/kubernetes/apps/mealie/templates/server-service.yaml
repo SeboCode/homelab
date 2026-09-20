@@ -9,4 +9,5 @@ spec:
     app: server
   ports:
     - port: {{ .Values.server.port }}
-      targetPort: 9000
+      targetPort: {{ .Values.server.port }}
+

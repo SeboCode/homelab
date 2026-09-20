@@ -29,7 +29,7 @@ spec:
                   name: secret
                   key: dbPassword
           ports:
-            - containerPort: 5432
+            - containerPort: {{ .Values.database.port }}
           volumeMounts:
             - name: storage
               mountPath: /var/lib/postgresql/data
@@ -38,3 +38,4 @@ spec:
         - name: storage
           persistentVolumeClaim:
             claimName: mealie-storage
+
