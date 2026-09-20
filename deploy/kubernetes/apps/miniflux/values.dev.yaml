@@ -1,0 +1,4 @@
+---
+environment: dev
+server:
+  host: "miniflux.dev.homelab.mikemarti.ch"

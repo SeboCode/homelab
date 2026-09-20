@@ -15,4 +15,7 @@ services:
   karakeep:
     node: k3d-homelab-dev-cluster-server-0
     path: /tmp/service-data/karakeep-storage
+  miniflux:
+    node: k3d-homelab-dev-cluster-server-0
+    path: /tmp/service-data/miniflux-storage
 
