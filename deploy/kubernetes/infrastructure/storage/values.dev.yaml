@@ -12,4 +12,7 @@ services:
   filebrowser:
     node: k3d-homelab-dev-cluster-server-0
     path: /tmp/service-data/filebrowser-storage
+  karakeep:
+    node: k3d-homelab-dev-cluster-server-0
+    path: /tmp/service-data/karakeep-storage
 

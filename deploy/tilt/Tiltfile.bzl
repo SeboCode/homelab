@@ -145,3 +145,13 @@ k8s_yaml(
     )
 )
 
+k8s_yaml(
+    helm(
+        "../kubernetes/apps/karakeep/",
+        values=[
+            "../kubernetes/apps/karakeep/values.yaml",
+            "../kubernetes/apps/karakeep/values.dev.yaml",
+        ],
+    )
+)
+

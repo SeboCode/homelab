@@ -12,4 +12,7 @@ services:
   filebrowser:
     node: charon
     path: /service-data/filebrowser-storage
+  karakeep:
+    node: daisy
+    path: /mnt/data/karakeep-storage
 
