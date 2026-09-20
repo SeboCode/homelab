@@ -500,34 +500,42 @@ provenance = "github-attestations"
 version = "3.4.9"
 backend = "core:ruby"
 
+[tools.ruby.options]
+compile = "false"
+precompiled_url = "jdx/ruby"
+ruby_build_repo = "https://github.com/rbenv/ruby-build.git"
+ruby_install = "false"
+
 [tools.ruby."platforms.linux-arm64"]
-checksum = "sha256:e0874055be768e9acc865a27ee363685e4081b3406071c0b347f816920dbe916"
-url = "https://github.com/jdx/ruby/releases/download/3.4.9-3/ruby-3.4.9.arm64_linux.tar.gz"
+checksum = "sha256:57158038eb54f5b56d0ee9bea792c972643729a74e5dd2fd3eef30e79cef527b"
+url = "https://github.com/jdx/ruby/releases/download/3.4.9-6/ruby-3.4.9.arm64_linux.tar.gz"
 provenance = "github-attestations"
 
 [tools.ruby."platforms.linux-arm64-musl"]
-checksum = "sha256:e0874055be768e9acc865a27ee363685e4081b3406071c0b347f816920dbe916"
-url = "https://github.com/jdx/ruby/releases/download/3.4.9-3/ruby-3.4.9.arm64_linux.tar.gz"
-provenance = "github-attestations"
+checksum = "sha256:7bb4d4f5e807cc27251d14d9d6086d182c5b25875191e44ab15b709cd7a7dd9c"
+url = "https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.9.tar.gz"
 
 [tools.ruby."platforms.linux-x64"]
-checksum = "sha256:9e3d35237f5affa6f4027a58f8fc59de6992944ffbecb828e066750ce40217d1"
-url = "https://github.com/jdx/ruby/releases/download/3.4.9-3/ruby-3.4.9.x86_64_linux.tar.gz"
+checksum = "sha256:47ce5b193d7a835944f2fb30562a6494eaaed4490e7228a455a88bb0f4fa6ad0"
+url = "https://github.com/jdx/ruby/releases/download/3.4.9-6/ruby-3.4.9.x86_64_linux.tar.gz"
 provenance = "github-attestations"
 
 [tools.ruby."platforms.linux-x64-musl"]
-checksum = "sha256:9e3d35237f5affa6f4027a58f8fc59de6992944ffbecb828e066750ce40217d1"
-url = "https://github.com/jdx/ruby/releases/download/3.4.9-3/ruby-3.4.9.x86_64_linux.tar.gz"
-provenance = "github-attestations"
+checksum = "sha256:7bb4d4f5e807cc27251d14d9d6086d182c5b25875191e44ab15b709cd7a7dd9c"
+url = "https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.9.tar.gz"
 
 [tools.ruby."platforms.macos-arm64"]
-checksum = "sha256:eb0383a31596fb1c37d141b4e74ec3eacd1733b5c88ba981e3a79968d02da022"
-url = "https://github.com/jdx/ruby/releases/download/3.4.9-3/ruby-3.4.9.macos.tar.gz"
+checksum = "sha256:ad3aada8e134fb7510d32f0f2e1d82dac352b711a61304f703d3ecd8a10833de"
+url = "https://github.com/jdx/ruby/releases/download/3.4.9-6/ruby-3.4.9.macos.tar.gz"
 provenance = "github-attestations"
 
 [tools.ruby."platforms.macos-x64"]
 checksum = "sha256:7bb4d4f5e807cc27251d14d9d6086d182c5b25875191e44ab15b709cd7a7dd9c"
 url = "https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.9.tar.gz"
+
+[[tools.ruby]]
+version = "3.4.9"
+backend = "core:ruby"
 
 [tools.ruby."platforms.windows-x64"]
 checksum = "sha256:4375268618b61dadf53bf8e54beaca74ea30580c90d3c47ea9f2a134bd3e494e"
