@@ -1,0 +1,20 @@
+---
+namespace: photoprism
+storage:
+  # Metadata only on a hostPath PV; the real limit is the ZFS pool on charon.
+  capacity: 500Gi
+cluster:
+  podCidr: 10.42.0.0/16
+  serviceCidr: 10.43.0.0/16
+server:
+  image:
+    tag: "251130"
+  port: 2342
+  # PhotoPrism does not allow creating users in the free version. This is also the
+  # user the application is used with.
+  adminUsername: admin
+database:
+  image:
+    tag: "11.8.5"
+  databaseName: photoprism_database
+  databaseUsername: photoprism_mariadb_user

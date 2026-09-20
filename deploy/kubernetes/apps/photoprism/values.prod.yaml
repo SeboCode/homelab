@@ -1,0 +1,4 @@
+---
+environment: prod
+server:
+  host: "photoprism.homelab.mikemarti.ch"
