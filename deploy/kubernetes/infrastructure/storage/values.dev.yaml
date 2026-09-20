@@ -24,4 +24,7 @@ services:
   syncthing:
     node: k3d-homelab-dev-cluster-server-0
     path: /tmp/service-data/syncthing-storage
+  photoprism:
+    node: k3d-homelab-dev-cluster-server-0
+    path: /tmp/service-data/photoprism-storage
 

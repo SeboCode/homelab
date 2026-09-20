@@ -24,4 +24,7 @@ services:
   syncthing:
     node: charon
     path: /service-data/syncthing-storage
+  photoprism:
+    node: charon
+    path: /service-data/photoprism-storage
 
