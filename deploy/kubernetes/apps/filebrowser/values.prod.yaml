@@ -1,0 +1,4 @@
+---
+environment: prod
+server:
+  host: "filebrowser.homelab.mikemarti.ch"

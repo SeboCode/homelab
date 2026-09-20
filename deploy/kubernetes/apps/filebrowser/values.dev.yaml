@@ -1,0 +1,4 @@
+---
+environment: dev
+server:
+  host: "filebrowser.dev.homelab.mikemarti.ch"
