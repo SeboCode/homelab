@@ -16,7 +16,9 @@ spec:
   tls:
     - hosts:
         - {{ .host }}
-      secretName: tls-secret
+      {{- /* Derived per Ingress: cert-manager's ingress-shim creates one Certificate per
+             TLS secret name, so two Ingresses in a namespace must not share one. */}}
+      secretName: tls-secret-{{ .appName }}
   rules:
     - host: {{ .host }}
       http:
