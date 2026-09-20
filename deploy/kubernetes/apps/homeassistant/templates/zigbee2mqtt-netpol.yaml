@@ -1,0 +1,8 @@
+{{-
+  $args := dict
+    "Values" .Values
+    "Release" .Release
+    "appName" "zigbee2mqtt"
+    "port" .Values.zigbee2mqtt.port
+-}}
+{{ include "common.netpol.traefik" $args }}

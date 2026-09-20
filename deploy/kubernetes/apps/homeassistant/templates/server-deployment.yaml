@@ -1,0 +1,78 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server
+  namespace: {{ .Values.namespace }}
+spec:
+  # The recorder uses SQLite on the shared volume; two pods must never write it
+  # at once.
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      labels:
+        app: server
+        connectsToMqtt: "true"
+        connectsToInternet: "true"
+      annotations:
+        # subPath configmap mounts do not hot-reload; force a rollout on config change.
+        checksum/config: {{ include (print $.Template.BasePath "/server-config-map.yaml") . | sha256sum }}
+    spec:
+      initContainers:
+        - name: config-bootstrap
+          image: ghcr.io/home-assistant/home-assistant:{{ .Values.server.image.tag }}{{ with .Values.server.image.digest }}@{{ . }}{{ end }}
+          # configuration.yaml is managed by the config map, but its !include
+          # targets are owned by Home Assistant's UI editors and only exist after
+          # first run. Create empty ones so a fresh volume starts cleanly; never
+          # touch existing files.
+          command:
+            - sh
+            - -c
+            - |
+              set -eu
+              mkdir -p /config/.ssh
+              [ -e /config/automations.yaml ] || echo '[]' > /config/automations.yaml
+              [ -e /config/scripts.yaml ]    || echo '{}' > /config/scripts.yaml
+              [ -e /config/scenes.yaml ]     || echo '[]' > /config/scenes.yaml
+          volumeMounts:
+            - name: storage
+              mountPath: /config
+              subPath: config
+      containers:
+        - name: server
+          image: ghcr.io/home-assistant/home-assistant:{{ .Values.server.image.tag }}{{ with .Values.server.image.digest }}@{{ . }}{{ end }}
+          env:
+            - name: TZ
+              value: {{ .Values.timezone | quote }}
+          ports:
+            - containerPort: {{ .Values.server.port }}
+          volumeMounts:
+            - name: storage
+              mountPath: /config
+              subPath: config
+            - name: config
+              mountPath: /config/configuration.yaml
+              subPath: configuration.yaml
+              readOnly: true
+            - name: ssh
+              mountPath: /ssh
+              readOnly: true
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: homeassistant-storage
+        - name: config
+          configMap:
+            name: server-config-map
+        - name: ssh
+          secret:
+            secretName: secret
+            defaultMode: 0400
+            items:
+              - key: charonSshPrivateKey
+                path: charon_ssh_key

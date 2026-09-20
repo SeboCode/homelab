@@ -1,0 +1,22 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: internet-netpol-egress
+  namespace: {{ .Values.namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      connectsToInternet: "true"
+  policyTypes:
+    - Egress
+  egress:
+    # Covers the LAN as well (needed for the wake-on-LAN magic packet and the SSH
+    # poweroff to charon at 192.168.1.3). In-cluster traffic stays denied so the
+    # per-component policies remain the only way pods reach each other.
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - {{ .Values.cluster.podCidr }}
+              - {{ .Values.cluster.serviceCidr }}
