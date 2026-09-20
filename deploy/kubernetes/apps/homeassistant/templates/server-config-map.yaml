@@ -1,0 +1,38 @@
+---
+# configuration.yaml carries no secrets — the wake_on_lan MAC/host are not secret
+# and the SSH key referenced by shell_command is mounted separately from a Secret.
+# Replaces the Ansible blockinfile append; the pre-existing configuration.yaml on
+# the production volume is shadowed by the subPath mount, not deleted.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: server-config-map
+  namespace: {{ .Values.namespace }}
+data:
+  configuration.yaml: |
+    default_config:
+
+    automation: !include automations.yaml
+    script: !include scripts.yaml
+    scene: !include scenes.yaml
+
+    http:
+      use_x_forwarded_for: true
+      trusted_proxies:
+    {{- range .Values.server.trustedProxies }}
+        - {{ . | quote }}
+    {{- end }}
+
+    wake_on_lan:
+
+    switch:
+      - platform: wake_on_lan
+        name: {{ .Values.server.wakeOnLan.name | quote }}
+        mac: {{ .Values.server.wakeOnLan.mac | quote }}
+        host: {{ .Values.server.wakeOnLan.host | quote }}
+        broadcast_address: {{ .Values.server.wakeOnLan.broadcastAddress | quote }}
+        turn_off:
+          action: shell_command.turn_off_charon
+
+    shell_command:
+      turn_off_charon: "ssh -i /ssh/charon_ssh_key -o StrictHostKeyChecking=accept-new -o UserKnownHostsFile=/config/.ssh/known_hosts {{ .Values.server.wakeOnLan.sshUser }}@{{ .Values.server.wakeOnLan.host }} {{ .Values.server.wakeOnLan.poweroffCommand }}"

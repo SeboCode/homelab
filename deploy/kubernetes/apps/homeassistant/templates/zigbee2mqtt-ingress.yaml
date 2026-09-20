@@ -1,0 +1,9 @@
+{{-
+  $args := dict
+    "Values" .Values
+    "Release" .Release
+    "appName" "zigbee2mqtt"
+    "host" .Values.zigbee2mqtt.host
+    "port" .Values.zigbee2mqtt.port
+-}}
+{{ include "common.netpol.defaultIngress" $args }}

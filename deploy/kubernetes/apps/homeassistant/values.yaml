@@ -1,0 +1,41 @@
+---
+namespace: homeassistant
+timezone: Europe/Zurich
+storage:
+  capacity: 5Gi
+cluster:
+  # k3s defaults; used to carve in-cluster traffic out of the internet egress policy.
+  podCidr: 10.42.0.0/16
+  serviceCidr: 10.43.0.0/16
+server:
+  image:
+    tag: "2025.12.5"
+  port: 8123
+  # Home Assistant sees the traefik pod's address (bridged pod network), so the pod
+  # cidr is the trusted proxy range. The Ansible config used 0.0.0.0/0, which was
+  # only safe because the podman deployment was never reachable except through the
+  # reverse proxy or the LAN firewall; in-cluster we can and should be specific.
+  trustedProxies:
+    - 10.42.0.0/16
+  wakeOnLan:
+    name: Wake on LAN Charon
+    mac: "F0:79:59:66:50:6F"
+    host: 192.168.1.3
+    broadcastAddress: 192.168.1.3
+    sshUser: wol-poweroff-user
+    poweroffCommand: doas /sbin/poweroff
+mosquitto:
+  image:
+    tag: "2.0.22"
+  port: 1883
+  homeassistantUsername: homeassistant
+  zigbee2mqttUsername: zigbee2mqtt
+zigbee2mqtt:
+  image:
+    tag: "2.7.2"
+  port: 8080
+  replicas: 1
+  baseTopic: zigbee2mqtt
+  # Matches /dev/ttyUSB0 used by the Ansible role (container_device target); kept
+  # verbatim rather than the ttyACM0 some Zigbee coordinators use.
+  deviceMountPath: /dev/ttyUSB0

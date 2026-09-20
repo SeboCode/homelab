@@ -1,0 +1,70 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mosquitto
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mosquitto
+  template:
+    metadata:
+      labels:
+        app: mosquitto
+    spec:
+      securityContext:
+        # uid/gid the eclipse-mosquitto image runs as.
+        runAsUser: 1883
+        runAsGroup: 1883
+        # Makes the emptyDir passwords volume writable by both the initContainer
+        # and the main container. Safe here: it is an emptyDir, not a hostPath.
+        fsGroup: 1883
+      initContainers:
+        - name: password-file
+          image: docker.io/eclipse-mosquitto:{{ .Values.mosquitto.image.tag }}{{ with .Values.mosquitto.image.digest }}@{{ . }}{{ end }}
+          # The password file is generated at pod start from the plaintext secrets
+          # so no password hash ever lands in a rendered manifest or in git.
+          command:
+            - sh
+            - -c
+            - |
+              set -eu
+              mosquitto_passwd -c -b /passwords/passwords "$HOMEASSISTANT_USERNAME" "$HOMEASSISTANT_PASSWORD"
+              mosquitto_passwd -b /passwords/passwords "$ZIGBEE2MQTT_USERNAME" "$ZIGBEE2MQTT_PASSWORD"
+          env:
+            - name: HOMEASSISTANT_USERNAME
+              value: {{ .Values.mosquitto.homeassistantUsername | quote }}
+            - name: HOMEASSISTANT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: mosquittoHomeassistantPassword
+            - name: ZIGBEE2MQTT_USERNAME
+              value: {{ .Values.mosquitto.zigbee2mqttUsername | quote }}
+            - name: ZIGBEE2MQTT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: mosquittoZigbee2mqttPassword
+          volumeMounts:
+            - name: passwords
+              mountPath: /passwords
+      containers:
+        - name: mosquitto
+          image: docker.io/eclipse-mosquitto:{{ .Values.mosquitto.image.tag }}{{ with .Values.mosquitto.image.digest }}@{{ . }}{{ end }}
+          ports:
+            - containerPort: {{ .Values.mosquitto.port }}
+          volumeMounts:
+            - name: config
+              mountPath: /mosquitto/config
+              readOnly: true
+            - name: passwords
+              mountPath: /mosquitto/passwords
+      volumes:
+        - name: config
+          configMap:
+            name: mosquitto-config-map
+        - name: passwords
+          emptyDir: {}
