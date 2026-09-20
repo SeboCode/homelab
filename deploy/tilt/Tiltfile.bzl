@@ -125,3 +125,13 @@ k8s_yaml(
     )
 )
 
+k8s_yaml(
+    helm(
+        "../kubernetes/apps/filebrowser/",
+        values=[
+            "../kubernetes/apps/filebrowser/values.yaml",
+            "../kubernetes/apps/filebrowser/values.dev.yaml",
+        ],
+    )
+)
+
