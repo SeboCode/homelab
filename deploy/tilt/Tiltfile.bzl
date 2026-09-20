@@ -125,3 +125,13 @@ k8s_yaml(
     )
 )
 
+k8s_yaml(
+    helm(
+        "../kubernetes/apps/pihole/",
+        values=[
+            "../kubernetes/apps/pihole/values.yaml",
+            "../kubernetes/apps/pihole/values.dev.yaml",
+        ],
+    )
+)
+

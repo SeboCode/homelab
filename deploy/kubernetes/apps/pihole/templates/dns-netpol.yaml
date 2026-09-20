@@ -1,0 +1,23 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: dns-netpol-ingress
+  namespace: {{ .Values.namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      app: server
+  policyTypes:
+    - Ingress
+  ingress:
+    # hostPort traffic still goes through NetworkPolicy after portmap's DNAT.
+    # This must reference the container's own DNS port, not the host port 53.
+    - from:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: {{ .Values.server.dnsPort }}
+        - protocol: UDP
+          port: {{ .Values.server.dnsPort }}
