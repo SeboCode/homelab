@@ -1,5 +1,5 @@
 passlib==1.7.4
 bcrypt==4.3.0
-libvirt-python==11.8.0
+libvirt-python==12.7.0
 ansible==12.1.0
 
