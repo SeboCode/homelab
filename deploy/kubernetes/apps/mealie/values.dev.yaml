@@ -1,0 +1,5 @@
+---
+environment: dev
+server:
+  host: "mealie.dev.homelab.mikemarti.ch"
+  allowSignup: "true"

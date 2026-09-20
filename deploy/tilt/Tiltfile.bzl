@@ -125,3 +125,13 @@ k8s_yaml(
     )
 )
 
+k8s_yaml(
+    helm(
+        "../kubernetes/apps/mealie/",
+        values=[
+            "../kubernetes/apps/mealie/values.yaml",
+            "../kubernetes/apps/mealie/values.dev.yaml",
+        ],
+    )
+)
+
