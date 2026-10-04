@@ -1,0 +1,4 @@
+---
+environment: dev
+server:
+  host: "pihole.dev.homelab.mikemarti.ch"

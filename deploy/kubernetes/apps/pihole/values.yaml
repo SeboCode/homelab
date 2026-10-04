@@ -1,0 +1,22 @@
+---
+namespace: pihole
+timezone: Europe/Zurich
+storage:
+  capacity: 5Gi
+cluster:
+  podCidr: 10.42.0.0/16
+  serviceCidr: 10.43.0.0/16
+server:
+  image:
+    tag: "2025.11.1"
+  port: 8080
+  # Host port for DNS. The container still binds 8053; the portmap CNI plugin does
+  # the 53 -> 8053 DNAT on the host, which is why no capability is needed.
+  dnsPort: 8053
+  dnsHostPort: 53
+  dnsUpstreams: "1.1.1.1;1.0.0.1;8.8.8.8;8.8.4.4"
+  dnsmasqLines:
+    # Longest-match wins in dnsmasq, so the dev line must exist or every dev
+    # hostname resolves to the prod ingress.
+    - "address=/dev.homelab.mikemarti.ch/192.168.1.4"
+    - "address=/homelab.mikemarti.ch/192.168.1.4"

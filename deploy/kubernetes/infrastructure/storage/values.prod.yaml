@@ -6,4 +6,7 @@ services:
   kimai:
     node: daisy
     path: /mnt/data/kimai-storage
+  pihole:
+    node: daisy
+    path: /mnt/data/pihole-storage
 
