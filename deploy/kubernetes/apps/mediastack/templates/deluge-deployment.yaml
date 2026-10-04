@@ -1,0 +1,39 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deluge
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deluge
+  template:
+    metadata:
+      labels:
+        app: deluge
+    spec:
+      containers:
+        - name: deluge
+          image: docker.io/linuxserver/deluge:{{ .Values.deluge.image.tag }}{{ with .Values.deluge.image.digest }}@{{ . }}{{ end }}
+          env:
+            - name: PUID
+              value: "0"
+            - name: PGID
+              value: "0"
+            - name: TZ
+              value: "Europe/Zurich"
+          ports:
+            - containerPort: 8112
+          volumeMounts:
+            - name: storage
+              mountPath: /config
+              subPath: deluge/config
+            - name: storage
+              mountPath: /downloads
+              subPath: downloads
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: mediastack-storage

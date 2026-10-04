@@ -1,0 +1,9 @@
+{{-
+  $args := dict
+    "Values" .Values
+    "Release" .Release
+    "appName" "radarr"
+    "host" .Values.radarr.host
+    "port" .Values.radarr.port
+-}}
+{{ include "common.netpol.defaultIngress" $args }}

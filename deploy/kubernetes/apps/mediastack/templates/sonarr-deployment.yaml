@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sonarr
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sonarr
+  template:
+    metadata:
+      labels:
+        app: sonarr
+        connectsToDeluge: "true"
+    spec:
+      containers:
+        - name: sonarr
+          image: docker.io/linuxserver/sonarr:{{ .Values.sonarr.image.tag }}{{ with .Values.sonarr.image.digest }}@{{ . }}{{ end }}
+          env:
+            - name: PUID
+              value: "0"
+            - name: PGID
+              value: "0"
+            - name: TZ
+              value: "Europe/Zurich"
+          ports:
+            - containerPort: 8989
+          volumeMounts:
+            - name: storage
+              mountPath: /config
+              subPath: sonarr/config
+            - name: storage
+              mountPath: /downloads
+              subPath: downloads
+            - name: storage
+              mountPath: /tv
+              subPath: media/tv
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: mediastack-storage

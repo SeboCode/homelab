@@ -1,0 +1,50 @@
+{{-
+  $args := dict
+    "Values" .Values
+    "Release" .Release
+    "appName" "radarr"
+    "port" .Values.radarr.port
+-}}
+{{ include "common.netpol.traefik" $args }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: radarr-netpol-connects-ingress
+  namespace: {{ .Values.namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      app: radarr
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              connectsToRadarr: "true"
+      ports:
+        - protocol: TCP
+          port: 7878
+---
+# Radarr needs outbound HTTPS to metadata providers (e.g. TheMovieDB,
+# arbitrary hostnames, not enumerable). See "Egress beyond the cluster" in
+# the brief.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: radarr-netpol-internet-egress
+  namespace: {{ .Values.namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      app: radarr
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: 443

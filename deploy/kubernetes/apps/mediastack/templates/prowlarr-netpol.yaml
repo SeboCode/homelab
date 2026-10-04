@@ -1,0 +1,71 @@
+{{-
+  $args := dict
+    "Values" .Values
+    "Release" .Release
+    "appName" "prowlarr"
+    "port" .Values.prowlarr.port
+-}}
+{{ include "common.netpol.traefik" $args }}
+---
+# Prowlarr pushes indexer sync to Radarr over its HTTP API.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: prowlarr-netpol-egress-radarr
+  namespace: {{ .Values.namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      connectsToRadarr: "true"
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: radarr
+      ports:
+        - protocol: TCP
+          port: 7878
+---
+# Prowlarr pushes indexer sync to Sonarr over its HTTP API.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: prowlarr-netpol-egress-sonarr
+  namespace: {{ .Values.namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      connectsToSonarr: "true"
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: sonarr
+      ports:
+        - protocol: TCP
+          port: 8989
+---
+# Prowlarr needs outbound HTTPS to indexer sites (arbitrary hostnames, not
+# enumerable). See "Egress beyond the cluster" in the brief.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: prowlarr-netpol-internet-egress
+  namespace: {{ .Values.namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      app: prowlarr
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: 443

@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sonarr
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: sonarr
+  ports:
+    - port: {{ .Values.sonarr.port }}
+      targetPort: 8989

@@ -1,0 +1,49 @@
+{{-
+  $args := dict
+    "Values" .Values
+    "Release" .Release
+    "appName" "sonarr"
+    "port" .Values.sonarr.port
+-}}
+{{ include "common.netpol.traefik" $args }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: sonarr-netpol-connects-ingress
+  namespace: {{ .Values.namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      app: sonarr
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              connectsToSonarr: "true"
+      ports:
+        - protocol: TCP
+          port: 8989
+---
+# Sonarr needs outbound HTTPS to metadata providers (e.g. TheTVDB, arbitrary
+# hostnames, not enumerable). See "Egress beyond the cluster" in the brief.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: sonarr-netpol-internet-egress
+  namespace: {{ .Values.namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      app: sonarr
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: 443

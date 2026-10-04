@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: deluge
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: deluge
+  ports:
+    - port: {{ .Values.deluge.port }}
+      targetPort: 8112

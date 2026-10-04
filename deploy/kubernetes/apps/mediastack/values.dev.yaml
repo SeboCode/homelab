@@ -1,0 +1,12 @@
+---
+environment: dev
+deluge:
+  host: "deluge.dev.homelab.mikemarti.ch"
+prowlarr:
+  host: "prowlarr.dev.homelab.mikemarti.ch"
+radarr:
+  host: "radarr.dev.homelab.mikemarti.ch"
+sonarr:
+  host: "sonarr.dev.homelab.mikemarti.ch"
+jellyfin:
+  host: "jellyfin.dev.homelab.mikemarti.ch"

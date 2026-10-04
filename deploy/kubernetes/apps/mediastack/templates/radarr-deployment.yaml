@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: radarr
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: radarr
+  template:
+    metadata:
+      labels:
+        app: radarr
+        connectsToDeluge: "true"
+    spec:
+      containers:
+        - name: radarr
+          image: docker.io/linuxserver/radarr:{{ .Values.radarr.image.tag }}{{ with .Values.radarr.image.digest }}@{{ . }}{{ end }}
+          env:
+            - name: PUID
+              value: "0"
+            - name: PGID
+              value: "0"
+            - name: TZ
+              value: "Europe/Zurich"
+          ports:
+            - containerPort: 7878
+          volumeMounts:
+            - name: storage
+              mountPath: /config
+              subPath: radarr/config
+            - name: storage
+              mountPath: /downloads
+              subPath: downloads
+            - name: storage
+              mountPath: /movies
+              subPath: media/movies
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: mediastack-storage

@@ -125,3 +125,13 @@ k8s_yaml(
     )
 )
 
+k8s_yaml(
+    helm(
+        "../kubernetes/apps/mediastack/",
+        values=[
+            "../kubernetes/apps/mediastack/values.yaml",
+            "../kubernetes/apps/mediastack/values.dev.yaml",
+        ],
+    )
+)
+
