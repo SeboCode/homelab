@@ -1,0 +1,91 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  # The bolt database in /database is single-writer; a rolling update would
+  # briefly run two pods against the same file.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      labels:
+        app: server
+      annotations:
+        # subPath ConfigMap mounts do not hot-reload, so roll the pod when
+        # settings.json actually changes.
+        checksum/config: {{ include (print $.Template.BasePath "/server-config-map.yaml") . | sha256sum }}
+    spec:
+      # Replaces the ansible first-run guard: create the database and the admin
+      # user only when no database exists yet. A no-op on every subsequent start.
+      initContainers:
+        - name: bootstrap
+          image: docker.io/filebrowser/filebrowser:{{ .Values.server.image.tag }}{{ with .Values.server.image.digest }}@{{ . }}{{ end }}
+          command:
+            - sh
+            - -c
+            - |
+              set -eu
+              if [ ! -e /database/filebrowser.db ]; then
+                filebrowser -c /config/settings.json config init --create-user-dir
+                filebrowser -c /config/settings.json users add "$ADMIN_USERNAME" "$ADMIN_PASSWORD" --perm.admin=true
+              fi
+          env:
+            - name: ADMIN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: adminUsername
+            - name: ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: adminPassword
+          volumeMounts:
+            - name: storage
+              mountPath: /config
+              subPath: config
+            - name: storage
+              mountPath: /srv
+              subPath: data
+            - name: storage
+              mountPath: /database
+              subPath: database
+            - name: config
+              mountPath: /config/settings.json
+              subPath: settings.json
+              readOnly: true
+      containers:
+        - name: server
+          image: docker.io/filebrowser/filebrowser:{{ .Values.server.image.tag }}{{ with .Values.server.image.digest }}@{{ . }}{{ end }}
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: storage
+              mountPath: /config
+              subPath: config
+            - name: storage
+              mountPath: /srv
+              subPath: data
+            - name: storage
+              mountPath: /database
+              subPath: database
+            # Nested inside the /config PVC mount, so it shadows any settings.json
+            # already on the prod volume rather than replacing it on disk.
+            - name: config
+              mountPath: /config/settings.json
+              subPath: settings.json
+              readOnly: true
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: filebrowser-storage
+        - name: config
+          configMap:
+            name: server-config-map

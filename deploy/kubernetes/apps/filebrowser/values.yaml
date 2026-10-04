@@ -1,0 +1,9 @@
+---
+namespace: filebrowser
+storage:
+  # Metadata only on a hostPath PV; the real limit is the ZFS pool on charon.
+  capacity: 500Gi
+server:
+  image:
+    tag: "v2.53.1"
+  port: 8080

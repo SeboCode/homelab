@@ -6,4 +6,7 @@ services:
   kimai:
     node: k3d-homelab-dev-cluster-server-0
     path: /tmp/service-data/kimai-storage
+  filebrowser:
+    node: k3d-homelab-dev-cluster-server-0
+    path: /tmp/service-data/filebrowser-storage
 
