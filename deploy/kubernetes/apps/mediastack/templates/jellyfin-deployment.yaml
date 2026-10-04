@@ -1,0 +1,40 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jellyfin
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jellyfin
+  template:
+    metadata:
+      labels:
+        app: jellyfin
+    spec:
+      containers:
+        - name: jellyfin
+          image: docker.io/jellyfin/jellyfin:{{ .Values.jellyfin.image.tag }}{{ with .Values.jellyfin.image.digest }}@{{ . }}{{ end }}
+          ports:
+            - containerPort: 8096
+          volumeMounts:
+            - name: storage
+              mountPath: /config
+              subPath: jellyfin/config
+            - name: storage
+              mountPath: /cache
+              subPath: jellyfin/cache
+            - name: storage
+              mountPath: /media/movies
+              subPath: media/movies
+              readOnly: true
+            - name: storage
+              mountPath: /media/tv
+              subPath: media/tv
+              readOnly: true
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: mediastack-storage

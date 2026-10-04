@@ -1,0 +1,9 @@
+{{-
+  $args := dict
+    "Values" .Values
+    "Release" .Release
+    "appName" "jellyfin"
+    "host" .Values.jellyfin.host
+    "port" .Values.jellyfin.port
+-}}
+{{ include "common.netpol.defaultIngress" $args }}

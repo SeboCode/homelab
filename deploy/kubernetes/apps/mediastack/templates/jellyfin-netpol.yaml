@@ -1,0 +1,8 @@
+{{-
+  $args := dict
+    "Values" .Values
+    "Release" .Release
+    "appName" "jellyfin"
+    "port" .Values.jellyfin.port
+-}}
+{{ include "common.netpol.traefik" $args }}

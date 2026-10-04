@@ -31,6 +31,11 @@
         - "{{ mealie_global.container.server.config.port }}"
         - "{{ syncthing_global.container.server.config.port }}"
         - "{{ syncthing_global.container.server.config.sync_port }}"
+        - "{{ mediastack.container.jellyfin.config.port }}"
+        - "{{ mediastack.container.radarr.config.port }}"
+        - "{{ mediastack.container.sonarr.config.port }}"
+        - "{{ mediastack.container.prowlarr.config.port }}"
+        - "{{ mediastack.container.deluge.config.port }}"
       become: true
       become_method: sudo
 

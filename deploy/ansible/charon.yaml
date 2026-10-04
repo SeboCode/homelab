@@ -22,4 +22,5 @@
     - service/photoprism
     - service/gitea
     - service/syncthing
+    - service/mediastack
 

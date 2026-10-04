@@ -1,0 +1,44 @@
+---
+- name: Ensure sonarr config location exists
+  ansible.builtin.file:
+    path: "{{ mediastack.container.sonarr.storage.config }}"
+    state: directory
+    owner: "{{ mediastack.user.name }}"
+    group: "{{ mediastack.user.name }}"
+    mode: 0755
+
+- name: Ensure traefik is configured for sonarr
+  ansible.builtin.import_role:
+    name: infrastructure/traefik-service
+  vars:
+    service_name: sonarr
+    service_port: "{{ mediastack.container.sonarr.config.port }}"
+
+- name: Instantiate sonarr container
+  ansible.builtin.import_role:
+    name: infrastructure/container
+  vars:
+    container_name: mediastack_sonarr
+    container_image: "{{ mediastack.container.sonarr.image }}"
+    container_image_tag: "{{ mediastack.container.sonarr.tag }}"
+    container_userns: "keep-id:uid=0,gid=0"
+    container_user_override: "0:0"
+    container_env:
+      TZ: Europe/Zurich
+    container_volumes:
+      - "{{ mediastack.container.sonarr.storage.config }}:/config:rw"
+      - "{{ mediastack.shared_storage.downloads }}:/downloads:rw"
+      - "{{ mediastack.shared_storage.tv }}:/tv:rw"
+    container_ports:
+      - "{{ mediastack.container.sonarr.config.port }}:8989"
+    container_networks:
+      - "{{ mediastack.container.network }}"
+    container_network_aliases:
+      - sonarr
+    container_user: "{{ mediastack.user.name }}"
+
+- ansible.builtin.import_role:
+    name: infrastructure/http-healthcheck
+  vars:
+    service_name: sonarr
+    service_port: "{{ mediastack.container.sonarr.config.port }}"

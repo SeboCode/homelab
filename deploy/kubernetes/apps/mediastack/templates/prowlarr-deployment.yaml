@@ -1,0 +1,38 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prowlarr
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prowlarr
+  template:
+    metadata:
+      labels:
+        app: prowlarr
+        connectsToRadarr: "true"
+        connectsToSonarr: "true"
+    spec:
+      containers:
+        - name: prowlarr
+          image: docker.io/linuxserver/prowlarr:{{ .Values.prowlarr.image.tag }}{{ with .Values.prowlarr.image.digest }}@{{ . }}{{ end }}
+          env:
+            - name: PUID
+              value: "0"
+            - name: PGID
+              value: "0"
+            - name: TZ
+              value: "Europe/Zurich"
+          ports:
+            - containerPort: 9696
+          volumeMounts:
+            - name: storage
+              mountPath: /config
+              subPath: prowlarr/config
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: mediastack-storage

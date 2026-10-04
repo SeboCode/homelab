@@ -1,0 +1,29 @@
+---
+namespace: mediastack
+storage:
+  capacity: 250Gi
+deluge:
+  image:
+    tag: "2.2.0"
+    digest: "sha256:1254a0821a2d8768aba9d1258de381f2633890bf9f44f412eead2744b17a391d"
+  port: 8112
+prowlarr:
+  image:
+    tag: "2.6.5"
+    digest: "sha256:f2b26429893d4c4cb71941b7ee50b1bdecd9d5f9f9e02d5410615e9f4f7c8d95"
+  port: 9696
+radarr:
+  image:
+    tag: "6.4.4"
+    digest: "sha256:adb6c09d6b729ea5e642c99cea35af72702ef476bf4763f153299ac5db9f0b4f"
+  port: 7878
+sonarr:
+  image:
+    tag: "4.0.20"
+    digest: "sha256:f247545d23ba8b233d6604575347e48a623fe6ad75dda02348bf81917f3b5c06"
+  port: 8989
+jellyfin:
+  image:
+    tag: "12.1"
+    digest: "sha256:78d3ea1207d1322471fcac39a614f004f2ccf7e878f95ab2977d752f07e4dd7e"
+  port: 8096
