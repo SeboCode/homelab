@@ -1,0 +1,53 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: database
+  namespace: {{ .Values.namespace }}
+spec:
+  serviceName: database-headless
+  replicas: 1
+  selector:
+    matchLabels:
+      app: database
+  template:
+    metadata:
+      labels:
+        app: database
+    spec:
+      containers:
+        - name: mariadb
+          image: docker.io/mariadb:{{ .Values.database.image.tag }}{{ with .Values.database.image.digest }}@{{ . }}{{ end }}
+          args:
+            - "--innodb-buffer-pool-size=512M"
+            - "--transaction-isolation=READ-COMMITTED"
+            - "--character-set-server=utf8mb4"
+            - "--collation-server=utf8mb4_unicode_ci"
+            - "--max-connections=512"
+            - "--innodb-rollback-on-timeout=OFF"
+            - "--innodb-lock-wait-timeout=120"
+          env:
+            - name: MARIADB_DATABASE
+              value: {{ .Values.database.databaseName | quote }}
+            - name: MARIADB_USER
+              value: {{ .Values.database.databaseUsername | quote }}
+            - name: MARIADB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: dbPassword
+            - name: MARIADB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: dbRootPassword
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: storage
+              mountPath: /var/lib/mysql
+              subPath: mariadb
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: photoprism-storage
