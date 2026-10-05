@@ -1,0 +1,5 @@
+---
+environment: prod
+server:
+  host: "karakeep.homelab.mikemarti.ch"
+  disableSignups: "true"

@@ -1,0 +1,20 @@
+---
+namespace: karakeep
+storage:
+  capacity: 20Gi
+cluster:
+  podCidr: 10.42.0.0/16
+  serviceCidr: 10.43.0.0/16
+server:
+  image:
+    tag: "0.30.0"
+  port: 3000
+  disableSignups: "false"
+meilisearch:
+  image:
+    tag: "v1.13.3"
+  port: 7700
+chrome:
+  image:
+    tag: "124"
+  port: 9222

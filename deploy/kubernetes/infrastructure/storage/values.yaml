@@ -7,4 +7,6 @@ services:
     capacity: 200Gi
   kimai:
     capacity: 10Gi
+  karakeep:
+    capacity: 20Gi
 

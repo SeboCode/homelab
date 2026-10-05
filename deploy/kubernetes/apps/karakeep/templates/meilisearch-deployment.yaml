@@ -1,0 +1,39 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: meilisearch
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: meilisearch
+  template:
+    metadata:
+      labels:
+        app: meilisearch
+    spec:
+      containers:
+        - name: meilisearch
+          image: docker.io/getmeili/meilisearch:{{ .Values.meilisearch.image.tag }}{{ with .Values.meilisearch.image.digest }}@{{ . }}{{ end }}
+          env:
+            - name: MEILI_MASTER_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: meiliMasterKey
+            - name: MEILI_NO_ANALYTICS
+              value: "true"
+          ports:
+            - containerPort: {{ .Values.meilisearch.port }}
+          volumeMounts:
+            - name: storage
+              mountPath: /meili_data
+              subPath: meilisearch-data
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: karakeep-storage

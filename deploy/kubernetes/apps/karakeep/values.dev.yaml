@@ -1,0 +1,4 @@
+---
+environment: dev
+server:
+  host: "karakeep.dev.homelab.mikemarti.ch"
