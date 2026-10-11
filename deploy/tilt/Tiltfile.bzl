@@ -125,3 +125,13 @@ k8s_yaml(
     )
 )
 
+k8s_yaml(
+    helm(
+        "../kubernetes/apps/homeassistant/",
+        values=[
+            "../kubernetes/apps/homeassistant/values.yaml",
+            "../kubernetes/apps/homeassistant/values.dev.yaml",
+        ],
+    )
+)
+

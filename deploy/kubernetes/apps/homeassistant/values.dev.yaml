@@ -1,0 +1,11 @@
+---
+environment: dev
+server:
+  host: "homeassistant.dev.homelab.mikemarti.ch"
+zigbee2mqtt:
+  host: "zigbee2mqtt.dev.homelab.mikemarti.ch"
+  # No zigbee coordinator on the dev cluster and zigbee2mqtt refuses to start
+  # without one. Service, ingress and network policies are still exercised;
+  # only the pod is scaled to zero.
+  replicas: 0
+  devicePath: /dev/null

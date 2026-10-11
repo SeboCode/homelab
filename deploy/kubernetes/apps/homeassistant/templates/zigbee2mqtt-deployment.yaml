@@ -1,0 +1,90 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zigbee2mqtt
+  namespace: {{ .Values.namespace }}
+spec:
+  # Two pods must never hold the serial port at once.
+  strategy:
+    type: Recreate
+  replicas: {{ .Values.zigbee2mqtt.replicas }}
+  selector:
+    matchLabels:
+      app: zigbee2mqtt
+  template:
+    metadata:
+      labels:
+        app: zigbee2mqtt
+        connectsToMqtt: "true"
+        connectsToInternet: "true"
+    spec:
+      containers:
+        - name: zigbee2mqtt
+          image: ghcr.io/koenkk/zigbee2mqtt:{{ .Values.zigbee2mqtt.image.tag }}{{ with .Values.zigbee2mqtt.image.digest }}@{{ . }}{{ end }}
+          # A hostPath device bind-mount is visible inside the container but the
+          # container runtime's device cgroup allow-list still denies open() on it
+          # for a non-privileged container. `privileged` is currently the only way
+          # to pass a serial device through without a device-plugin DaemonSet.
+          # UNVERIFIED: the dev cluster was not reachable to run the kubectl devtest
+          # experiment from the conversion plan (plan-homeassistant.md 3.2). This
+          # must be confirmed on daisy with the coordinator attached before prod
+          # rollout; if the plain hostPath read succeeds, drop this.
+          securityContext:
+            privileged: true
+          env:
+            - name: TZ
+              value: {{ .Values.timezone | quote }}
+            - name: ZIGBEE2MQTT_CONFIG_MQTT_SERVER
+              value: "mqtt://mosquitto:{{ .Values.mosquitto.port }}"
+            - name: ZIGBEE2MQTT_CONFIG_MQTT_BASE_TOPIC
+              value: {{ .Values.zigbee2mqtt.baseTopic | quote }}
+            - name: ZIGBEE2MQTT_CONFIG_MQTT_USER
+              value: {{ .Values.mosquitto.zigbee2mqttUsername | quote }}
+            - name: ZIGBEE2MQTT_CONFIG_MQTT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: mosquittoZigbee2mqttPassword
+            - name: ZIGBEE2MQTT_CONFIG_SERIAL_PORT
+              value: {{ .Values.zigbee2mqtt.deviceMountPath | quote }}
+            - name: ZIGBEE2MQTT_CONFIG_FRONTEND_ENABLED
+              value: "true"
+            - name: ZIGBEE2MQTT_CONFIG_FRONTEND_PORT
+              value: {{ .Values.zigbee2mqtt.port | quote }}
+            - name: ZIGBEE2MQTT_CONFIG_FRONTEND_URL
+              value: "https://{{ .Values.zigbee2mqtt.host }}"
+            - name: ZIGBEE2MQTT_CONFIG_FRONTEND_AUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: zigbee2mqttFrontendAuthToken
+            - name: ZIGBEE2MQTT_CONFIG_HOMEASSISTANT_ENABLED
+              value: "true"
+          ports:
+            - containerPort: {{ .Values.zigbee2mqtt.port }}
+          volumeMounts:
+            - name: zigbee-adapter
+              mountPath: {{ .Values.zigbee2mqtt.deviceMountPath }}
+            - name: udev
+              mountPath: /run/udev
+              readOnly: true
+            - name: storage
+              mountPath: /app/data
+              subPath: zigbee2mqtt-config
+      volumes:
+        - name: zigbee-adapter
+          hostPath:
+            # Always the /dev/serial/by-id/ path in prod: kernel-assigned tty names
+            # are not stable across replug. type: CharDevice is required — File
+            # fails the kubelet's type check, and the kubelet's stat follows the
+            # by-id symlink so CharDevice is still correct.
+            path: {{ .Values.zigbee2mqtt.devicePath }}
+            type: CharDevice
+        - name: udev
+          hostPath:
+            path: /run/udev
+            type: Directory
+        - name: storage
+          persistentVolumeClaim:
+            claimName: homeassistant-storage

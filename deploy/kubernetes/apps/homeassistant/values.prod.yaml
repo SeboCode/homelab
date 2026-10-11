@@ -1,0 +1,10 @@
+---
+environment: prod
+server:
+  host: "homeassistant.homelab.mikemarti.ch"
+zigbee2mqtt:
+  host: "zigbee2mqtt.homelab.mikemarti.ch"
+  # TODO(user): run `ls -l /dev/serial/by-id/` on daisy with the coordinator plugged
+  # in and paste the stable by-id path here. Do not use /dev/ttyUSB0 directly —
+  # kernel-assigned names are not stable across replug/reboot.
+  devicePath: "/dev/serial/by-id/REPLACE_ME"
