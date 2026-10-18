@@ -1,0 +1,55 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      labels:
+        app: server
+        connectsToDatabase: "true"
+        connectsToInternet: "true"
+    spec:
+      containers:
+        - name: server
+          image: ghcr.io/mealie-recipes/mealie:{{ .Values.server.image.tag }}{{ with .Values.server.image.digest }}@{{ . }}{{ end }}
+          env:
+            - name: ALLOW_SIGNUP
+              value: {{ .Values.server.allowSignup | quote }}
+            - name: TZ
+              value: {{ .Values.timezone | quote }}
+            - name: BASE_URL
+              value: "https://{{ .Values.server.host }}"
+            - name: DB_ENGINE
+              value: "postgres"
+            - name: POSTGRES_SERVER
+              value: "database"
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_DB
+              value: {{ .Values.database.databaseName | quote }}
+            - name: POSTGRES_USER
+              value: {{ .Values.database.databaseUsername | quote }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: dbPassword
+          ports:
+            - containerPort: 9000
+          volumeMounts:
+            - name: storage
+              mountPath: /app/data
+              subPath: data
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: mealie-storage
