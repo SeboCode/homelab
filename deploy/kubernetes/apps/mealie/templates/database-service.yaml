@@ -1,0 +1,25 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: database-headless
+  namespace: {{.Values.namespace }}
+spec:
+  clusterIP: None
+  selector:
+    app: database
+  ports:
+    - port: {{ .Values.database.port }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: database
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: database
+  ports:
+    - port: {{ .Values.database.port }}
+      targetPort: {{ .Values.database.port }}
+

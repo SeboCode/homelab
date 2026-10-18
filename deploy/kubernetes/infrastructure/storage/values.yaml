@@ -7,4 +7,6 @@ services:
     capacity: 200Gi
   kimai:
     capacity: 10Gi
+  mealie:
+    capacity: 10Gi
 

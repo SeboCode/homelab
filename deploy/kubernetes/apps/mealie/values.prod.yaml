@@ -1,0 +1,6 @@
+---
+environment: prod
+server:
+  host: "mealie.homelab.mikemarti.ch"
+  allowSignup: "false"
+

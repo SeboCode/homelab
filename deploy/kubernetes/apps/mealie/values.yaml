@@ -1,0 +1,16 @@
+---
+namespace: mealie
+timezone: Europe/Zurich
+storage:
+  capacity: 10Gi
+server:
+  image:
+    tag: "v3.12.0"
+  port: 9000
+database:
+  image:
+    tag: "17.9"
+  port: 5432
+  databaseName: mealie_database
+  databaseUsername: mealie_pg_user
+
