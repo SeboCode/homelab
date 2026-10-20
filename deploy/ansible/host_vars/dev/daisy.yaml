@@ -1,6 +1,8 @@
 ---
 domain: dev.daisy.mikemarti.ch
 superuser_method: sudo
+# Vagrant manages its own key outside of the Ansible managed block
+sshd_authorized_keys: []
 charon_superuser_method: doas
 data_root_drive: /dev/vdb1
 k3s_fetch_kubeconfig_leaking_admin_access: true # ONLY ON DEV!

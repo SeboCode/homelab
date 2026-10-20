@@ -1,6 +1,8 @@
 ---
 domain: dev.charon.mikemarti.ch
 superuser_method: sudo
+# Vagrant manages its own key outside of the Ansible managed block
+sshd_authorized_keys: []
 
 zfs_env:
   devices:

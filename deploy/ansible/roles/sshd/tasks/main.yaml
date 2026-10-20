@@ -16,3 +16,19 @@
 - ansible.builtin.include_tasks: "{{ platform }}.yaml"
   when: sshd_config.changed
 
+- name: Ensure ssh directory of the connecting user exists
+  ansible.builtin.file:
+    path: ~/.ssh
+    state: directory
+    mode: 0700
+  become: false
+
+- name: Ensure authorized keys of the connecting user are present
+  ansible.builtin.blockinfile:
+    path: ~/.ssh/authorized_keys
+    marker: "# {mark} ANSIBLE MANAGED AUTHORIZED KEYS"
+    block: "{{ sshd_authorized_keys | join('\n') }}"
+    create: true
+    mode: 0600
+  become: false
+
