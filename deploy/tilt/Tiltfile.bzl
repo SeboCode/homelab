@@ -105,33 +105,33 @@ k8s_yaml(
 # --------
 # services
 # --------
-k8s_yaml(
-    helm(
-        "../kubernetes/apps/immich/",
-        values=[
-            "../kubernetes/apps/immich/values.yaml",
-            "../kubernetes/apps/immich/values.dev.yaml",
-        ],
-    )
-)
-
-k8s_yaml(
-    helm(
-        "../kubernetes/apps/kimai/",
-        values=[
-            "../kubernetes/apps/kimai/values.yaml",
-            "../kubernetes/apps/kimai/values.dev.yaml",
-        ],
-    )
-)
-
-k8s_yaml(
-    helm(
-        "../kubernetes/apps/mealie/",
-        values=[
-            "../kubernetes/apps/mealie/values.yaml",
-            "../kubernetes/apps/mealie/values.dev.yaml",
-        ],
-    )
-)
+#k8s_yaml(
+#    helm(
+#        "../kubernetes/apps/immich/",
+#        values=[
+#            "../kubernetes/apps/immich/values.yaml",
+#            "../kubernetes/apps/immich/values.dev.yaml",
+#        ],
+#    )
+#)
+#
+#k8s_yaml(
+#    helm(
+#        "../kubernetes/apps/kimai/",
+#        values=[
+#            "../kubernetes/apps/kimai/values.yaml",
+#            "../kubernetes/apps/kimai/values.dev.yaml",
+#        ],
+#    )
+#)
+#
+#k8s_yaml(
+#    helm(
+#        "../kubernetes/apps/mealie/",
+#        values=[
+#            "../kubernetes/apps/mealie/values.yaml",
+#            "../kubernetes/apps/mealie/values.dev.yaml",
+#        ],
+#    )
+#)
 
