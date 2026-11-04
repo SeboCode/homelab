@@ -1,7 +1,4 @@
 ---
-# The image's own entrypoint (/init.sh) only seeds /config/settings.json from its
-# built-in defaults when the file is absent. Shipping it as a ConfigMap keeps the
-# port in sync with .Values.server.port instead of duplicating it as a literal here.
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -17,3 +14,4 @@ data:
       "database": "/database/filebrowser.db",
       "root": "/srv"
     }
+
