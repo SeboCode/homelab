@@ -18,3 +18,14 @@ traefik_global:
 
 wol_poweroff_user: wol-poweroff-user
 
+k3s:
+  version: v1.36.1+k3s1 # keep in sync with the k3s image in deploy/k3d/cluster.yaml
+  # Keyed by ansible_facts['architecture'], sha256 from the release's sha256sum-<arch>.txt
+  binary:
+    x86_64:
+      name: k3s
+      sha256: a443db3fe9820cd93617ae67e4386d87c1514c1e96ceb30f4c2791c39065653c
+    aarch64:
+      name: k3s-arm64
+      sha256: 2240e9f7fd8cf36e9998d7ef18781975780d724b59408174618ec15b410891dc
+
