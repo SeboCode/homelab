@@ -9,4 +9,7 @@ services:
   mealie:
     node: daisy
     path: /mnt/data/mealie-storage
+  filebrowser:
+    node: charon
+    path: /service-data/filebrowser-storage
 

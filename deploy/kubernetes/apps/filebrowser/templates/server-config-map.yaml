@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: server-config-map
+  namespace: {{ .Values.namespace }}
+data:
+  settings.json: |
+    {
+      "port": {{ .Values.server.port }},
+      "baseURL": "",
+      "address": "",
+      "log": "stdout",
+      "database": "/database/filebrowser.db",
+      "root": "/srv"
+    }
+

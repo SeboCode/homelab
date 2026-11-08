@@ -1,0 +1,125 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  # The bolt database in /database is single-writer; a rolling update would
+  # briefly run two pods against the same file.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      labels:
+        app: server
+      annotations:
+        # subPath ConfigMap mounts do not hot-reload, so roll the pod when
+        # settings.json actually changes.
+        checksum/config: {{ include (print $.Template.BasePath "/server-config-map.yaml") . | sha256sum }}
+    spec:
+      # The image runs as this non-root user. The hostPath-backed PV ignores fsGroup, so the fix-permissions init
+      # container chowns the volume directories to it instead. If this is not done, modifications to the various
+      # folders mounted from the PV will result in permission issues inside the container.
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+      initContainers:
+        # This is the only container that runs as root; it does nothing but chown and exits. Only entries not already
+        # owned by 1000:1000 are touched, so after the first run this is a read-only walk and does not rewrite
+        # metadata on every file of the library in /srv.
+        - name: fix-permissions
+          image: docker.io/filebrowser/filebrowser:{{ .Values.server.image.tag }}{{ with .Values.server.image.digest }}@{{ . }}{{ end }}
+          command:
+            - sh
+            - -c
+            - |
+              set -eu
+              find /config /database /srv \( ! -user 1000 -o ! -group 1000 \) -exec chown -h 1000:1000 {} +
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+            runAsNonRoot: false
+            capabilities:
+              drop:
+                - ALL
+              add:
+                - CHOWN # to change ownership
+                - DAC_READ_SEARCH # to traverse directories root cannot otherwise read.
+          volumeMounts:
+            - name: storage
+              mountPath: /config
+              subPath: config
+            - name: storage
+              mountPath: /srv
+              subPath: data
+            - name: storage
+              mountPath: /database
+              subPath: database
+        - name: bootstrap
+          image: docker.io/filebrowser/filebrowser:{{ .Values.server.image.tag }}{{ with .Values.server.image.digest }}@{{ . }}{{ end }}
+          command:
+            - sh
+            - -c
+            - |
+              set -eu
+              if [ ! -e /database/filebrowser.db ]; then
+                filebrowser -c /config/settings.json config init --create-user-dir
+                filebrowser -c /config/settings.json users add "$ADMIN_USERNAME" "$ADMIN_PASSWORD" --perm.admin=true
+              fi
+          env:
+            - name: ADMIN_USERNAME
+              value: {{ .Values.server.adminUsername }}
+            - name: ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: adminPassword
+          volumeMounts:
+            - name: storage
+              mountPath: /config
+              subPath: config
+            - name: storage
+              mountPath: /srv
+              subPath: data
+            - name: storage
+              mountPath: /database
+              subPath: database
+            - name: config
+              mountPath: /config/settings.json
+              subPath: settings.json
+              readOnly: true
+      containers:
+        - name: server
+          image: docker.io/filebrowser/filebrowser:{{ .Values.server.image.tag }}{{ with .Values.server.image.digest }}@{{ . }}{{ end }}
+          ports:
+            - containerPort: {{ .Values.server.port }}
+          volumeMounts:
+            - name: storage
+              mountPath: /config
+              subPath: config
+            - name: storage
+              mountPath: /srv
+              subPath: data
+            - name: storage
+              mountPath: /database
+              subPath: database
+            # Nested inside the /config PVC mount, so it shadows any settings.json
+            # already on the prod volume rather than replacing it on disk.
+            - name: config
+              mountPath: /config/settings.json
+              subPath: settings.json
+              readOnly: true
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: filebrowser-storage
+        - name: config
+          configMap:
+            name: server-config-map
+
