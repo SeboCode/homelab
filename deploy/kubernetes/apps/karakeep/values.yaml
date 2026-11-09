@@ -1,0 +1,16 @@
+---
+namespace: karakeep
+storage:
+  capacity: 20Gi
+server:
+  image:
+    tag: "0.30.0"
+  port: 3000
+meilisearch:
+  image:
+    tag: "v1.13.3"
+  port: 7700
+chrome:
+  image:
+    tag: "124"
+  port: 9222

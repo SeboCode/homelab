@@ -1,0 +1,58 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  # There should only be one instance running at the same time to not interfere with the mounted data.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      labels:
+        app: server
+        connectsToMeilisearch: "true"
+        connectsToBrowser: "true"
+        connectsToInternet: "true"
+    spec:
+      containers:
+        - name: server
+          image: ghcr.io/karakeep-app/karakeep:{{ .Values.server.image.tag }}{{ with .Values.server.image.digest }}@{{ . }}{{ end }}
+          env:
+            - name: DATA_DIR
+              value: "/data"
+            - name: DISABLE_SIGNUPS
+              value: {{ .Values.server.disableSignups | quote }}
+            - name: NEXTAUTH_URL
+              value: "https://{{ .Values.server.host }}"
+            - name: NEXTAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: nextauthSecret
+            - name: MEILI_ADDR
+              value: "http://meilisearch:{{ .Values.meilisearch.port }}"
+            - name: MEILI_MASTER_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: meilisearchMasterKey
+            # TODO seems to not be an official environment variable. maybe BROWSER_WEB_URL?
+            - name: BROWSER_ADDR
+              value: "http://chrome:{{ .Values.chrome.port }}"
+          ports:
+            - containerPort: {{ .Values.server.port }}
+          volumeMounts:
+            - name: storage
+              mountPath: /data
+              subPath: data
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: karakeep-storage
+

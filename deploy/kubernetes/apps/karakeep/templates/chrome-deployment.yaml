@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chrome
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chrome
+  template:
+    metadata:
+      labels:
+        app: chrome
+        connectsToInternet: "true"
+    spec:
+      containers:
+        - name: chrome
+          image: docker.io/zenika/alpine-chrome:{{ .Values.chrome.image.tag }}{{ with .Values.chrome.image.digest }}@{{ . }}{{ end }}
+          args:
+            - "--no-sandbox"
+            - "--disable-gpu"
+            - "--disable-dev-shm-usage"
+            - "--remote-debugging-address=0.0.0.0"
+            - "--remote-debugging-port={{ .Values.chrome.port }}"
+            - "--hide-scrollbars"
+          ports:
+            - containerPort: {{ .Values.chrome.port }}
+          volumeMounts:
+            # TODO switch to node selector and remove this (also the directory in the production location)
+            # chrome has no real persistent-data need. This mounts the shared PVC under a
+            # throwaway subPath purely to inherit WaitForFirstConsumer scheduling, so chrome
+            # is pinned to the same node as server/meilisearch (mirrors immich's
+            # machine-learning component, which does the same trick for its /cache mount).
+            - name: storage
+              mountPath: /chrome-scratch
+              subPath: chrome-scratch
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: {{ .Values.namespace }}-storage
+
