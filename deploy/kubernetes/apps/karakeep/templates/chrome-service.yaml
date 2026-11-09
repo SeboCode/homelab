@@ -10,3 +10,4 @@ spec:
   ports:
     - port: {{ .Values.chrome.port }}
       targetPort: {{ .Values.chrome.port }}
+

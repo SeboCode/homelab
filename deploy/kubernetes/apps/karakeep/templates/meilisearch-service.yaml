@@ -10,3 +10,4 @@ spec:
   ports:
     - port: {{ .Values.meilisearch.port }}
       targetPort: {{ .Values.meilisearch.port }}
+

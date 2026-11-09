@@ -17,14 +17,7 @@ spec:
     spec:
       containers:
         - name: chrome
-          # Swapped from gcr.io/zenika-hub/alpine-chrome (same content/tag) to the Docker Hub
-          # mirror: GCR billing is disabled on the upstream zenika-hub project, so the gcr.io
-          # image is unpullable (see karakeep-app/karakeep#3000). Not an upgrade — identical
-          # tag, identical args.
           image: docker.io/zenika/alpine-chrome:{{ .Values.chrome.image.tag }}{{ with .Values.chrome.image.digest }}@{{ . }}{{ end }}
-          # Verbatim from the Ansible role's container_command. Keep --disable-dev-shm-usage
-          # (default 64MB /dev/shm is otherwise too small) and --no-sandbox (allows Chrome to
-          # run without extra privileges) — do not compensate with a securityContext.
           args:
             - "--no-sandbox"
             - "--disable-gpu"
@@ -35,6 +28,7 @@ spec:
           ports:
             - containerPort: {{ .Values.chrome.port }}
           volumeMounts:
+            # TODO switch to node selector and remove this (also the directory in the production location)
             # chrome has no real persistent-data need. This mounts the shared PVC under a
             # throwaway subPath purely to inherit WaitForFirstConsumer scheduling, so chrome
             # is pinned to the same node as server/meilisearch (mirrors immich's
@@ -46,3 +40,4 @@ spec:
         - name: storage
           persistentVolumeClaim:
             claimName: {{ .Values.namespace }}-storage
+

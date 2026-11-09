@@ -6,6 +6,7 @@ metadata:
   namespace: {{ .Values.namespace }}
 spec:
   replicas: 1
+  # There should only be one instance running at the same time to not interfere with the mounted data.
   strategy:
     type: Recreate
   selector:
@@ -40,12 +41,9 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: secret
-                  key: meiliMasterKey
-            # Ansible's karakeep_server sets BROWSER_ADDR, but karakeep's own
-            # packages/shared/config.ts (checked against the pinned v0.30.0 tag)
-            # only reads BROWSER_WEB_URL / BROWSER_WEBSOCKET_URL. BROWSER_ADDR is
-            # not a variable the app consumes, so it is not ported verbatim here.
-            - name: BROWSER_WEB_URL
+                  key: meilisearchMasterKey
+            # TODO seems to not be an official environment variable. maybe BROWSER_WEB_URL?
+            - name: BROWSER_ADDR
               value: "http://chrome:{{ .Values.chrome.port }}"
           ports:
             - containerPort: {{ .Values.server.port }}
@@ -57,3 +55,4 @@ spec:
         - name: storage
           persistentVolumeClaim:
             claimName: karakeep-storage
+

@@ -6,6 +6,7 @@ metadata:
   namespace: {{ .Values.namespace }}
 spec:
   replicas: 1
+  # There should only be one instance running at the same time to not interfere with the mounted data.
   strategy:
     type: Recreate
   selector:
@@ -24,7 +25,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: secret
-                  key: meiliMasterKey
+                  key: meilisearchMasterKey
             - name: MEILI_NO_ANALYTICS
               value: "true"
           ports:
@@ -37,3 +38,4 @@ spec:
         - name: storage
           persistentVolumeClaim:
             claimName: karakeep-storage
+
