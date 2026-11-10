@@ -6,6 +6,7 @@ metadata:
   namespace: {{ .Values.namespace }}
 spec:
   replicas: 1
+  # There should only be one instance running at the same time to not interfere with the database connection.
   strategy:
     type: Recreate
   selector:
@@ -38,10 +39,7 @@ spec:
             - name: CREATE_ADMIN
               value: "true"
             - name: ADMIN_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: secret
-                  key: adminUsername
+              value: {{ .Values.server.adminUsername }}
             - name: ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -49,3 +47,4 @@ spec:
                   key: adminPassword
           ports:
             - containerPort: {{ .Values.server.port }}
+

@@ -29,15 +29,13 @@ spec:
                   name: secret
                   key: dbPassword
           ports:
-            - containerPort: 5432
+            - containerPort: {{ .Values.database.port }}
           volumeMounts:
             - name: storage
-              # postgres:18 moved its VOLUME target one level up from /var/lib/postgresql/data
-              # (PGDATA is now versioned, e.g. /var/lib/postgresql/18/docker). Mount the parent
-              # directory, matching what the Ansible role already mounts.
               mountPath: /var/lib/postgresql
               subPath: db-data
       volumes:
         - name: storage
           persistentVolumeClaim:
             claimName: miniflux-storage
+

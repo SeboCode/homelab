@@ -9,7 +9,7 @@ spec:
   selector:
     app: database
   ports:
-    - port: 5432
+    - port: {{ .Values.database.port }}
 ---
 apiVersion: v1
 kind: Service
@@ -20,5 +20,6 @@ spec:
   selector:
     app: database
   ports:
-    - port: 5432
-      targetPort: 5432
+    - port: {{ .Values.database.port }} 
+      targetPort: {{ .Values.database.port }}
+

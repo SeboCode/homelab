@@ -2,3 +2,5 @@
 environment: prod
 server:
   host: "miniflux.homelab.mikemarti.ch"
+  adminUsername: admin
+
