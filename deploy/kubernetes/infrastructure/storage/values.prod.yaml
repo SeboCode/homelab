@@ -15,4 +15,7 @@ services:
   karakeep:
     node: daisy
     path: /mnt/data/karakeep-storage
+  miniflux:
+    node: daisy
+    path: /mnt/data/miniflux-storage
 

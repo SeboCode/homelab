@@ -1,0 +1,15 @@
+---
+namespace: miniflux
+storage:
+  capacity: 10Gi
+server:
+  image:
+    tag: "2.2.17"
+  port: 8080
+database:
+  image:
+    tag: "18.3"
+  port: 5432
+  databaseName: miniflux_database
+  databaseUsername: miniflux_pg_user
+
