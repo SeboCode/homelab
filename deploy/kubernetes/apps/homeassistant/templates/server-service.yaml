@@ -10,3 +10,4 @@ spec:
   ports:
     - port: {{ .Values.server.port }}
       targetPort: {{ .Values.server.port }}
+

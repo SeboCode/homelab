@@ -1,5 +1,4 @@
 ---
-# mosquitto.conf carries no secrets, unlike the password file it references.
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -10,3 +9,4 @@ data:
     listener {{ .Values.mosquitto.port }}
     allow_anonymous false
     password_file /mosquitto/passwords/passwords
+

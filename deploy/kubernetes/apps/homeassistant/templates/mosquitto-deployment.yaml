@@ -15,17 +15,14 @@ spec:
         app: mosquitto
     spec:
       securityContext:
-        # uid/gid the eclipse-mosquitto image runs as.
         runAsUser: 1883
         runAsGroup: 1883
-        # Makes the emptyDir passwords volume writable by both the initContainer
-        # and the main container. Safe here: it is an emptyDir, not a hostPath.
         fsGroup: 1883
       initContainers:
         - name: password-file
           image: docker.io/eclipse-mosquitto:{{ .Values.mosquitto.image.tag }}{{ with .Values.mosquitto.image.digest }}@{{ . }}{{ end }}
-          # The password file is generated at pod start from the plaintext secrets
-          # so no password hash ever lands in a rendered manifest or in git.
+          # The password file is generated at pod start from the unhashed secrets.
+          # This allows the password to be stored in a not hashed format.
           command:
             - sh
             - -c
@@ -66,5 +63,8 @@ spec:
         - name: config
           configMap:
             name: mosquitto-config-map
+        # Not mounted password directory only available to the initContainer and
+        # the main container.
         - name: passwords
           emptyDir: {}
+

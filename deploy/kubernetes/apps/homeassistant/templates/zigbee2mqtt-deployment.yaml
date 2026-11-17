@@ -17,11 +17,11 @@ spec:
       labels:
         app: zigbee2mqtt
         connectsToMqtt: "true"
-        connectsToInternet: "true"
     spec:
       containers:
         - name: zigbee2mqtt
           image: ghcr.io/koenkk/zigbee2mqtt:{{ .Values.zigbee2mqtt.image.tag }}{{ with .Values.zigbee2mqtt.image.digest }}@{{ . }}{{ end }}
+          # TODO check this as it is a security risk! try without first and 
           # A hostPath device bind-mount is visible inside the container but the
           # container runtime's device cgroup allow-list still denies open() on it
           # for a non-privileged container. `privileged` is currently the only way
@@ -75,10 +75,6 @@ spec:
       volumes:
         - name: zigbee-adapter
           hostPath:
-            # Always the /dev/serial/by-id/ path in prod: kernel-assigned tty names
-            # are not stable across replug. type: CharDevice is required — File
-            # fails the kubelet's type check, and the kubelet's stat follows the
-            # by-id symlink so CharDevice is still correct.
             path: {{ .Values.zigbee2mqtt.devicePath }}
             type: CharDevice
         - name: udev
@@ -88,3 +84,4 @@ spec:
         - name: storage
           persistentVolumeClaim:
             claimName: homeassistant-storage
+

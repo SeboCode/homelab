@@ -10,3 +10,4 @@ spec:
   ports:
     - port: {{ .Values.mosquitto.port }}
       targetPort: {{ .Values.mosquitto.port }}
+

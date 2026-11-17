@@ -10,3 +10,4 @@ spec:
   ports:
     - port: {{ .Values.zigbee2mqtt.port }}
       targetPort: {{ .Values.zigbee2mqtt.port }}
+

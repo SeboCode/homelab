@@ -26,6 +26,7 @@ spec:
       initContainers:
         - name: config-bootstrap
           image: ghcr.io/home-assistant/home-assistant:{{ .Values.server.image.tag }}{{ with .Values.server.image.digest }}@{{ . }}{{ end }}
+          # TODO: check if this is really necessary
           # configuration.yaml is managed by the config map, but its !include
           # targets are owned by Home Assistant's UI editors and only exist after
           # first run. Create empty ones so a fresh volume starts cleanly; never
@@ -73,6 +74,11 @@ spec:
           secret:
             secretName: secret
             defaultMode: 0400
+            # Same effect as a subPath mount (only this key, renamed), but the
+            # file is updated in place when the secret changes, without a pod
+            # restart. Only possible because /ssh is a dedicated mount point and
+            # not a directory inside the PVC.
             items:
-              - key: charonSshPrivateKey
-                path: charon_ssh_key
+              - key: charonWolPoweroffUserSshPrivateKey
+                path: charon_wol_poweroff_ssh_key
+
