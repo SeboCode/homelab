@@ -1,0 +1,101 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zigbee2mqtt
+  namespace: {{ .Values.namespace }}
+spec:
+  # Two pods must never hold the serial port at once.
+  strategy:
+    type: Recreate
+  replicas: {{ .Values.zigbee2mqtt.replicas }}
+  selector:
+    matchLabels:
+      app: zigbee2mqtt
+  template:
+    metadata:
+      labels:
+        app: zigbee2mqtt
+        connectsToMqtt: "true"
+      annotations:
+        # The config is only copied at pod start; force a rollout on config change.
+        checksum/config: {{ include (print $.Template.BasePath "/zigbee2mqtt-config-map.yaml") . | sha256sum }}
+    spec:
+      initContainers:
+        # TODO check if this can be simplified
+        # zigbee2mqtt needs a writable configuration.yaml, so it is copied instead
+        # of mounted. Like the Ansible template task, it is overwritten every time.
+        - name: config-bootstrap
+          image: ghcr.io/koenkk/zigbee2mqtt:{{ .Values.zigbee2mqtt.image.tag }}{{ with .Values.zigbee2mqtt.image.digest }}@{{ . }}{{ end }}
+          command:
+            - sh
+            - -c
+            - |
+              set -eu
+              cp /config-map/configuration.yaml /app/data/configuration.yaml
+              chmod 0600 /app/data/configuration.yaml
+          volumeMounts:
+            - name: storage
+              mountPath: /app/data
+              subPath: zigbee2mqtt-config
+            - name: config
+              mountPath: /config-map
+              readOnly: true
+      containers:
+        - name: zigbee2mqtt
+          image: ghcr.io/koenkk/zigbee2mqtt:{{ .Values.zigbee2mqtt.image.tag }}{{ with .Values.zigbee2mqtt.image.digest }}@{{ . }}{{ end }}
+          # TODO check this as it is a security risk! try without first and 
+          # A hostPath device bind-mount is visible inside the container but the
+          # container runtime's device cgroup allow-list still denies open() on it
+          # for a non-privileged container. `privileged` is currently the only way
+          # to pass a serial device through without a device-plugin DaemonSet.
+          # UNVERIFIED: the dev cluster was not reachable to run the kubectl devtest
+          # experiment from the conversion plan (plan-homeassistant.md 3.2). This
+          # must be confirmed on daisy with the coordinator attached before prod
+          # rollout; if the plain hostPath read succeeds, drop this.
+          securityContext:
+            privileged: true
+          env:
+            - name: TZ
+              value: {{ .Values.timezone | quote }}
+            # Use environment variables to let zigbee2mqtt handle proper escaping, if necessary.
+            - name: ZIGBEE2MQTT_CONFIG_FRONTEND_AUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: zigbee2mqttFrontendAuthToken
+            # TODO: move to mqtt.user in zigbee2mqtt-config-map.yaml (not a secret, needs no escaping)
+            - name: ZIGBEE2MQTT_CONFIG_MQTT_USER
+              value: {{ .Values.mosquitto.zigbee2mqttUsername | quote }}
+            - name: ZIGBEE2MQTT_CONFIG_MQTT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: mosquittoZigbee2mqttPassword
+          ports:
+            - containerPort: {{ .Values.zigbee2mqtt.port }}
+          volumeMounts:
+            - name: zigbee-adapter
+              mountPath: {{ .Values.zigbee2mqtt.deviceMountPath }}
+            - name: udev
+              mountPath: /run/udev
+              readOnly: true
+            - name: storage
+              mountPath: /app/data
+              subPath: zigbee2mqtt-config
+      volumes:
+        - name: zigbee-adapter
+          hostPath:
+            path: {{ .Values.zigbee2mqtt.devicePath }}
+            type: CharDevice
+        - name: udev
+          hostPath:
+            path: /run/udev
+            type: Directory
+        - name: storage
+          persistentVolumeClaim:
+            claimName: homeassistant-storage
+        - name: config
+          configMap:
+            name: zigbee2mqtt-config-map
+

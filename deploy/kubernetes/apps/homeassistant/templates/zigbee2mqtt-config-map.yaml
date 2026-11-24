@@ -1,0 +1,54 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zigbee2mqtt-config-map
+  namespace: {{ .Values.namespace }}
+data:
+  configuration.yaml: |
+    frontend:
+      enabled: true
+      url: "https://{{ .Values.zigbee2mqtt.host }}"
+    serial:
+      port: {{ .Values.zigbee2mqtt.deviceMountPath }}
+    mqtt:
+      base_topic: {{ .Values.zigbee2mqtt.baseTopic }}
+      server: mqtt://mosquitto:{{ .Values.mosquitto.port }}
+    homeassistant:
+      enabled: true
+    devices:
+      '0x3425b4fffe12db4a':
+        friendly_name: living_room/temparature_and_humidity_sensor
+        homeassistant:
+          name: Living Room Temparature and Humidity Sensor
+      '0x001788010e3633e0':
+        friendly_name: living_room/ceiling_lamp
+        availability:
+          timeout: 1 # This sets the device to unavailable after 1 minute at which point home assistant will set its state to off
+        homeassistant:
+          name: Living Room Ceiling Lamp
+      '0x001788010e2bc677':
+        friendly_name: living_room/philips_hue_dimmer_switch
+        homeassistant:
+          name: Living Room Philips Hue Dimmer Switch
+      '0x3425b4fffe136b61':
+        friendly_name: bedroom/temparature_and_humidity_sensor
+        homeassistant:
+          name: Bedroom Temparature and Humidity Sensor
+      '0x180df9fffe1daea8':
+        friendly_name: kitchen/coffee_machine_smart_plug
+        homeassistant:
+          name: Kitchen Coffee Machine Smart Plug
+      '0x70d07efffee94e9c':
+        friendly_name: kitchen/fridge_temparature_and_humidity_sensor
+        homeassistant:
+          name: Kitchen Fridge Temparature and Humidity Sensor
+      '0xa4c13810b6c8ffff':
+        friendly_name: kitchen/freezer_temparature_and_humidity_sensor
+        homeassistant:
+          name: Kitchen Freezer Temparature and Humidity Sensor
+      '0x18690afffe16f0f2':
+        friendly_name: bathroom/temparature_and_humidity_sensor
+        homeassistant:
+          name: Bathroom Temparature and Humidity Sensor
+

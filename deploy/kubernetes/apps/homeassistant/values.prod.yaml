@@ -1,0 +1,9 @@
+---
+environment: prod
+server:
+  host: "homeassistant.homelab.mikemarti.ch"
+zigbee2mqtt:
+  host: "zigbee2mqtt.homelab.mikemarti.ch"
+  zigbeeDeviceIdSerial: 96837879f873ef1189bbc674d9b539e6
+  zigbeeDeviceId: "/dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_{{ .Values.zigbee2mqtt.zigbeeDeviceIdSerial }}-if00-port0"
+

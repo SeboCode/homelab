@@ -15,4 +15,6 @@ services:
     capacity: 20Gi
   miniflux:
     capacity: 10Gi
+  homeassistant:
+    capacity: 5Gi
 

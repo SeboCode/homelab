@@ -1,0 +1,8 @@
+---
+environment: dev
+server:
+  host: "homeassistant.dev.homelab.mikemarti.ch"
+zigbee2mqtt:
+  host: "zigbee2mqtt.dev.homelab.mikemarti.ch"
+  devicePath: /dev/null
+

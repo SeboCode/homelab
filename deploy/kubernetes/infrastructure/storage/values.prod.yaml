@@ -18,4 +18,7 @@ services:
   miniflux:
     node: daisy
     path: /mnt/data/miniflux-storage
+  homeassistant:
+    node: daisy
+    path: /mnt/data/homeassistant-storage
 
