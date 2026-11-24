@@ -2,3 +2,4 @@
 environment: dev
 server:
   host: "syncthing.dev.homelab.mikemarti.ch"
+

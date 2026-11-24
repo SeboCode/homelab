@@ -11,15 +11,16 @@ spec:
   policyTypes:
     - Ingress
   ingress:
-    # The sync port is reached via hostPort (Podman's `-p 21001:22000` translated
-    # literally), not through a Service, so peers arrive from anywhere on the LAN /
-    # tailscale network. Discovery and relays are disabled, so this is the only path
-    # in. Filtered on the container's own port (22000), not the host port (21001).
+    # The sync port is reached via hostPort, not through a proxy, so peers arrive from
+    # anywhere on the LAN / tailscale network. Discovery and relays are disabled, so
+    # this is the only path in. Filtered on the container's own port (syncContainerPort),
+    # not the host port (syncHostPort).
     - from:
         - ipBlock:
             cidr: 0.0.0.0/0
       ports:
         - protocol: TCP
-          port: 22000
+          port: {{ .Values.server.syncContainerPort }}
         - protocol: UDP
-          port: 22000
+          port: {{ .Values.server.syncContainerPort }}
+

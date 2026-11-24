@@ -2,3 +2,4 @@
 environment: prod
 server:
   host: "syncthing.homelab.mikemarti.ch"
+

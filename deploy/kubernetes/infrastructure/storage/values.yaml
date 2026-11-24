@@ -18,5 +18,5 @@ services:
   homeassistant:
     capacity: 5Gi
   syncthing:
-    capacity: 500Gi
+    capacity: 10Gi
 

@@ -2,17 +2,15 @@
 namespace: syncthing
 storage:
   # Metadata only on a hostPath PV; the real limit is the ZFS pool on charon.
-  capacity: 500Gi
-cluster:
-  podCidr: 10.42.0.0/16
-  serviceCidr: 10.43.0.0/16
+  capacity: 10Gi
 server:
   image:
     tag: "2.0.15"
   port: 8384
-  syncPort: 22000
-  # Must stay 21001: every configured peer has this address baked in, and discovery
-  # and relays are disabled so nothing can rediscover a changed port.
+  syncContainerPort: 22000
   syncHostPort: 21001
-  # Syncthing has no user management; this only protects the GUI from modification.
+  # Syncthing uses this user name and the credentials in the secret to protect the
+  # webserver from being modified by unprivileged users. There is no user management
+  # in the application.
   guiUsername: "admin"
+
