@@ -11,13 +11,16 @@ spec:
   policyTypes:
     - Ingress
   ingress:
-    # The sync port is reached via hostPort, not through a proxy, so peers arrive from
-    # anywhere on the LAN / tailscale network. Discovery and relays are disabled, so
-    # this is the only path in. Filtered on the container's own port (syncContainerPort),
-    # not the host port (syncHostPort).
+    # Peers reach the sync port through the ServiceLB pods of the `sync` Service,
+    # which forward the traffic with their own pod IP as source.
     - from:
-        - ipBlock:
-            cidr: 0.0.0.0/0
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              svccontroller.k3s.cattle.io/svcname: sync
+              svccontroller.k3s.cattle.io/svcnamespace: {{ .Values.namespace }}
       ports:
         - protocol: TCP
           port: {{ .Values.server.syncContainerPort }}

@@ -77,15 +77,10 @@ spec:
                   name: secret
                   key: apiKey
           ports:
-            - name: gui
-              containerPort: {{ .Values.server.port }}
-            - name: sync-tcp
-              containerPort: {{ .Values.server.syncContainerPort }}
-              hostPort: {{ .Values.server.syncHostPort }}
+            - containerPort: {{ .Values.server.port }}
+            - containerPort: {{ .Values.server.syncContainerPort }}
               protocol: TCP
-            - name: sync-udp
-              containerPort: {{ .Values.server.syncContainerPort }}
-              hostPort: {{ .Values.server.syncHostPort }}
+            - containerPort: {{ .Values.server.syncContainerPort }}
               protocol: UDP
           volumeMounts:
             - name: storage
