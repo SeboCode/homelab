@@ -2,9 +2,16 @@
 namespace: &ns traefik # Only used in the custom namespace template manifest
 traefik:
   namespaceOverride: *ns
+  ports:
+    web:
+      http:
+        # Configured through the chart rather than additionalArguments: the chart
+        # redirects to the exposed port (443), raw arguments to the pod port (8443).
+        redirections:
+          entryPoint:
+            to: websecure
+            scheme: https
   additionalArguments:
-    - "--entryPoints.web.http.redirections.entryPoint.to=websecure"
-    - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
     # `api.insecure` is Traefik's (poorly-named) flag for "auto-expose the
     # API/dashboard on the `traefik` entrypoint without a router in front",
     # not "disable security". Port 8080 stays cluster-internal, and the
