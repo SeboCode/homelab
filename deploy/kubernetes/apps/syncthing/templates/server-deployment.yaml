@@ -18,6 +18,7 @@ spec:
       labels:
         app: server
         connectsToInternet: "true"
+        exposedByLoadBalancer: "true"
     spec:
       initContainers:
         - name: config
