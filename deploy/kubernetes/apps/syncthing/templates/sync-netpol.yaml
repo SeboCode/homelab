@@ -1,0 +1,29 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: sync-netpol-ingress
+  namespace: {{ .Values.namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      app: server
+  policyTypes:
+    - Ingress
+  ingress:
+    # Peers reach the sync port through the ServiceLB pods of the `sync` Service,
+    # which forward the traffic with their own pod IP as source.
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              svccontroller.k3s.cattle.io/svcname: sync
+              svccontroller.k3s.cattle.io/svcnamespace: {{ .Values.namespace }}
+      ports:
+        - protocol: TCP
+          port: {{ .Values.server.syncContainerPort }}
+        - protocol: UDP
+          port: {{ .Values.server.syncContainerPort }}
+

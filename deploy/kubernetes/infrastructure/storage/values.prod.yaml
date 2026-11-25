@@ -21,4 +21,7 @@ services:
   homeassistant:
     node: daisy
     path: /mnt/data/homeassistant-storage
+  syncthing:
+    node: charon
+    path: /service-data/syncthing-storage
 

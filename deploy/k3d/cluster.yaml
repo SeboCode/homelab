@@ -14,4 +14,11 @@ ports:
   - port: 443:443
     nodeFilters:
       - loadbalancer
+  # syncthing sync port (LoadBalancer Service `sync`)
+  - port: 21001:21001/tcp
+    nodeFilters:
+      - loadbalancer
+  - port: 21001:21001/udp
+    nodeFilters:
+      - loadbalancer
 

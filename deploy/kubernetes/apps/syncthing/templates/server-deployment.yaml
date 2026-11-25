@@ -1,0 +1,93 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  # Syncthing keeps a SQLite database in the config directory; two pods must
+  # never open it at once.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      labels:
+        app: server
+        connectsToInternet: "true"
+    spec:
+      initContainers:
+        - name: config
+          image: docker.io/syncthing/syncthing:{{ .Values.server.image.tag }}{{ with .Values.server.image.digest }}@{{ . }}{{ end }}
+          # `syncthing cli` only talks to the REST API and never edits config.xml
+          # itself, so a temporary daemon is started, configured and shut down
+          # again. The changes are persisted to config.xml on the shared volume.
+          # Runs through the image entrypoint to drop to the same PUID/PGID as the
+          # server, so a first start does not leave root-owned files behind.
+          command:
+            - /bin/entrypoint.sh
+            - sh
+            - -c
+            - |
+              set -eu
+              syncthing serve --no-browser &
+              pid=$!
+              until syncthing cli show system >/dev/null 2>&1; do
+                kill -0 "$pid" # Fails (and exits via set -e) if the daemon has died.
+                sleep 1
+              done
+
+              # Configure syncthing
+              syncthing cli config gui user set {{ .Values.server.guiUsername | squote }}
+              syncthing cli config gui password set "$GUI_PASSWORD"
+              syncthing cli config options global-ann-enabled set false
+              syncthing cli config options relays-enabled set false
+              syncthing cli config options natenabled set false
+              syncthing cli config options local-ann-enabled set false
+              syncthing cli config options crenabled set false
+
+              syncthing cli operations shutdown
+              wait "$pid"
+          env:
+            # `syncthing cli` refuses to run unless the API key is set as well.
+            - name: STGUIAPIKEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: apiKey
+            - name: GUI_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: guiPassword
+          volumeMounts:
+            - name: storage
+              mountPath: /var/syncthing
+              subPath: data
+      containers:
+        - name: server
+          image: docker.io/syncthing/syncthing:{{ .Values.server.image.tag }}{{ with .Values.server.image.digest }}@{{ . }}{{ end }}
+          env:
+            - name: STGUIAPIKEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: apiKey
+          ports:
+            - containerPort: {{ .Values.server.port }}
+            - containerPort: {{ .Values.server.syncContainerPort }}
+              protocol: TCP
+            - containerPort: {{ .Values.server.syncContainerPort }}
+              protocol: UDP
+          volumeMounts:
+            - name: storage
+              mountPath: /var/syncthing
+              subPath: data
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: syncthing-storage
+
