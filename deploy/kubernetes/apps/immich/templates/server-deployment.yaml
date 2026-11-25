@@ -39,7 +39,7 @@ spec:
                   name: secret
                   key: dbPassword
           ports:
-            - containerPort: 2283
+            - containerPort: {{ .Values.server.port }}
           volumeMounts:
             - name: storage
               mountPath: /usr/src/app/upload

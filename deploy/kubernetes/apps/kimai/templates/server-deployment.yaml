@@ -48,7 +48,7 @@ spec:
                   name: secret
                   key: adminPassword
           ports:
-            - containerPort: 8001
+            - containerPort: {{ .Values.server.port }}
           volumeMounts:
             - name: storage
               mountPath: /opt/kimai/var/data
