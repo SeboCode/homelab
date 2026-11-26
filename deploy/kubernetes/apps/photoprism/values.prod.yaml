@@ -2,3 +2,7 @@
 environment: prod
 server:
   host: "photoprism.homelab.mikemarti.ch"
+  # PhotoPrism does not allow to create users in the free version. This is also the
+  # user the application is used with.
+  adminUsername: mike
+

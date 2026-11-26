@@ -10,9 +10,6 @@ server:
   image:
     tag: "251130"
   port: 2342
-  # PhotoPrism does not allow creating users in the free version. This is also the
-  # user the application is used with.
-  adminUsername: admin
 database:
   image:
     tag: "11.8.5"
