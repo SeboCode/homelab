@@ -11,6 +11,6 @@ spec:
   selector:
     app: machine-learning
   ports:
-    - port: 3003
-      targetPort: 3003
+    - port: {{ .Values.machineLearning.port }}
+      targetPort: {{ .Values.machineLearning.port }}
 

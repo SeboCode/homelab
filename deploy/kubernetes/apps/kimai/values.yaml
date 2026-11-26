@@ -11,4 +11,5 @@ database:
   databaseUsername: kimai_db_user
   image:
     tag: "9.6.0"
+  port: 3306
 

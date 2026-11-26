@@ -19,6 +19,4 @@ traefik:
     insecure: true
   image:
     tag: "v3.7.5"
-dashboard:
-  port: 8080
 

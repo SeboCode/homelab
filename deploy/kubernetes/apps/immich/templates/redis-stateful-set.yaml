@@ -20,7 +20,7 @@ spec:
           image: docker.io/valkey/valkey:{{ .Values.redis.image.tag }}{{ with .Values.redis.image.digest }}@{{ . }}{{ end }}
           command: ["redis-server", "/etc/redis/redis.conf"]
           ports:
-            - containerPort: 6379
+            - containerPort: {{ .Values.redis.port }}
           volumeMounts:
             - name: storage
               mountPath: /data

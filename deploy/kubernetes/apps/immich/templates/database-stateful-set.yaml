@@ -33,7 +33,7 @@ spec:
             - name: DB_STORAGE_TYPE
               value: HDD
           ports:
-            - containerPort: 5432
+            - containerPort: {{ .Values.database.port }}
           volumeMounts:
             - name: storage
               mountPath: /var/lib/postgresql/data

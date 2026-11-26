@@ -4,7 +4,7 @@
     "Release" .Release
     "appName" "dashboard"
     "host" .Values.dashboard.host
-    "port" .Values.dashboard.port
+    "port" .Values.traefik.ports.traefik.port
     "annotations" (dict
       "traefik.ingress.kubernetes.io/router.middlewares" (printf "%s-dashboard-auth@kubernetescrd" .Values.namespace)
     )
