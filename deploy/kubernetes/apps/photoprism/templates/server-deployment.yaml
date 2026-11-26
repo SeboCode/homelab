@@ -1,0 +1,128 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      labels:
+        app: server
+        connectsToDatabase: "true"
+        # TensorFlow download on init (PHOTOPRISM_INIT), Places reverse geocoding and
+        # instance registration at *.photoprism.app.
+        connectsToInternet: "true"
+    spec:
+      containers:
+        - name: server
+          image: docker.io/photoprism/photoprism:{{ .Values.server.image.tag }}{{ with .Values.server.image.digest }}@{{ . }}{{ end }}
+          env:
+            - name: PHOTOPRISM_ADMIN_USER # admin login username
+              value: {{ .Values.server.adminUsername | quote }}
+            - name: PHOTOPRISM_ADMIN_PASSWORD # initial admin password (8-72 characters)
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: adminPassword
+            - name: PHOTOPRISM_AUTH_MODE # authentication mode (public, password)
+              value: "password"
+            # Traefik terminates TLS and talks plain HTTP to photoprism, so TLS stays off despite the https SITE_URL.
+            - name: PHOTOPRISM_DISABLE_TLS # disables HTTPS/TLS even if the site URL starts with https:// and a certificate is available
+              value: "true"
+            # No self-signed fallback certificate is needed since photoprism serves plain HTTP behind Traefik.
+            - name: PHOTOPRISM_DEFAULT_TLS # defaults to a self-signed HTTPS/TLS certificate if no other certificate is available
+              value: "false"
+            - name: PHOTOPRISM_DEFAULT_LOCALE # default user interface language, e.g. "en" or "de"
+              value: "en"
+            - name: PHOTOPRISM_PLACES_LOCALE # location details language, e.g. "local", "en", or "de"
+              value: "local"
+            # Public https URL so generated and share links work, which would enable TLS without DISABLE_TLS.
+            - name: PHOTOPRISM_SITE_URL # server URL in the format "http(s)://domain.name(:port)/(path)"
+              value: "https://{{ .Values.server.host }}/"
+            - name: PHOTOPRISM_SITE_TITLE
+              value: "PhotoPrism"
+            - name: PHOTOPRISM_SITE_CAPTION
+              value: "AI-Powered Photos App"
+            - name: PHOTOPRISM_LOG_LEVEL # log level: trace, debug, info, warning, or error
+              value: "info"
+            - name: PHOTOPRISM_READONLY # do not modify originals directory (reduced functionality)
+              value: "false"
+            - name: PHOTOPRISM_EXPERIMENTAL # enables experimental features
+              value: "false"
+            - name: PHOTOPRISM_DISABLE_CHOWN # disables updating storage permissions via chmod and chown on startup
+              value: "false"
+            - name: PHOTOPRISM_DISABLE_WEBDAV # disables built-in WebDAV server
+              value: "true"
+            - name: PHOTOPRISM_DISABLE_SETTINGS # disables settings UI and API
+              value: "false"
+            - name: PHOTOPRISM_DISABLE_TENSORFLOW # disables all features depending on TensorFlow
+              value: "false"
+            - name: PHOTOPRISM_DISABLE_FACES # disables face detection and recognition (requires TensorFlow)
+              value: "true"
+            - name: PHOTOPRISM_DISABLE_CLASSIFICATION # disables image classification (requires TensorFlow)
+              value: "false"
+            - name: PHOTOPRISM_DISABLE_VECTORS # disables vector graphics support
+              value: "false"
+            - name: PHOTOPRISM_DISABLE_RAW # disables indexing and conversion of RAW images
+              value: "false"
+            - name: PHOTOPRISM_RAW_PRESETS # enables applying user presets when converting RAW images (reduces performance)
+              value: "false"
+            - name: PHOTOPRISM_SIDECAR_YAML # creates YAML sidecar files to back up picture metadata
+              value: "true"
+            - name: PHOTOPRISM_BACKUP_ALBUMS # creates YAML files to back up album metadata
+              value: "true"
+            - name: PHOTOPRISM_BACKUP_DATABASE # creates regular backups based on the configured schedule
+              value: "false"
+            - name: PHOTOPRISM_DETECT_NSFW # automatically flags photos as private that MAY be offensive (requires TensorFlow)
+              value: "false"
+            - name: PHOTOPRISM_UPLOAD_NSFW # allows uploads that MAY be offensive (no effect without TensorFlow)
+              value: "true"
+            - name: PHOTOPRISM_UPLOAD_ARCHIVES # allows upload of zip archives (will be extracted before import)
+              value: "true"
+            - name: PHOTOPRISM_UPLOAD_LIMIT # maximum size of uploaded files and uncompressed archive contents in MB
+              value: "5000"
+            - name: PHOTOPRISM_ORIGINALS_LIMIT # maximum size of original media files in MB (larger files are skipped)
+              value: "5000"
+            - name: PHOTOPRISM_HTTP_COMPRESSION # improves transfer speed and bandwidth utilization (none or gzip)
+              value: "gzip"
+            - name: PHOTOPRISM_DATABASE_DRIVER # MariaDB 10.5.12+ (MySQL successor) offers significantly better performance compared to SQLite
+              value: "mysql"
+            - name: PHOTOPRISM_DATABASE_SERVER # MariaDB database server (hostname:port)
+              value: "database:{{ .Values.database.port }}"
+            - name: PHOTOPRISM_DATABASE_NAME # MariaDB database, see MARIADB_DATABASE in the mariadb service
+              value: {{ .Values.database.databaseName | quote }}
+            - name: PHOTOPRISM_DATABASE_USER # MariaDB database username, must be the same as MARIADB_USER
+              value: {{ .Values.database.databaseUsername | quote }}
+            - name: PHOTOPRISM_DATABASE_PASSWORD # MariaDB database password, must be the same as MARIADB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: dbPassword
+            # Drops "https" step, which only provisions the self-signed certificate that DEFAULT_TLS no longer uses.
+            - name: PHOTOPRISM_INIT # options: update https tensorflow tensorflow-gpu intel gpu davfs yt-dlp
+              value: "tensorflow"
+            - name: PHOTOPRISM_ORIGINALS_PATH
+              value: "/var/photoprism/originals"
+            - name: PHOTOPRISM_STORAGE_PATH
+              value: "/var/photoprism/storage"
+          ports:
+            - containerPort: {{ .Values.server.port }}
+          volumeMounts:
+            - name: storage
+              mountPath: /var/photoprism/originals
+              subPath: originals
+            - name: storage
+              mountPath: /var/photoprism/storage
+              subPath: storage
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: photoprism-storage
+

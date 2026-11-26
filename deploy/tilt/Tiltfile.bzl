@@ -185,3 +185,13 @@ k8s_yaml(
     )
 )
 
+k8s_yaml(
+    helm(
+        "../kubernetes/apps/photoprism/",
+        values=[
+            "../kubernetes/apps/photoprism/values.yaml",
+            "../kubernetes/apps/photoprism/values.dev.yaml",
+        ],
+    )
+)
+

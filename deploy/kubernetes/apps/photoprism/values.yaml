@@ -1,0 +1,15 @@
+---
+namespace: photoprism
+storage:
+  # Metadata only on a hostPath PV; the real limit is the ZFS pool on charon.
+  capacity: 500Gi
+server:
+  image:
+    tag: "251130"
+  port: 2342
+database:
+  image:
+    tag: "11.8.5"
+  port: 3306
+  databaseName: photoprism_database
+  databaseUsername: photoprism_mariadb_user
